@@ -1,0 +1,1413 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Barbearia Rodrigues</title>
+
+  <style>
+    :root {
+      --bg: #080808;
+      --bg2: #111111;
+      --card: #181818;
+      --card2: #202020;
+      --text: #f5f5f5;
+      --muted: #b8b8b8;
+      --gold: #d4a034;
+      --gold2: #f0c76c;
+      --danger: #ff4d4d;
+      --success: #30d158;
+      --border: rgba(255,255,255,0.08);
+      --shadow: 0 18px 45px rgba(0,0,0,0.45);
+      --radius: 22px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(212,160,52,0.16), transparent 35%),
+        radial-gradient(circle at bottom right, rgba(212,160,52,0.10), transparent 35%),
+        var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 18px;
+    }
+
+    .hero {
+      background:
+        linear-gradient(135deg, rgba(212,160,52,0.18), rgba(255,255,255,0.03)),
+        linear-gradient(180deg, #161616, #0f0f0f);
+      border: 1px solid var(--border);
+      border-radius: 30px;
+      padding: 24px;
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 18px;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;
+      background: rgba(212,160,52,0.18);
+      right: -80px;
+      top: -80px;
+      filter: blur(4px);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .logo {
+      width: 62px;
+      height: 62px;
+      border-radius: 20px;
+      background: linear-gradient(135deg, var(--gold), #7a510f);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 31px;
+      box-shadow: 0 14px 30px rgba(212,160,52,0.25);
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: 29px;
+      letter-spacing: -0.5px;
+    }
+
+    .brand p {
+      margin: 5px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 20px;
+      position: relative;
+      z-index: 2;
+    }
+
+    button, .btn {
+      border: none;
+      outline: none;
+      padding: 13px 16px;
+      border-radius: 15px;
+      cursor: pointer;
+      font-weight: 800;
+      font-size: 14px;
+      transition: 0.2s;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    button:hover, .btn:hover {
+      transform: translateY(-1px);
+      opacity: 0.94;
+    }
+
+    .primary {
+      background: linear-gradient(135deg, var(--gold2), var(--gold));
+      color: #15100a;
+    }
+
+    .secondary {
+      background: rgba(255,255,255,0.08);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .danger {
+      background: rgba(255,77,77,0.13);
+      color: #ffb0b0;
+      border: 1px solid rgba(255,77,77,0.25);
+    }
+
+    .success {
+      background: rgba(48,209,88,0.12);
+      color: #aef5c0;
+      border: 1px solid rgba(48,209,88,0.25);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1.05fr 1.35fr;
+      gap: 18px;
+    }
+
+    .card {
+      background: rgba(24,24,24,0.92);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+    }
+
+    .card h2 {
+      margin: 0 0 12px;
+      font-size: 21px;
+    }
+
+    .card h3 {
+      margin: 18px 0 10px;
+      font-size: 16px;
+      color: var(--gold2);
+    }
+
+    label {
+      display: block;
+      margin-bottom: 7px;
+      font-size: 13px;
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      border: 1px solid var(--border);
+      background: #101010;
+      color: var(--text);
+      border-radius: 14px;
+      padding: 13px;
+      font-size: 15px;
+      outline: none;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: rgba(212,160,52,0.65);
+      box-shadow: 0 0 0 3px rgba(212,160,52,0.08);
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .single {
+      margin-bottom: 12px;
+    }
+
+    .days {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .day-check {
+      background: #101010;
+      border: 1px solid var(--border);
+      border-radius: 15px;
+      padding: 12px;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      cursor: pointer;
+      color: var(--text);
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    .day-check input {
+      width: auto;
+      accent-color: var(--gold);
+    }
+
+    .tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 18px;
+      flex-wrap: wrap;
+    }
+
+    .tab {
+      flex: 1;
+      min-width: 140px;
+      background: rgba(255,255,255,0.07);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .tab.active {
+      background: linear-gradient(135deg, var(--gold2), var(--gold));
+      color: #15100a;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .date-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(135px, 1fr));
+      gap: 10px;
+      margin: 14px 0;
+    }
+
+    .date-btn {
+      background: #101010;
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 14px;
+      text-align: left;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .date-btn strong {
+      display: block;
+      font-size: 15px;
+      margin-bottom: 4px;
+    }
+
+    .date-btn span {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .date-btn.active {
+      border-color: var(--gold);
+      background: rgba(212,160,52,0.13);
+      box-shadow: 0 0 0 3px rgba(212,160,52,0.07);
+    }
+
+    .slots {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(92px, 1fr));
+      gap: 10px;
+      margin: 14px 0;
+    }
+
+    .slot {
+      background: #101010;
+      border: 1px solid var(--border);
+      color: var(--text);
+      border-radius: 15px;
+      padding: 13px 10px;
+      font-weight: 900;
+      cursor: pointer;
+    }
+
+    .slot.active {
+      background: linear-gradient(135deg, var(--gold2), var(--gold));
+      color: #15100a;
+      border-color: transparent;
+    }
+
+    .slot.booked {
+      opacity: 0.35;
+      cursor: not-allowed;
+      text-decoration: line-through;
+    }
+
+    .appointment {
+      background: #101010;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 14px;
+      margin-bottom: 10px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .appointment strong {
+      display: block;
+      font-size: 15px;
+      margin-bottom: 4px;
+    }
+
+    .appointment span {
+      display: block;
+      color: var(--muted);
+      font-size: 13px;
+      margin-top: 3px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 7px 10px;
+      border-radius: 99px;
+      background: rgba(212,160,52,0.14);
+      color: var(--gold2);
+      font-size: 12px;
+      font-weight: 900;
+      border: 1px solid rgba(212,160,52,0.23);
+    }
+
+    .message {
+      padding: 13px;
+      border-radius: 16px;
+      margin: 12px 0;
+      font-size: 14px;
+      line-height: 1.4;
+      display: none;
+    }
+
+    .message.show {
+      display: block;
+    }
+
+    .message.ok {
+      background: rgba(48,209,88,0.12);
+      color: #b7f8c8;
+      border: 1px solid rgba(48,209,88,0.25);
+    }
+
+    .message.err {
+      background: rgba(255,77,77,0.12);
+      color: #ffc0c0;
+      border: 1px solid rgba(255,77,77,0.25);
+    }
+
+    .message.info {
+      background: rgba(212,160,52,0.12);
+      color: #ffe2a1;
+      border: 1px solid rgba(212,160,52,0.23);
+    }
+
+    .empty {
+      text-align: center;
+      color: var(--muted);
+      padding: 28px 10px;
+      border: 1px dashed var(--border);
+      border-radius: 18px;
+      background: rgba(255,255,255,0.03);
+    }
+
+    .footer-note {
+      margin-top: 18px;
+      color: var(--muted);
+      font-size: 12px;
+      text-align: center;
+      line-height: 1.5;
+    }
+
+    .login-box {
+      max-width: 440px;
+      margin: 30px auto 0;
+    }
+
+    .whatsapp-link {
+      color: #aef5c0;
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    .top-mini {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+
+    .pill {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid var(--border);
+      padding: 8px 11px;
+      border-radius: 99px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .blocked-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .blocked-item {
+      padding: 8px 10px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid var(--border);
+      border-radius: 99px;
+      display: inline-flex;
+      gap: 8px;
+      align-items: center;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .blocked-item button {
+      padding: 2px 7px;
+      border-radius: 999px;
+      font-size: 11px;
+    }
+
+    @media (max-width: 850px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      .brand h1 {
+        font-size: 24px;
+      }
+
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+
+      .days {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="app">
+    <section class="hero">
+      <div class="brand">
+        <div class="logo">✂️</div>
+        <div>
+          <h1>Barbearia Rodrigues</h1>
+          <p>Agendamento moderno de cortes, direto pelo celular.</p>
+        </div>
+      </div>
+
+      <div class="hero-actions">
+        <button class="primary" onclick="showClient()">Agendar corte</button>
+        <button class="secondary" onclick="showOwnerLogin()">Painel do dono</button>
+      </div>
+    </section>
+
+    <div id="firebaseWarning" class="message info show">
+      Antes de publicar, coloque sua configuração do Firebase no código, na parte marcada como
+      <strong>firebaseConfig</strong>. Sem isso, o app não consegue salvar os agendamentos online.
+    </div>
+
+    <section id="clientView" class="card">
+      <div class="top-mini">
+        <div>
+          <h2>Agende seu corte</h2>
+          <span class="pill">Escolha um dia e horário disponível</span>
+        </div>
+      </div>
+
+      <div id="clientMsg" class="message"></div>
+
+      <h3>1. Escolha o dia</h3>
+      <div id="dateList" class="date-list"></div>
+
+      <h3>2. Escolha o horário</h3>
+      <div id="slotList" class="slots"></div>
+
+      <h3>3. Seus dados</h3>
+      <div class="form-row">
+        <div>
+          <label>Seu nome</label>
+          <input id="clientName" type="text" placeholder="Ex: João Silva" />
+        </div>
+        <div>
+          <label>WhatsApp</label>
+          <input id="clientPhone" type="tel" placeholder="Ex: 11999999999" />
+        </div>
+      </div>
+
+      <button class="primary" style="width:100%;" onclick="bookAppointment()">
+        Confirmar agendamento
+      </button>
+
+      <p class="footer-note">
+        Após confirmar, seu horário fica reservado e não aparece mais para outros clientes.
+      </p>
+    </section>
+
+    <section id="ownerLoginView" class="card login-box hidden">
+      <h2>Entrar no painel do dono</h2>
+      <p style="color: var(--muted); line-height: 1.5;">
+        Digite a senha do dono para configurar horários e ver os agendamentos.
+      </p>
+
+      <div id="loginMsg" class="message"></div>
+
+      <div class="single">
+        <label>Senha</label>
+        <input id="ownerPassword" type="password" placeholder="Digite a senha" />
+      </div>
+
+      <button class="primary" style="width:100%;" onclick="ownerLogin()">Entrar</button>
+    </section>
+
+    <section id="ownerView" class="hidden">
+      <div class="tabs">
+        <button id="tabSchedule" class="tab active" onclick="openOwnerTab('schedule')">
+          Configurações
+        </button>
+        <button id="tabAppointments" class="tab" onclick="openOwnerTab('appointments')">
+          Agendamentos
+        </button>
+      </div>
+
+      <div id="ownerSchedule" class="grid">
+        <div class="card">
+          <h2>Configurar atendimento</h2>
+          <div id="settingsMsg" class="message"></div>
+
+          <h3>Dias de trabalho</h3>
+          <div class="days">
+            <label class="day-check">
+              <input type="checkbox" class="workday" value="1" />
+              Segunda-feira
+            </label>
+
+            <label class="day-check">
+              <input type="checkbox" class="workday" value="2" />
+              Terça-feira
+            </label>
+
+            <label class="day-check">
+              <input type="checkbox" class="workday" value="3" />
+              Quarta-feira
+            </label>
+
+            <label class="day-check">
+              <input type="checkbox" class="workday" value="4" />
+              Quinta-feira
+            </label>
+
+            <label class="day-check">
+              <input type="checkbox" class="workday" value="5" />
+              Sexta-feira
+            </label>
+
+            <label class="day-check">
+              <input type="checkbox" class="workday" value="6" />
+              Sábado
+            </label>
+
+            <label class="day-check">
+              <input type="checkbox" class="workday" value="0" />
+              Domingo
+            </label>
+          </div>
+
+          <div class="form-row">
+            <div>
+              <label>Horário de início</label>
+              <input id="startTime" type="time" value="08:00" />
+            </div>
+            <div>
+              <label>Horário de término</label>
+              <input id="endTime" type="time" value="18:00" />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div>
+              <label>Duração de cada corte</label>
+              <select id="slotDuration">
+                <option value="20">20 minutos</option>
+                <option value="30" selected>30 minutos</option>
+                <option value="40">40 minutos</option>
+                <option value="45">45 minutos</option>
+                <option value="60">1 hora</option>
+              </select>
+            </div>
+            <div>
+              <label>Senha do dono</label>
+              <input id="adminPin" type="text" placeholder="Ex: 1234" />
+            </div>
+          </div>
+
+          <button class="primary" style="width:100%;" onclick="saveSettings()">
+            Salvar configurações
+          </button>
+
+          <h3>Bloquear um dia específico</h3>
+          <p style="color: var(--muted); font-size: 13px; line-height: 1.5;">
+            Use isso para folgas, viagens, feriados ou dias que você não vai atender.
+          </p>
+
+          <div class="form-row">
+            <div>
+              <label>Data para bloquear</label>
+              <input id="blockDate" type="date" />
+            </div>
+            <div style="display:flex; align-items:flex-end;">
+              <button class="secondary" style="width:100%;" onclick="addBlockedDate()">
+                Bloquear data
+              </button>
+            </div>
+          </div>
+
+          <div id="blockedDatesList" class="blocked-list"></div>
+        </div>
+
+        <div class="card">
+          <h2>Link para clientes</h2>
+          <p style="color: var(--muted); line-height: 1.5;">
+            Envie este link para seus clientes fazerem o agendamento.
+          </p>
+
+          <div class="single">
+            <label>Link do cliente</label>
+            <input id="clientLink" type="text" readonly />
+          </div>
+
+          <button class="success" style="width:100%;" onclick="copyClientLink()">
+            Copiar link do cliente
+          </button>
+
+          <h3>Resumo de funcionamento</h3>
+          <div class="empty" style="text-align:left;">
+            <p><strong>1.</strong> O dono configura os dias e horários.</p>
+            <p><strong>2.</strong> O cliente entra no link e escolhe um horário vago.</p>
+            <p><strong>3.</strong> Depois que alguém agenda, aquele horário não aparece mais para outros clientes.</p>
+            <p><strong>4.</strong> O dono consegue ver nome, WhatsApp, data e horário do cliente.</p>
+          </div>
+        </div>
+      </div>
+
+      <div id="ownerAppointments" class="card hidden">
+        <div class="top-mini">
+          <div>
+            <h2>Agendamentos</h2>
+            <span class="pill">Clientes marcados</span>
+          </div>
+
+          <button class="secondary" onclick="loadAppointments()">
+            Atualizar
+          </button>
+        </div>
+
+        <div class="form-row">
+          <div>
+            <label>Filtrar por data</label>
+            <input id="filterDate" type="date" onchange="loadAppointments()" />
+          </div>
+          <div style="display:flex; align-items:flex-end;">
+            <button class="secondary" style="width:100%;" onclick="clearFilter()">
+              Mostrar todos
+            </button>
+          </div>
+        </div>
+
+        <div id="appointmentsList"></div>
+      </div>
+    </section>
+
+    <p class="footer-note">
+      Barbearia Rodrigues © Sistema de agendamento online.
+    </p>
+  </div>
+
+  <script type="module">
+    /*
+      =====================================================
+      CONFIGURAÇÃO DO FIREBASE
+      =====================================================
+
+      1. Acesse: https://console.firebase.google.com
+      2. Crie um projeto.
+      3. Ative o Firestore Database.
+      4. Vá em Configurações do projeto > Seus apps > Web.
+      5. Copie a configuração e cole abaixo.
+
+      Enquanto estiver assim com dados vazios, o app abre,
+      mas não consegue salvar online.
+    */
+
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import {
+      getFirestore,
+      doc,
+      getDoc,
+      setDoc,
+      collection,
+      addDoc,
+      getDocs,
+      query,
+      where,
+      orderBy,
+      deleteDoc,
+      serverTimestamp
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "COLE_AQUI_SUA_API_KEY",
+      authDomain: "COLE_AQUI.firebaseapp.com",
+      projectId: "COLE_AQUI_SEU_PROJECT_ID",
+      storageBucket: "COLE_AQUI.appspot.com",
+      messagingSenderId: "COLE_AQUI",
+      appId: "COLE_AQUI"
+    };
+
+    let app = null;
+    let db = null;
+    let firebaseReady = false;
+
+    try {
+      if (
+        firebaseConfig.apiKey &&
+        firebaseConfig.apiKey !== "COLE_AQUI_SUA_API_KEY" &&
+        firebaseConfig.projectId &&
+        firebaseConfig.projectId !== "COLE_AQUI_SEU_PROJECT_ID"
+      ) {
+        app = initializeApp(firebaseConfig);
+        db = getFirestore(app);
+        firebaseReady = true;
+        document.getElementById("firebaseWarning").classList.remove("show");
+      }
+    } catch (error) {
+      console.error(error);
+      firebaseReady = false;
+    }
+
+    const DEFAULT_SETTINGS = {
+      workdays: [1, 2, 3, 4, 5, 6],
+      startTime: "08:00",
+      endTime: "18:00",
+      slotDuration: 30,
+      adminPin: "1234",
+      blockedDates: []
+    };
+
+    let settings = { ...DEFAULT_SETTINGS };
+    let selectedDate = "";
+    let selectedSlot = "";
+    let bookedSlots = [];
+
+    const $ = (id) => document.getElementById(id);
+
+    function showMessage(id, text, type = "info") {
+      const el = $(id);
+      if (!el) return;
+
+      el.className = "message show " + type;
+      el.innerHTML = text;
+
+      setTimeout(() => {
+        el.className = "message";
+      }, 4500);
+    }
+
+    function formatDateBR(dateStr) {
+      const [y, m, d] = dateStr.split("-");
+      return `${d}/${m}/${y}`;
+    }
+
+    function getDayName(date) {
+      const names = [
+        "Domingo",
+        "Segunda",
+        "Terça",
+        "Quarta",
+        "Quinta",
+        "Sexta",
+        "Sábado"
+      ];
+      return names[date.getDay()];
+    }
+
+    function toDateInputValue(date) {
+      const y = date.getFullYear();
+      const m = String(date.getMonth() + 1).padStart(2, "0");
+      const d = String(date.getDate()).padStart(2, "0");
+      return `${y}-${m}-${d}`;
+    }
+
+    function minutesFromTime(time) {
+      const [h, m] = time.split(":").map(Number);
+      return h * 60 + m;
+    }
+
+    function timeFromMinutes(total) {
+      const h = String(Math.floor(total / 60)).padStart(2, "0");
+      const m = String(total % 60).padStart(2, "0");
+      return `${h}:${m}`;
+    }
+
+    function generateSlots() {
+      const slots = [];
+      const start = minutesFromTime(settings.startTime);
+      const end = minutesFromTime(settings.endTime);
+      const duration = Number(settings.slotDuration || 30);
+
+      for (let t = start; t + duration <= end; t += duration) {
+        slots.push(timeFromMinutes(t));
+      }
+
+      return slots;
+    }
+
+    async function loadSettings() {
+      if (!firebaseReady) {
+        settings = { ...DEFAULT_SETTINGS };
+        applySettingsToForm();
+        renderClientDates();
+        return;
+      }
+
+      try {
+        const ref = doc(db, "barbeariaRodrigues", "settings");
+        const snap = await getDoc(ref);
+
+        if (snap.exists()) {
+          settings = { ...DEFAULT_SETTINGS, ...snap.data() };
+        } else {
+          await setDoc(ref, DEFAULT_SETTINGS);
+          settings = { ...DEFAULT_SETTINGS };
+        }
+
+        applySettingsToForm();
+        renderClientDates();
+      } catch (error) {
+        console.error(error);
+        showMessage("clientMsg", "Não foi possível carregar as configurações.", "err");
+      }
+    }
+
+    function applySettingsToForm() {
+      document.querySelectorAll(".workday").forEach((check) => {
+        check.checked = settings.workdays.includes(Number(check.value));
+      });
+
+      $("startTime").value = settings.startTime || "08:00";
+      $("endTime").value = settings.endTime || "18:00";
+      $("slotDuration").value = String(settings.slotDuration || 30);
+      $("adminPin").value = settings.adminPin || "1234";
+
+      renderBlockedDates();
+      updateClientLink();
+    }
+
+    function renderClientDates() {
+      const container = $("dateList");
+      container.innerHTML = "";
+
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      let count = 0;
+
+      for (let i = 0; i < 45; i++) {
+        const date = new Date(today);
+        date.setDate(today.getDate() + i);
+
+        const dayNumber = date.getDay();
+        const dateValue = toDateInputValue(date);
+
+        const isWorkday = settings.workdays.includes(dayNumber);
+        const isBlocked = Array.isArray(settings.blockedDates) && settings.blockedDates.includes(dateValue);
+
+        if (!isWorkday || isBlocked) continue;
+
+        const btn = document.createElement("button");
+        btn.className = "date-btn";
+        btn.innerHTML = `
+          <strong>${formatDateBR(dateValue)}</strong>
+          <span>${getDayName(date)}</span>
+        `;
+
+        btn.onclick = async () => {
+          selectedDate = dateValue;
+          selectedSlot = "";
+
+          document.querySelectorAll(".date-btn").forEach((b) => b.classList.remove("active"));
+          btn.classList.add("active");
+
+          await loadBookedSlots();
+          renderSlots();
+        };
+
+        container.appendChild(btn);
+        count++;
+
+        if (count >= 18) break;
+      }
+
+      if (count === 0) {
+        container.innerHTML = `
+          <div class="empty">
+            Nenhum dia disponível no momento.
+          </div>
+        `;
+      }
+    }
+
+    async function loadBookedSlots() {
+      bookedSlots = [];
+
+      if (!selectedDate || !firebaseReady) return;
+
+      try {
+        const q = query(
+          collection(db, "appointments"),
+          where("date", "==", selectedDate)
+        );
+
+        const snap = await getDocs(q);
+        snap.forEach((docItem) => {
+          bookedSlots.push(docItem.data().time);
+        });
+      } catch (error) {
+        console.error(error);
+        showMessage("clientMsg", "Erro ao buscar horários disponíveis.", "err");
+      }
+    }
+
+    function renderSlots() {
+      const container = $("slotList");
+      container.innerHTML = "";
+
+      if (!selectedDate) {
+        container.innerHTML = `
+          <div class="empty">
+            Primeiro escolha um dia.
+          </div>
+        `;
+        return;
+      }
+
+      const slots = generateSlots();
+      const freeSlots = slots.filter((slot) => !bookedSlots.includes(slot));
+
+      if (freeSlots.length === 0) {
+        container.innerHTML = `
+          <div class="empty">
+            Não há horários vagos para este dia.
+          </div>
+        `;
+        return;
+      }
+
+      slots.forEach((slot) => {
+        const isBooked = bookedSlots.includes(slot);
+
+        if (isBooked) return;
+
+        const btn = document.createElement("button");
+        btn.className = "slot";
+        btn.textContent = slot;
+
+        btn.onclick = () => {
+          selectedSlot = slot;
+          document.querySelectorAll(".slot").forEach((b) => b.classList.remove("active"));
+          btn.classList.add("active");
+        };
+
+        container.appendChild(btn);
+      });
+    }
+
+    async function bookAppointment() {
+      const name = $("clientName").value.trim();
+      const phone = $("clientPhone").value.trim();
+
+      if (!firebaseReady) {
+        showMessage(
+          "clientMsg",
+          "O Firebase ainda não foi configurado. Coloque a configuração do Firebase no código para salvar agendamentos online.",
+          "err"
+        );
+        return;
+      }
+
+      if (!selectedDate) {
+        showMessage("clientMsg", "Escolha uma data para o corte.", "err");
+        return;
+      }
+
+      if (!selectedSlot) {
+        showMessage("clientMsg", "Escolha um horário disponível.", "err");
+        return;
+      }
+
+      if (!name || name.length < 3) {
+        showMessage("clientMsg", "Digite seu nome completo.", "err");
+        return;
+      }
+
+      if (!phone || phone.length < 8) {
+        showMessage("clientMsg", "Digite seu WhatsApp corretamente.", "err");
+        return;
+      }
+
+      try {
+        await loadBookedSlots();
+
+        if (bookedSlots.includes(selectedSlot)) {
+          showMessage(
+            "clientMsg",
+            "Esse horário acabou de ser preenchido por outro cliente. Escolha outro horário.",
+            "err"
+          );
+          renderSlots();
+          return;
+        }
+
+        await addDoc(collection(db, "appointments"), {
+          name,
+          phone,
+          date: selectedDate,
+          time: selectedSlot,
+          status: "confirmed",
+          createdAt: serverTimestamp()
+        });
+
+        showMessage(
+          "clientMsg",
+          `Agendamento confirmado para <strong>${formatDateBR(selectedDate)}</strong> às <strong>${selectedSlot}</strong>.`,
+          "ok"
+        );
+
+        $("clientName").value = "";
+        $("clientPhone").value = "";
+        selectedSlot = "";
+
+        await loadBookedSlots();
+        renderSlots();
+      } catch (error) {
+        console.error(error);
+        showMessage("clientMsg", "Não foi possível confirmar o agendamento.", "err");
+      }
+    }
+
+    async function saveSettings() {
+      if (!firebaseReady) {
+        showMessage(
+          "settingsMsg",
+          "Configure o Firebase no código antes de salvar online.",
+          "err"
+        );
+        return;
+      }
+
+      const workdays = Array.from(document.querySelectorAll(".workday"))
+        .filter((check) => check.checked)
+        .map((check) => Number(check.value));
+
+      const startTime = $("startTime").value;
+      const endTime = $("endTime").value;
+      const slotDuration = Number($("slotDuration").value);
+      const adminPin = $("adminPin").value.trim() || "1234";
+
+      if (workdays.length === 0) {
+        showMessage("settingsMsg", "Escolha pelo menos um dia de trabalho.", "err");
+        return;
+      }
+
+      if (minutesFromTime(startTime) >= minutesFromTime(endTime)) {
+        showMessage("settingsMsg", "O horário inicial precisa ser menor que o horário final.", "err");
+        return;
+      }
+
+      settings = {
+        ...settings,
+        workdays,
+        startTime,
+        endTime,
+        slotDuration,
+        adminPin,
+        blockedDates: settings.blockedDates || []
+      };
+
+      try {
+        await setDoc(doc(db, "barbeariaRodrigues", "settings"), settings);
+        showMessage("settingsMsg", "Configurações salvas com sucesso.", "ok");
+        renderClientDates();
+        renderBlockedDates();
+      } catch (error) {
+        console.error(error);
+        showMessage("settingsMsg", "Erro ao salvar configurações.", "err");
+      }
+    }
+
+    async function addBlockedDate() {
+      const date = $("blockDate").value;
+
+      if (!date) {
+        showMessage("settingsMsg", "Escolha uma data para bloquear.", "err");
+        return;
+      }
+
+      if (!Array.isArray(settings.blockedDates)) {
+        settings.blockedDates = [];
+      }
+
+      if (!settings.blockedDates.includes(date)) {
+        settings.blockedDates.push(date);
+      }
+
+      $("blockDate").value = "";
+      await saveSettings();
+      renderBlockedDates();
+      renderClientDates();
+    }
+
+    async function removeBlockedDate(date) {
+      settings.blockedDates = (settings.blockedDates || []).filter((d) => d !== date);
+      await saveSettings();
+      renderBlockedDates();
+      renderClientDates();
+    }
+
+    function renderBlockedDates() {
+      const list = $("blockedDatesList");
+      if (!list) return;
+
+      list.innerHTML = "";
+
+      const dates = settings.blockedDates || [];
+
+      if (dates.length === 0) {
+        list.innerHTML = `<span style="color: var(--muted); font-size: 13px;">Nenhuma data bloqueada.</span>`;
+        return;
+      }
+
+      dates.sort().forEach((date) => {
+        const item = document.createElement("div");
+        item.className = "blocked-item";
+        item.innerHTML = `
+          ${formatDateBR(date)}
+          <button class="danger" type="button">x</button>
+        `;
+
+        item.querySelector("button").onclick = () => removeBlockedDate(date);
+        list.appendChild(item);
+      });
+    }
+
+    async function ownerLogin() {
+      await loadSettings();
+
+      const pin = $("ownerPassword").value.trim();
+
+      if (pin === settings.adminPin) {
+        $("ownerLoginView").classList.add("hidden");
+        $("clientView").classList.add("hidden");
+        $("ownerView").classList.remove("hidden");
+        updateClientLink();
+        loadAppointments();
+      } else {
+        showMessage("loginMsg", "Senha incorreta.", "err");
+      }
+    }
+
+    async function loadAppointments() {
+      const container = $("appointmentsList");
+      container.innerHTML = `<div class="empty">Carregando agendamentos...</div>`;
+
+      if (!firebaseReady) {
+        container.innerHTML = `
+          <div class="empty">
+            Configure o Firebase para carregar agendamentos online.
+          </div>
+        `;
+        return;
+      }
+
+      const filterDate = $("filterDate").value;
+
+      try {
+        let snap;
+
+        if (filterDate) {
+          const q = query(
+            collection(db, "appointments"),
+            where("date", "==", filterDate),
+            orderBy("time", "asc")
+          );
+          snap = await getDocs(q);
+        } else {
+          const q = query(
+            collection(db, "appointments"),
+            orderBy("date", "asc"),
+            orderBy("time", "asc")
+          );
+          snap = await getDocs(q);
+        }
+
+        const items = [];
+
+        snap.forEach((docItem) => {
+          items.push({
+            id: docItem.id,
+            ...docItem.data()
+          });
+        });
+
+        if (items.length === 0) {
+          container.innerHTML = `
+            <div class="empty">
+              Nenhum agendamento encontrado.
+            </div>
+          `;
+          return;
+        }
+
+        container.innerHTML = "";
+
+        items.forEach((item) => {
+          const phoneClean = String(item.phone || "").replace(/\D/g, "");
+          const whatsappUrl = `https://wa.me/55${phoneClean}`;
+
+          const div = document.createElement("div");
+          div.className = "appointment";
+
+          div.innerHTML = `
+            <div>
+              <strong>${item.name || "Cliente"}</strong>
+              <span>Data: ${formatDateBR(item.date)} às ${item.time}</span>
+              <span>WhatsApp:
+                <a class="whatsapp-link" href="${whatsappUrl}" target="_blank">
+                  ${item.phone || ""}
+                </a>
+              </span>
+            </div>
+
+            <button class="danger" type="button">
+              Cancelar
+            </button>
+          `;
+
+          div.querySelector("button").onclick = () => cancelAppointment(item.id);
+          container.appendChild(div);
+        });
+      } catch (error) {
+        console.error(error);
+        container.innerHTML = `
+          <div class="empty">
+            Não foi possível carregar os agendamentos.
+          </div>
+        `;
+      }
+    }
+
+    async function cancelAppointment(id) {
+      const ok = confirm("Deseja cancelar este agendamento?");
+      if (!ok) return;
+
+      try {
+        await deleteDoc(doc(db, "appointments", id));
+        loadAppointments();
+
+        if (selectedDate) {
+          await loadBookedSlots();
+          renderSlots();
+        }
+      } catch (error) {
+        console.error(error);
+        alert("Erro ao cancelar agendamento.");
+      }
+    }
+
+    function clearFilter() {
+      $("filterDate").value = "";
+      loadAppointments();
+    }
+
+    function updateClientLink() {
+      const base = window.location.origin + window.location.pathname;
+      $("clientLink").value = `${base}?cliente=1`;
+    }
+
+    async function copyClientLink() {
+      const link = $("clientLink").value;
+
+      try {
+        await navigator.clipboard.writeText(link);
+        alert("Link copiado com sucesso.");
+      } catch {
+        $("clientLink").select();
+        document.execCommand("copy");
+        alert("Link copiado.");
+      }
+    }
+
+    function openOwnerTab(tab) {
+      $("tabSchedule").classList.remove("active");
+      $("tabAppointments").classList.remove("active");
+      $("ownerSchedule").classList.add("hidden");
+      $("ownerAppointments").classList.add("hidden");
+
+      if (tab === "schedule") {
+        $("tabSchedule").classList.add("active");
+        $("ownerSchedule").classList.remove("hidden");
+      }
+
+      if (tab === "appointments") {
+        $("tabAppointments").classList.add("active");
+        $("ownerAppointments").classList.remove("hidden");
+        loadAppointments();
+      }
+    }
+
+    function showClient() {
+      $("clientView").classList.remove("hidden");
+      $("ownerLoginView").classList.add("hidden");
+      $("ownerView").classList.add("hidden");
+      renderClientDates();
+    }
+
+    function showOwnerLogin() {
+      $("clientView").classList.add("hidden");
+      $("ownerLoginView").classList.remove("hidden");
+      $("ownerView").classList.add("hidden");
+    }
+
+    window.showClient = showClient;
+    window.showOwnerLogin = showOwnerLogin;
+    window.ownerLogin = ownerLogin;
+    window.saveSettings = saveSettings;
+    window.addBlockedDate = addBlockedDate;
+    window.removeBlockedDate = removeBlockedDate;
+    window.bookAppointment = bookAppointment;
+    window.copyClientLink = copyClientLink;
+    window.openOwnerTab = openOwnerTab;
+    window.loadAppointments = loadAppointments;
+    window.clearFilter = clearFilter;
+
+    await loadSettings();
+
+    const params = new URLSearchParams(window.location.search);
+
+    if (params.get("dono") === "1" || params.get("admin") === "1") {
+      showOwnerLogin();
+    } else {
+      showClient();
+    }
+  </script>
+</body>
+</html>
