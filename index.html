@@ -110,21 +110,9 @@
       box-shadow:var(--shadow);
     }
 
-    .admin-topbar strong{
-      display:block;
-      font-size:15px;
-    }
-
-    .admin-topbar span{
-      color:var(--muted);
-      font-size:12px;
-    }
-
-    .admin-topbar-actions{
-      display:flex;
-      gap:8px;
-      flex-wrap:wrap;
-    }
+    .admin-topbar strong{display:block;font-size:15px}
+    .admin-topbar span{color:var(--muted);font-size:12px}
+    .admin-topbar-actions{display:flex;gap:8px;flex-wrap:wrap}
 
     .message{padding:13px;border-radius:16px;margin:12px 0;font-size:14px;line-height:1.4;display:none}
     .message.show{display:block}
@@ -229,6 +217,70 @@
       padding:12px;border-radius:16px;font-size:13px;line-height:1.5;margin-bottom:12px;
     }
 
+    .client-live-card{
+      margin-bottom:18px;
+      border-radius:22px;
+      border:1px solid rgba(212,160,52,.32);
+      background:linear-gradient(135deg,rgba(212,160,52,.14),rgba(255,255,255,.04));
+      box-shadow:var(--shadow);
+      padding:16px;
+    }
+
+    .client-live-card.confirmed{
+      border-color:rgba(48,209,88,.35);
+      background:linear-gradient(135deg,rgba(48,209,88,.16),rgba(255,255,255,.04));
+    }
+
+    .client-live-card.canceled{
+      border-color:rgba(255,77,77,.35);
+      background:linear-gradient(135deg,rgba(255,77,77,.14),rgba(255,255,255,.04));
+    }
+
+    .client-live-card h3{
+      margin:0 0 8px;
+      color:var(--text);
+    }
+
+    .client-live-card p{
+      margin:6px 0;
+      color:var(--muted);
+      font-size:14px;
+    }
+
+    .owner-popup-wrap{
+      display:grid;
+      gap:12px;
+      margin-bottom:16px;
+    }
+
+    .owner-popup{
+      background:linear-gradient(135deg,rgba(212,160,52,.18),rgba(255,255,255,.05));
+      border:1px solid rgba(212,160,52,.35);
+      border-radius:22px;
+      padding:16px;
+      box-shadow:var(--shadow);
+      animation:pulseNotice 1s ease-in-out infinite alternate;
+    }
+
+    .owner-popup h3{
+      color:var(--text);
+      margin:0 0 8px;
+      font-size:18px;
+    }
+
+    .owner-popup p{
+      margin:5px 0;
+      color:var(--muted);
+      font-size:14px;
+    }
+
+    .owner-popup-actions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:12px;
+    }
+
     @media(max-width:850px){
       .app{padding:12px}.grid{grid-template-columns:1fr}.brand h1{font-size:22px}.brand p{font-size:12px}
       .logo{width:54px;height:54px;font-size:27px;border-radius:18px}.hero{padding:18px;border-radius:24px}
@@ -237,6 +289,7 @@
       .tab{min-width:100%}.appointment,.client-item{grid-template-columns:1fr}
       .admin-topbar{align-items:stretch}
       .admin-topbar-actions{width:100%}
+      .owner-popup-actions{width:100%}
     }
   </style>
 </head>
@@ -254,6 +307,14 @@
     </section>
 
     <div id="firebaseWarning" class="message info show">Conectando ao Firebase...</div>
+
+    <section id="clientLiveStatusView" class="client-shell hidden">
+      <div id="clientLiveStatusCard" class="client-live-card">
+        <h3 id="clientLiveStatusTitle">Acompanhando agendamento</h3>
+        <p id="clientLiveStatusText"></p>
+        <p id="clientLiveStatusDetails"></p>
+      </div>
+    </section>
 
     <section id="clientHomeView" class="client-shell">
       <div class="card">
@@ -457,6 +518,8 @@
       <div id="newAppointmentAlert" class="message new">
         🔔 Novo movimento na agenda! Veja a lista abaixo.
       </div>
+
+      <div id="ownerPopupContainer" class="owner-popup-wrap"></div>
 
       <div class="tabs">
         <button id="tabSchedule" class="tab active" onclick="openOwnerTab('schedule')">Configurações</button>
@@ -703,6 +766,8 @@
     let clientsCache = [];
     let currentClient = null;
     let unsubscribeAppointments = null;
+    let unsubscribeClientAppointment = null;
+    let activeClientAppointmentId = "";
     let firstRealtimeLoad = true;
     let knownAppointmentIds = new Set();
     let lastStatusById = new Map();
@@ -727,6 +792,10 @@
         "ownerLoginView",
         "ownerView"
       ].forEach(id => $(id).classList.add("hidden"));
+
+      if(viewId === "ownerView" || viewId === "ownerLoginView"){
+        $("clientLiveStatusView").classList.add("hidden");
+      }
 
       $(viewId).classList.remove("hidden");
     }
@@ -1177,7 +1246,7 @@
           return;
         }
 
-        await addDoc(collection(db,"appointments"),{
+        const appointmentRef = await addDoc(collection(db,"appointments"),{
           clientId:client.id,
           name:client.name,
           phone:client.phone,
@@ -1188,14 +1257,26 @@
           updatedAt:serverTimestamp()
         });
 
+        activeClientAppointmentId = appointmentRef.id;
+        watchClientAppointment(appointmentRef.id);
+
+        showClientLiveStatus({
+          id: appointmentRef.id,
+          name: client.name,
+          phone: client.phone,
+          date,
+          time,
+          status: "pending"
+        });
+
         showMessage(
           messageBoxId,
-          `✅ Seu agendamento foi confirmado com sucesso!<br><br>
+          `✅ Seu agendamento foi solicitado com sucesso!<br><br>
           <strong>Data:</strong> ${formatDateBR(date)}<br>
           <strong>Horário:</strong> ${time}<br><br>
-          Aguarde a confirmação da barbearia pelo WhatsApp.`,
+          Status: <strong>Aguardando confirmação da barbearia.</strong>`,
           "ok",
-          10000
+          0
         );
 
         selectedSlot = "";
@@ -1214,6 +1295,75 @@
         console.error(error);
         showMessage(messageBoxId,"Não foi possível confirmar o agendamento.","err");
       }
+    }
+
+    function showClientLiveStatus(item){
+      if(!item) return;
+
+      const status = item.status || "pending";
+      const card = $("clientLiveStatusCard");
+
+      $("clientLiveStatusView").classList.remove("hidden");
+
+      card.classList.remove("confirmed","canceled");
+
+      if(status === "confirmed"){
+        card.classList.add("confirmed");
+        $("clientLiveStatusTitle").innerHTML = "✅ Seu horário foi confirmado!";
+        $("clientLiveStatusText").innerHTML = "A barbearia confirmou seu agendamento com sucesso.";
+      }else if(isCanceledStatus(status)){
+        card.classList.add("canceled");
+        $("clientLiveStatusTitle").innerHTML = "⚠️ Agendamento cancelado";
+        $("clientLiveStatusText").innerHTML = "Esse horário foi cancelado.";
+      }else{
+        $("clientLiveStatusTitle").innerHTML = "⏳ Aguardando confirmação";
+        $("clientLiveStatusText").innerHTML = "Seu agendamento foi solicitado. Aguarde a confirmação da barbearia.";
+      }
+
+      $("clientLiveStatusDetails").innerHTML = `
+        <strong>Data:</strong> ${formatDateBR(item.date)}<br>
+        <strong>Horário:</strong> ${item.time}
+      `;
+    }
+
+    function watchClientAppointment(appointmentId){
+      if(!appointmentId || !firebaseReady) return;
+
+      if(unsubscribeClientAppointment){
+        unsubscribeClientAppointment();
+        unsubscribeClientAppointment = null;
+      }
+
+      unsubscribeClientAppointment = onSnapshot(doc(db,"appointments",appointmentId),(snap)=>{
+        if(!snap.exists()) return;
+
+        const item = {
+          id: snap.id,
+          ...snap.data()
+        };
+
+        showClientLiveStatus(item);
+
+        if(item.status === "confirmed"){
+          showMessage(
+            "clientMsg",
+            `✅ Seu horário foi confirmado com sucesso!<br><br>
+            <strong>Data:</strong> ${formatDateBR(item.date)}<br>
+            <strong>Horário:</strong> ${item.time}`,
+            "ok",
+            0
+          );
+
+          showMessage(
+            "availableMsg",
+            `✅ Seu horário foi confirmado com sucesso!<br><br>
+            <strong>Data:</strong> ${formatDateBR(item.date)}<br>
+            <strong>Horário:</strong> ${item.time}`,
+            "ok",
+            0
+          );
+        }
+      });
     }
 
     async function renderAvailableTimes(){
@@ -1317,6 +1467,7 @@
 
     async function openClientAppointments(){
       showOnly("clientAppointmentsView");
+      $("clientLiveStatusView").classList.remove("hidden");
       $("myAppointmentsList").innerHTML = "";
 
       if(currentClient && currentClient.phone){
@@ -1627,7 +1778,7 @@
 
         if(!firstRealtimeLoad && hasNewAppointment){
           playBeep();
-          showOwnerAlert("🔔 Novo agendamento recebido! Veja a lista abaixo.");
+          showOwnerAlert("🔔 Novo agendamento recebido! Confirme o horário no balão abaixo.");
         }
 
         if(!firstRealtimeLoad && hasClientCancellation){
@@ -1649,7 +1800,51 @@
         }
 
         firstRealtimeLoad = false;
+        renderOwnerPendingPopups();
         renderAppointmentsList();
+      });
+    }
+
+    function renderOwnerPendingPopups(){
+      const container = $("ownerPopupContainer");
+      if(!container) return;
+
+      const pendingItems = appointmentsCache.filter(item => (item.status || "pending") === "pending");
+
+      if(pendingItems.length === 0){
+        container.innerHTML = "";
+        return;
+      }
+
+      container.innerHTML = "";
+
+      pendingItems.forEach(item=>{
+        const message = buildConfirmationMessage(item);
+        const whatsappUrl = makeWhatsAppUrl(item.phone,message);
+
+        const div = document.createElement("div");
+        div.className = "owner-popup";
+        div.innerHTML = `
+          <h3>🔔 Novo agendamento aguardando confirmação</h3>
+          <p><strong>Cliente:</strong> ${item.name || "Cliente"}</p>
+          <p><strong>Data:</strong> ${formatDateBR(item.date)}</p>
+          <p><strong>Horário:</strong> ${item.time}</p>
+          <p><strong>WhatsApp:</strong> ${item.phone || ""}</p>
+
+          <div class="owner-popup-actions">
+            <button class="success" type="button" data-action="confirm-whatsapp">
+              Confirmar pelo WhatsApp
+            </button>
+            <button class="blue" type="button" data-action="mark-confirmed">
+              Marcar confirmado
+            </button>
+          </div>
+        `;
+
+        div.querySelector('[data-action="confirm-whatsapp"]').onclick = () => confirmByWhatsapp(item.id,whatsappUrl);
+        div.querySelector('[data-action="mark-confirmed"]').onclick = () => markAppointmentConfirmed(item.id);
+
+        container.appendChild(div);
       });
     }
 
@@ -1664,6 +1859,7 @@
         snap.forEach(docItem=>items.push({id:docItem.id, ...docItem.data()}));
 
         appointmentsCache = sortAppointments(items);
+        renderOwnerPendingPopups();
         renderAppointmentsList();
       }catch(error){
         console.error(error);
@@ -1972,10 +2168,17 @@
       }
 
       showOnly("clientHomeView");
+
+      if(activeClientAppointmentId){
+        $("clientLiveStatusView").classList.remove("hidden");
+      }
     }
 
     function openGuidedBooking(){
       showOnly("guidedView");
+      if(activeClientAppointmentId){
+        $("clientLiveStatusView").classList.remove("hidden");
+      }
       updateClientUi();
       renderMonthOptions();
       renderClientDates();
@@ -1983,6 +2186,9 @@
 
     async function openAvailableTimes(){
       showOnly("availableView");
+      if(activeClientAppointmentId){
+        $("clientLiveStatusView").classList.remove("hidden");
+      }
       $("quickConfirmBox").classList.add("hidden");
       await renderAvailableTimes();
     }
