@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
   <title>Barbearia Rodrigues</title>
 
   <style>
@@ -682,6 +683,11 @@
             🕒 Ver horários disponíveis
             <small>Veja os próximos horários livres e toque para agendar.</small>
           </button>
+
+          <button class="secondary big-action" onclick="openClientAppointments()">
+            📅 Meus agendamentos
+            <small>Veja ou desmarque seu corte agendado.</small>
+          </button>
         </div>
 
         <div class="admin-mini">
@@ -798,6 +804,28 @@
 
           <button class="primary" onclick="bookAppointment()">Confirmar agendamento</button>
         </div>
+      </div>
+    </section>
+
+    <section id="clientAppointmentsView" class="client-shell hidden">
+      <div class="card">
+        <div class="back-row">
+          <button class="secondary" onclick="showClientHome()">← Voltar</button>
+        </div>
+
+        <h2>Meus agendamentos</h2>
+        <p style="color:var(--muted);margin-top:0;">Consulte ou desmarque um corte agendado.</p>
+
+        <div id="myAppointmentsMsg" class="message"></div>
+
+        <div id="myAppointmentsLookup" class="step-card">
+          <label>Digite seu WhatsApp</label>
+          <input id="myAppointmentsPhone" type="tel" placeholder="Ex: 11999999999" />
+          <br><br>
+          <button class="primary" onclick="loadMyAppointments()">Buscar meus agendamentos</button>
+        </div>
+
+        <div id="myAppointmentsList"></div>
       </div>
     </section>
 
@@ -949,7 +977,7 @@
             <p><strong>1.</strong> Troque o nome da barbearia.</p>
             <p><strong>2.</strong> Coloque o WhatsApp do dono.</p>
             <p><strong>3.</strong> Troque e-mail e senha do administrador.</p>
-            <p><strong>4.</strong> Depois use um domínio próprio, exemplo: agenda.barbeariarodrigues.com.br</p>
+            <p><strong>4.</strong> Depois use um domínio próprio.</p>
           </div>
         </div>
       </div>
@@ -1036,6 +1064,10 @@
     let db = null;
     let firebaseReady = false;
 
+    function $(id) {
+      return document.getElementById(id);
+    }
+
     try {
       app = initializeApp(firebaseConfig);
       db = getFirestore(app);
@@ -1078,15 +1110,13 @@
     let knownAppointmentIds = new Set();
     let audioContextStarted = false;
 
-    function $(id) {
-      return document.getElementById(id);
-    }
-
     function showMessage(id, text, type = "info", timeout = 4500) {
       const el = $(id);
       if (!el) return;
+
       el.className = "message show " + type;
       el.innerHTML = text;
+
       if (timeout > 0) {
         setTimeout(() => {
           el.className = "message";
@@ -1099,6 +1129,7 @@
         "clientHomeView",
         "availableView",
         "guidedView",
+        "clientAppointmentsView",
         "ownerLoginView",
         "ownerView"
       ].forEach(id => $(id).classList.add("hidden"));
@@ -1176,6 +1207,7 @@
     function playBeep() {
       try {
         if (!audioContextStarted) return;
+
         const AudioContext = window.AudioContext || window.webkitAudioContext;
         if (!AudioContext) return;
 
@@ -1201,6 +1233,7 @@
       const el = $("newAppointmentAlert");
       el.className = "message new show";
       el.innerHTML = "🔔 Novo agendamento recebido! Veja a lista abaixo.";
+
       setTimeout(() => {
         el.className = "message new";
       }, 9000);
@@ -1218,8 +1251,10 @@
       try {
         const saved = localStorage.getItem("barbeariaClient");
         if (!saved) return null;
+
         const parsed = JSON.parse(saved);
         if (!parsed || !parsed.name || !parsed.phone) return null;
+
         return parsed;
       } catch {
         return null;
@@ -1347,11 +1382,14 @@
       try {
         currentClient = await saveOrUpdateClient(name, phone);
         saveClientToStorage(currentClient);
+
         $("registerName").value = "";
         $("registerPhone").value = "";
+
         updateClientUi();
         renderMonthOptions();
         renderClientDates();
+
         showMessage("clientMsg", "Cadastro realizado. Agora escolha o mês, o dia e o horário.", "ok", 6000);
       } catch (error) {
         console.error(error);
@@ -1372,6 +1410,7 @@
     function renderMonthOptions() {
       const select = $("monthSelect");
       if (!select) return;
+
       select.innerHTML = "";
 
       const today = new Date();
@@ -1394,6 +1433,7 @@
       if (!container) return;
 
       container.innerHTML = "";
+
       const monthValue = $("monthSelect").value;
       selectedMonth = monthValue;
       selectedDate = "";
@@ -1410,6 +1450,7 @@
       for (let day = 1; day <= lastDay.getDate(); day++) {
         const date = new Date(year, month - 1, day);
         date.setHours(0,0,0,0);
+
         if (date < today) continue;
 
         const dateValue = toDateInputValue(date);
@@ -1428,8 +1469,10 @@
         btn.onclick = async () => {
           selectedDate = dateValue;
           selectedSlot = "";
+
           document.querySelectorAll(".date-btn").forEach(b => b.classList.remove("active"));
           btn.classList.add("active");
+
           await loadBookedSlots();
           renderSlots();
         };
@@ -1518,10 +1561,28 @@
 
     async function createAppointment(client, date, time, messageBoxId) {
       try {
+        const confirmar = confirm(
+          `Você quer confirmar este horário?\n\nData: ${formatDateBR(date)}\nHorário: ${time}`
+        );
+
+        if (!confirmar) {
+          showMessage(
+            messageBoxId,
+            "Agendamento cancelado. Escolha outro horário, se desejar.",
+            "info",
+            5000
+          );
+          return;
+        }
+
         const takenSlots = await loadBookedSlotsForDate(date);
 
         if (takenSlots.includes(time)) {
-          showMessage(messageBoxId, "Esse horário acabou de ser preenchido. Escolha outro horário.", "err");
+          showMessage(
+            messageBoxId,
+            "Esse horário acabou de ser preenchido. Escolha outro horário.",
+            "err"
+          );
           return;
         }
 
@@ -1537,9 +1598,12 @@
 
         showMessage(
           messageBoxId,
-          `Agendamento solicitado para <strong>${formatDateBR(date)}</strong> às <strong>${time}</strong>. Aguarde confirmação pelo WhatsApp.`,
+          `✅ Seu agendamento foi confirmado com sucesso!<br><br>
+          <strong>Data:</strong> ${formatDateBR(date)}<br>
+          <strong>Horário:</strong> ${time}<br><br>
+          Aguarde a confirmação da barbearia pelo WhatsApp.`,
           "ok",
-          8000
+          10000
         );
 
         selectedSlot = "";
@@ -1566,6 +1630,7 @@
 
       const today = new Date();
       today.setHours(0,0,0,0);
+
       const slots = generateSlots();
       let daysShown = 0;
       let html = "";
@@ -1610,8 +1675,10 @@
 
     function selectQuickSlot(date, time) {
       quickSelected = { date, time };
+
       $("quickConfirmBox").classList.remove("hidden");
       $("quickConfirmText").innerHTML = `
+        Você quer agendar para este horário?<br><br>
         Data: <strong>${formatDateBR(date)}</strong><br>
         Horário: <strong>${time}</strong>
       `;
@@ -1654,6 +1721,113 @@
       }
 
       await createAppointment(client, quickSelected.date, quickSelected.time, "availableMsg");
+    }
+
+    async function openClientAppointments() {
+      showOnly("clientAppointmentsView");
+
+      $("myAppointmentsList").innerHTML = "";
+
+      if (currentClient && currentClient.phone) {
+        $("myAppointmentsPhone").value = currentClient.phone;
+        await loadMyAppointments();
+      }
+    }
+
+    async function loadMyAppointments() {
+      const phone = cleanPhone($("myAppointmentsPhone").value);
+
+      if (!phone || phone.length < 8) {
+        showMessage("myAppointmentsMsg", "Digite seu WhatsApp corretamente.", "err");
+        return;
+      }
+
+      const container = $("myAppointmentsList");
+      container.innerHTML = `<div class="empty">Buscando seus agendamentos...</div>`;
+
+      try {
+        const q = query(collection(db, "appointments"), where("phone", "==", phone));
+        const snap = await getDocs(q);
+        const items = [];
+
+        snap.forEach(docItem => {
+          items.push({
+            id: docItem.id,
+            ...docItem.data()
+          });
+        });
+
+        const today = new Date();
+        today.setHours(0,0,0,0);
+
+        const activeItems = items
+          .filter(item => {
+            if (!item.date) return true;
+            const [y,m,d] = item.date.split("-").map(Number);
+            const itemDate = new Date(y, m - 1, d);
+            itemDate.setHours(0,0,0,0);
+            return itemDate >= today;
+          })
+          .sort((a,b) => `${a.date || ""} ${a.time || ""}`.localeCompare(`${b.date || ""} ${b.time || ""}`));
+
+        if (activeItems.length === 0) {
+          container.innerHTML = `<div class="empty">Nenhum agendamento futuro encontrado para este WhatsApp.</div>`;
+          return;
+        }
+
+        container.innerHTML = "";
+
+        activeItems.forEach(item => {
+          const div = document.createElement("div");
+          div.className = "appointment";
+
+          const status = item.status === "confirmed" ? "Confirmado" : "Aguardando confirmação";
+          const statusClass = item.status === "confirmed" ? "confirmed" : "pending";
+
+          div.innerHTML = `
+            <div>
+              <strong>${item.name || "Cliente"}</strong>
+              <span>Data: ${formatDateBR(item.date)} às ${item.time}</span>
+              <span class="status ${statusClass}">${status}</span>
+            </div>
+
+            <div class="appointment-actions">
+              <button class="danger" onclick="cancelMyAppointment('${item.id}', '${item.date}', '${item.time}')">
+                Desmarcar corte
+              </button>
+            </div>
+          `;
+
+          container.appendChild(div);
+        });
+      } catch (error) {
+        console.error(error);
+        container.innerHTML = `<div class="empty">Não foi possível buscar seus agendamentos.</div>`;
+      }
+    }
+
+    async function cancelMyAppointment(id, date, time) {
+      const ok = confirm(
+        `Deseja desmarcar este corte?\n\nData: ${formatDateBR(date)}\nHorário: ${time}`
+      );
+
+      if (!ok) return;
+
+      try {
+        await deleteDoc(doc(db, "appointments", id));
+
+        showMessage(
+          "myAppointmentsMsg",
+          "✅ Seu corte foi desmarcado com sucesso.",
+          "ok",
+          7000
+        );
+
+        await loadMyAppointments();
+      } catch (error) {
+        console.error(error);
+        showMessage("myAppointmentsMsg", "Não foi possível desmarcar o corte.", "err");
+      }
     }
 
     async function saveSettings() {
@@ -1726,6 +1900,7 @@
       if (!list) return;
 
       list.innerHTML = "";
+
       const dates = settings.blockedDates || [];
 
       if (dates.length === 0) {
@@ -1815,7 +1990,9 @@
       try {
         const snap = await getDocs(collection(db, "appointments"));
         const items = [];
+
         snap.forEach(docItem => items.push({ id: docItem.id, ...docItem.data() }));
+
         appointmentsCache = sortAppointments(items);
         renderAppointmentsList();
       } catch (error) {
@@ -1832,6 +2009,7 @@
       let items = [...appointmentsCache];
 
       if (filterDate) items = items.filter(item => item.date === filterDate);
+
       items = sortAppointments(items);
 
       if (items.length === 0) {
@@ -1862,7 +2040,7 @@
           <div class="appointment-actions">
             <button class="success" type="button" data-action="confirm">Confirmar pelo WhatsApp</button>
             <button class="blue" type="button" data-action="mark">Marcar confirmado</button>
-            <button class="danger" type="button" data-action="cancel">Cancelar</button>
+            <button class="danger" type="button" data-action="cancel">Cancelar corte</button>
           </div>
         `;
 
@@ -1906,6 +2084,7 @@
           status: "confirmed",
           confirmedAt: serverTimestamp()
         });
+
         showMessage("appointmentsMsg", "Agendamento marcado como confirmado.", "ok");
         await loadAppointments();
       } catch (error) {
@@ -1915,12 +2094,12 @@
     }
 
     async function cancelAppointment(id) {
-      const ok = confirm("Deseja cancelar este agendamento?");
+      const ok = confirm("Deseja cancelar/desmarcar este corte?");
       if (!ok) return;
 
       try {
         await deleteDoc(doc(db, "appointments", id));
-        showMessage("appointmentsMsg", "Agendamento cancelado.", "ok");
+        showMessage("appointmentsMsg", "Corte cancelado com sucesso.", "ok");
         await loadAppointments();
 
         if (selectedDate) {
@@ -1947,7 +2126,9 @@
       try {
         const snap = await getDocs(collection(db, "clientes"));
         const items = [];
+
         snap.forEach(docItem => items.push({ id: docItem.id, ...docItem.data() }));
+
         clientsCache = sortClients(items);
         renderClientsList();
       } catch (error) {
@@ -1997,11 +2178,29 @@
 
           <div class="appointment-actions">
             <a class="btn success" href="${whatsappUrl}" target="_blank">Chamar no WhatsApp</a>
+            <button class="danger" type="button" onclick="deleteClient('${item.id}')">Excluir cliente</button>
           </div>
         `;
 
         container.appendChild(div);
       });
+    }
+
+    async function deleteClient(id) {
+      const ok = confirm(
+        "Deseja excluir este cliente da lista?\n\nIsso não cancela automaticamente cortes já agendados."
+      );
+
+      if (!ok) return;
+
+      try {
+        await deleteDoc(doc(db, "clientes", id));
+        showMessage("clientsMsg", "Cliente excluído com sucesso.", "ok", 6000);
+        await loadClients();
+      } catch (error) {
+        console.error(error);
+        showMessage("clientsMsg", "Não foi possível excluir o cliente.", "err");
+      }
     }
 
     function updateClientLink() {
@@ -2091,6 +2290,10 @@
     window.renderClientDates = renderClientDates;
     window.selectQuickSlot = selectQuickSlot;
     window.confirmQuickBooking = confirmQuickBooking;
+    window.openClientAppointments = openClientAppointments;
+    window.loadMyAppointments = loadMyAppointments;
+    window.cancelMyAppointment = cancelMyAppointment;
+    window.deleteClient = deleteClient;
 
     currentClient = loadClientFromStorage();
 
