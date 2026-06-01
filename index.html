@@ -9,15 +9,14 @@
   <style>
     :root {
       --bg: #080808;
-      --bg2: #111111;
       --card: #181818;
-      --card2: #202020;
       --text: #f5f5f5;
       --muted: #b8b8b8;
       --gold: #d4a034;
       --gold2: #f0c76c;
       --danger: #ff4d4d;
       --success: #30d158;
+      --blue: #4da3ff;
       --border: rgba(255,255,255,0.08);
       --shadow: 0 18px 45px rgba(0,0,0,0.45);
       --radius: 22px;
@@ -153,6 +152,12 @@
       background: rgba(48,209,88,0.12);
       color: #aef5c0;
       border: 1px solid rgba(48,209,88,0.25);
+    }
+
+    .blue {
+      background: rgba(77,163,255,0.13);
+      color: #b9dcff;
+      border: 1px solid rgba(77,163,255,0.25);
     }
 
     .grid {
@@ -349,17 +354,34 @@
       margin-top: 3px;
     }
 
-    .badge {
+    .appointment-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .status {
       display: inline-flex;
       align-items: center;
       justify-content: center;
       padding: 7px 10px;
       border-radius: 99px;
-      background: rgba(212,160,52,0.14);
-      color: var(--gold2);
       font-size: 12px;
       font-weight: 900;
-      border: 1px solid rgba(212,160,52,0.23);
+      border: 1px solid transparent;
+      margin-top: 8px;
+    }
+
+    .status.pending {
+      background: rgba(212,160,52,0.14);
+      color: var(--gold2);
+      border-color: rgba(212,160,52,0.28);
+    }
+
+    .status.confirmed {
+      background: rgba(48,209,88,0.12);
+      color: #aef5c0;
+      border-color: rgba(48,209,88,0.25);
     }
 
     .message {
@@ -391,6 +413,22 @@
       background: rgba(212,160,52,0.12);
       color: #ffe2a1;
       border: 1px solid rgba(212,160,52,0.23);
+    }
+
+    .message.new {
+      background: rgba(48,209,88,0.14);
+      color: #bcffcb;
+      border: 1px solid rgba(48,209,88,0.35);
+      animation: pulseNotice 1s ease-in-out infinite alternate;
+    }
+
+    @keyframes pulseNotice {
+      from {
+        box-shadow: 0 0 0 rgba(48,209,88,0);
+      }
+      to {
+        box-shadow: 0 0 22px rgba(48,209,88,0.25);
+      }
     }
 
     .empty {
@@ -465,6 +503,17 @@
       font-size: 11px;
     }
 
+    .sound-box {
+      background: rgba(77,163,255,0.10);
+      border: 1px solid rgba(77,163,255,0.20);
+      color: #cfe8ff;
+      padding: 12px;
+      border-radius: 16px;
+      font-size: 13px;
+      line-height: 1.5;
+      margin-bottom: 12px;
+    }
+
     @media (max-width: 850px) {
       .grid {
         grid-template-columns: 1fr;
@@ -484,6 +533,14 @@
 
       .hero {
         padding: 20px;
+      }
+
+      .appointment {
+        grid-template-columns: 1fr;
+      }
+
+      .appointment-actions {
+        flex-direction: column;
       }
     }
   </style>
@@ -527,11 +584,13 @@
       <div id="slotList" class="slots"></div>
 
       <h3>3. Seus dados</h3>
+
       <div class="form-row">
         <div>
           <label>Seu nome</label>
           <input id="clientName" type="text" placeholder="Ex: João Silva" />
         </div>
+
         <div>
           <label>WhatsApp</label>
           <input id="clientPhone" type="tel" placeholder="Ex: 11999999999" />
@@ -549,6 +608,7 @@
 
     <section id="ownerLoginView" class="card login-box hidden">
       <h2>Entrar no painel do dono</h2>
+
       <p style="color: var(--muted); line-height: 1.5;">
         Digite a senha do dono para configurar horários e ver os agendamentos.
       </p>
@@ -564,10 +624,15 @@
     </section>
 
     <section id="ownerView" class="hidden">
+      <div id="newAppointmentAlert" class="message new">
+        🔔 Novo agendamento recebido! Veja a lista abaixo.
+      </div>
+
       <div class="tabs">
         <button id="tabSchedule" class="tab active" onclick="openOwnerTab('schedule')">
           Configurações
         </button>
+
         <button id="tabAppointments" class="tab" onclick="openOwnerTab('appointments')">
           Agendamentos
         </button>
@@ -576,6 +641,12 @@
       <div id="ownerSchedule" class="grid">
         <div class="card">
           <h2>Configurar atendimento</h2>
+
+          <div class="sound-box">
+            🔔 O painel do dono agora avisa em tempo real quando chegar um novo agendamento.
+            Para o bip tocar, deixe o painel aberto no celular.
+          </div>
+
           <div id="settingsMsg" class="message"></div>
 
           <h3>Dias de trabalho</h3>
@@ -694,8 +765,9 @@
           <div class="empty" style="text-align:left;">
             <p><strong>1.</strong> O dono configura os dias e horários.</p>
             <p><strong>2.</strong> O cliente entra no link e escolhe um horário vago.</p>
-            <p><strong>3.</strong> Depois que alguém agenda, aquele horário não aparece mais para outros clientes.</p>
-            <p><strong>4.</strong> O dono consegue ver nome, WhatsApp, data e horário do cliente.</p>
+            <p><strong>3.</strong> Depois que alguém agenda, aquele horário some para outros clientes.</p>
+            <p><strong>4.</strong> O painel do dono toca um bip quando chegar novo agendamento.</p>
+            <p><strong>5.</strong> O dono confirma pelo WhatsApp com mensagem pronta.</p>
           </div>
         </div>
       </div>
@@ -711,6 +783,8 @@
             Atualizar
           </button>
         </div>
+
+        <div id="appointmentsMsg" class="message"></div>
 
         <div class="form-row">
           <div>
@@ -742,14 +816,15 @@
       doc,
       getDoc,
       setDoc,
+      updateDoc,
       collection,
       addDoc,
       getDocs,
       query,
       where,
-      orderBy,
       deleteDoc,
-      serverTimestamp
+      serverTimestamp,
+      onSnapshot
     } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
     const firebaseConfig = {
@@ -795,19 +870,38 @@
     let selectedDate = "";
     let selectedSlot = "";
     let bookedSlots = [];
+    let appointmentsCache = [];
+    let unsubscribeAppointments = null;
+    let firstRealtimeLoad = true;
+    let knownAppointmentIds = new Set();
+    let audioContextStarted = false;
 
     const $ = (id) => document.getElementById(id);
 
-    function showMessage(id, text, type = "info") {
+    function showMessage(id, text, type = "info", timeout = 4500) {
       const el = $(id);
       if (!el) return;
 
       el.className = "message show " + type;
       el.innerHTML = text;
 
+      if (timeout > 0) {
+        setTimeout(() => {
+          el.className = "message";
+        }, timeout);
+      }
+    }
+
+    function showNewAppointmentAlert() {
+      const el = $("newAppointmentAlert");
+      if (!el) return;
+
+      el.className = "message new show";
+      el.innerHTML = "🔔 Novo agendamento recebido! Veja a lista abaixo.";
+
       setTimeout(() => {
-        el.className = "message";
-      }, 4500);
+        el.className = "message new";
+      }, 9000);
     }
 
     function formatDateBR(dateStr) {
@@ -861,6 +955,81 @@
       }
 
       return slots;
+    }
+
+    function sortAppointments(items) {
+      return items.sort((a, b) => {
+        const aKey = `${a.date || ""} ${a.time || ""}`;
+        const bKey = `${b.date || ""} ${b.time || ""}`;
+        return aKey.localeCompare(bKey);
+      });
+    }
+
+    function cleanPhone(phone) {
+      return String(phone || "").replace(/\D/g, "");
+    }
+
+    function makeWhatsAppUrl(phone, message) {
+      const phoneClean = cleanPhone(phone);
+      if (!phoneClean) return "#";
+
+      let finalPhone = phoneClean;
+
+      if (!finalPhone.startsWith("55")) {
+        finalPhone = "55" + finalPhone;
+      }
+
+      return `https://wa.me/${finalPhone}?text=${encodeURIComponent(message)}`;
+    }
+
+    function startAudioContext() {
+      audioContextStarted = true;
+    }
+
+    function playBeep() {
+      try {
+        if (!audioContextStarted) return;
+
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        if (!AudioContext) return;
+
+        const ctx = new AudioContext();
+        const oscillator = ctx.createOscillator();
+        const gain = ctx.createGain();
+
+        oscillator.type = "sine";
+        oscillator.frequency.value = 880;
+
+        gain.gain.setValueAtTime(0.0001, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.45, ctx.currentTime + 0.03);
+        gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.45);
+
+        oscillator.connect(gain);
+        gain.connect(ctx.destination);
+
+        oscillator.start();
+        oscillator.stop(ctx.currentTime + 0.5);
+
+        setTimeout(() => {
+          const oscillator2 = ctx.createOscillator();
+          const gain2 = ctx.createGain();
+
+          oscillator2.type = "sine";
+          oscillator2.frequency.value = 1175;
+
+          gain2.gain.setValueAtTime(0.0001, ctx.currentTime);
+          gain2.gain.exponentialRampToValueAtTime(0.35, ctx.currentTime + 0.03);
+          gain2.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.35);
+
+          oscillator2.connect(gain2);
+          gain2.connect(ctx.destination);
+
+          oscillator2.start();
+          oscillator2.stop(ctx.currentTime + 0.4);
+        }, 220);
+      } catch (error) {
+        console.error("Erro no bip:", error);
+      }
     }
 
     async function loadSettings() {
@@ -1092,14 +1261,15 @@
           phone,
           date: selectedDate,
           time: selectedSlot,
-          status: "confirmed",
+          status: "pending",
           createdAt: serverTimestamp()
         });
 
         showMessage(
           "clientMsg",
-          `Agendamento confirmado para <strong>${formatDateBR(selectedDate)}</strong> às <strong>${selectedSlot}</strong>.`,
-          "ok"
+          `Agendamento solicitado para <strong>${formatDateBR(selectedDate)}</strong> às <strong>${selectedSlot}</strong>. Aguarde a confirmação da barbearia pelo WhatsApp.`,
+          "ok",
+          8000
         );
 
         $("clientName").value = "";
@@ -1251,15 +1421,92 @@
       const pin = $("ownerPassword").value.trim();
 
       if (pin === settings.adminPin) {
+        startAudioContext();
+
         $("ownerLoginView").classList.add("hidden");
         $("clientView").classList.add("hidden");
         $("ownerView").classList.remove("hidden");
 
         updateClientLink();
+        startRealtimeAppointments();
         loadAppointments();
       } else {
         showMessage("loginMsg", "Senha incorreta.", "err");
       }
+    }
+
+    function startRealtimeAppointments() {
+      if (!firebaseReady) return;
+
+      if (unsubscribeAppointments) {
+        unsubscribeAppointments();
+        unsubscribeAppointments = null;
+      }
+
+      firstRealtimeLoad = true;
+      knownAppointmentIds = new Set();
+
+      unsubscribeAppointments = onSnapshot(
+        collection(db, "appointments"),
+        (snapshot) => {
+          let hasNewAppointment = false;
+
+          snapshot.docChanges().forEach((change) => {
+            const id = change.doc.id;
+            const data = change.doc.data();
+
+            if (change.type === "added") {
+              if (!knownAppointmentIds.has(id) && !firstRealtimeLoad) {
+                hasNewAppointment = true;
+              }
+
+              knownAppointmentIds.add(id);
+            }
+
+            if (change.type === "removed") {
+              knownAppointmentIds.delete(id);
+            }
+          });
+
+          const items = [];
+
+          snapshot.forEach((docItem) => {
+            items.push({
+              id: docItem.id,
+              ...docItem.data()
+            });
+          });
+
+          appointmentsCache = sortAppointments(items);
+
+          if (!firstRealtimeLoad && hasNewAppointment) {
+            playBeep();
+            showNewAppointmentAlert();
+
+            if (!$("ownerAppointments").classList.contains("hidden")) {
+              showMessage(
+                "appointmentsMsg",
+                "🔔 Novo agendamento recebido!",
+                "ok",
+                7000
+              );
+            }
+          }
+
+          firstRealtimeLoad = false;
+
+          renderAppointmentsList();
+        },
+        (error) => {
+          console.error(error);
+          showMessage(
+            "appointmentsMsg",
+            "Não foi possível escutar novos agendamentos em tempo real. Verifique as regras do Firestore.",
+            "err",
+            8000
+          );
+        }
+      );
     }
 
     async function loadAppointments() {
@@ -1281,29 +1528,8 @@
         return;
       }
 
-      const filterDate = $("filterDate").value;
-
       try {
-        let snap;
-
-        if (filterDate) {
-          const q = query(
-            collection(db, "appointments"),
-            where("date", "==", filterDate),
-            orderBy("time", "asc")
-          );
-
-          snap = await getDocs(q);
-        } else {
-          const q = query(
-            collection(db, "appointments"),
-            orderBy("date", "asc"),
-            orderBy("time", "asc")
-          );
-
-          snap = await getDocs(q);
-        }
-
+        const snap = await getDocs(collection(db, "appointments"));
         const items = [];
 
         snap.forEach((docItem) => {
@@ -1313,48 +1539,8 @@
           });
         });
 
-        if (items.length === 0) {
-          container.innerHTML = `
-            <div class="empty">
-              Nenhum agendamento encontrado.
-            </div>
-          `;
-
-          return;
-        }
-
-        container.innerHTML = "";
-
-        items.forEach((item) => {
-          const phoneClean = String(item.phone || "").replace(/\D/g, "");
-          const whatsappUrl = phoneClean
-            ? `https://wa.me/55${phoneClean}`
-            : "#";
-
-          const div = document.createElement("div");
-          div.className = "appointment";
-
-          div.innerHTML = `
-            <div>
-              <strong>${item.name || "Cliente"}</strong>
-              <span>Data: ${formatDateBR(item.date)} às ${item.time}</span>
-              <span>
-                WhatsApp:
-                <a class="whatsapp-link" href="${whatsappUrl}" target="_blank">
-                  ${item.phone || ""}
-                </a>
-              </span>
-            </div>
-
-            <button class="danger" type="button">
-              Cancelar
-            </button>
-          `;
-
-          div.querySelector("button").onclick = () => cancelAppointment(item.id);
-
-          container.appendChild(div);
-        });
+        appointmentsCache = sortAppointments(items);
+        renderAppointmentsList();
       } catch (error) {
         console.error(error);
 
@@ -1362,9 +1548,156 @@
           <div class="empty">
             Não foi possível carregar os agendamentos.
             <br><br>
-            Pode ser necessário criar o índice no Firestore ou ajustar as regras.
+            Verifique as regras do Firestore.
           </div>
         `;
+      }
+    }
+
+    function renderAppointmentsList() {
+      const container = $("appointmentsList");
+      if (!container) return;
+
+      const filterDate = $("filterDate") ? $("filterDate").value : "";
+
+      let items = [...appointmentsCache];
+
+      if (filterDate) {
+        items = items.filter((item) => item.date === filterDate);
+      }
+
+      items = sortAppointments(items);
+
+      if (items.length === 0) {
+        container.innerHTML = `
+          <div class="empty">
+            Nenhum agendamento encontrado.
+          </div>
+        `;
+
+        return;
+      }
+
+      container.innerHTML = "";
+
+      items.forEach((item) => {
+        const status = item.status || "pending";
+
+        const statusText =
+          status === "confirmed"
+            ? "Confirmado"
+            : "Aguardando confirmação";
+
+        const statusClass =
+          status === "confirmed"
+            ? "confirmed"
+            : "pending";
+
+        const message =
+          `Olá, ${item.name || "cliente"}! ` +
+          `Seu horário na Barbearia Rodrigues foi confirmado para ` +
+          `${formatDateBR(item.date)} às ${item.time}. ` +
+          `Qualquer dúvida, pode responder por aqui. Deus abençoe!`;
+
+        const whatsappUrl = makeWhatsAppUrl(item.phone, message);
+
+        const div = document.createElement("div");
+        div.className = "appointment";
+
+        div.innerHTML = `
+          <div>
+            <strong>${item.name || "Cliente"}</strong>
+            <span>Data: ${formatDateBR(item.date)} às ${item.time}</span>
+            <span>
+              WhatsApp:
+              <a class="whatsapp-link" href="${whatsappUrl}" target="_blank">
+                ${item.phone || ""}
+              </a>
+            </span>
+            <span class="status ${statusClass}">
+              ${statusText}
+            </span>
+          </div>
+
+          <div class="appointment-actions">
+            <button class="success" type="button" data-action="confirm">
+              Confirmar pelo WhatsApp
+            </button>
+
+            <button class="blue" type="button" data-action="mark">
+              Marcar como confirmado
+            </button>
+
+            <button class="danger" type="button" data-action="cancel">
+              Cancelar
+            </button>
+          </div>
+        `;
+
+        div.querySelector('[data-action="confirm"]').onclick = () => {
+          confirmByWhatsapp(item.id, whatsappUrl);
+        };
+
+        div.querySelector('[data-action="mark"]').onclick = () => {
+          markAppointmentConfirmed(item.id);
+        };
+
+        div.querySelector('[data-action="cancel"]').onclick = () => {
+          cancelAppointment(item.id);
+        };
+
+        container.appendChild(div);
+      });
+    }
+
+    async function confirmByWhatsapp(id, whatsappUrl) {
+      try {
+        await updateDoc(doc(db, "appointments", id), {
+          status: "confirmed",
+          confirmedAt: serverTimestamp()
+        });
+
+        window.open(whatsappUrl, "_blank");
+
+        showMessage(
+          "appointmentsMsg",
+          "Agendamento marcado como confirmado. O WhatsApp foi aberto com a mensagem pronta.",
+          "ok",
+          7000
+        );
+
+        await loadAppointments();
+      } catch (error) {
+        console.error(error);
+        showMessage(
+          "appointmentsMsg",
+          "Não foi possível confirmar o agendamento.",
+          "err"
+        );
+      }
+    }
+
+    async function markAppointmentConfirmed(id) {
+      try {
+        await updateDoc(doc(db, "appointments", id), {
+          status: "confirmed",
+          confirmedAt: serverTimestamp()
+        });
+
+        showMessage(
+          "appointmentsMsg",
+          "Agendamento marcado como confirmado.",
+          "ok"
+        );
+
+        await loadAppointments();
+      } catch (error) {
+        console.error(error);
+        showMessage(
+          "appointmentsMsg",
+          "Não foi possível marcar como confirmado.",
+          "err"
+        );
       }
     }
 
@@ -1376,7 +1709,13 @@
       try {
         await deleteDoc(doc(db, "appointments", id));
 
-        loadAppointments();
+        showMessage(
+          "appointmentsMsg",
+          "Agendamento cancelado com sucesso.",
+          "ok"
+        );
+
+        await loadAppointments();
 
         if (selectedDate) {
           await loadBookedSlots();
@@ -1390,7 +1729,7 @@
 
     function clearFilter() {
       $("filterDate").value = "";
-      loadAppointments();
+      renderAppointmentsList();
     }
 
     function updateClientLink() {
@@ -1426,7 +1765,7 @@
       if (tab === "appointments") {
         $("tabAppointments").classList.add("active");
         $("ownerAppointments").classList.remove("hidden");
-        loadAppointments();
+        renderAppointmentsList();
       }
     }
 
