@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
   <title>Barbearia Rodrigues</title>
 
   <style>
@@ -94,6 +95,36 @@
 
     .admin-mini{display:flex;justify-content:center;margin-top:16px}
     .admin-mini button{font-size:12px;padding:10px 13px;opacity:.85}
+
+    .admin-topbar{
+      background:rgba(255,255,255,.045);
+      border:1px solid var(--border);
+      border-radius:20px;
+      padding:12px;
+      margin-bottom:14px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      flex-wrap:wrap;
+      box-shadow:var(--shadow);
+    }
+
+    .admin-topbar strong{
+      display:block;
+      font-size:15px;
+    }
+
+    .admin-topbar span{
+      color:var(--muted);
+      font-size:12px;
+    }
+
+    .admin-topbar-actions{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+    }
 
     .message{padding:13px;border-radius:16px;margin:12px 0;font-size:14px;line-height:1.4;display:none}
     .message.show{display:block}
@@ -204,6 +235,8 @@
       .form-row{grid-template-columns:1fr}.days{grid-template-columns:1fr}.date-list{grid-template-columns:repeat(2,1fr)}
       .slots,.available-slots{grid-template-columns:repeat(3,1fr)}button,.btn{width:100%;min-height:46px}
       .tab{min-width:100%}.appointment,.client-item{grid-template-columns:1fr}
+      .admin-topbar{align-items:stretch}
+      .admin-topbar-actions{width:100%}
     }
   </style>
 </head>
@@ -409,6 +442,18 @@
     </section>
 
     <section id="ownerView" class="hidden">
+      <div class="admin-topbar">
+        <div>
+          <strong>Painel do administrador</strong>
+          <span>Você está logado como dono da barbearia.</span>
+        </div>
+
+        <div class="admin-topbar-actions">
+          <button class="secondary" onclick="showClientHome()">Área do cliente</button>
+          <button class="danger" onclick="adminLogout()">Sair do administrador</button>
+        </div>
+      </div>
+
       <div id="newAppointmentAlert" class="message new">
         🔔 Novo movimento na agenda! Veja a lista abaixo.
       </div>
@@ -1495,6 +1540,26 @@
       }
     }
 
+    function adminLogout(){
+      const ok = confirm("Deseja sair do painel do administrador?");
+
+      if(!ok) return;
+
+      if(unsubscribeAppointments){
+        unsubscribeAppointments();
+        unsubscribeAppointments = null;
+      }
+
+      firstRealtimeLoad = true;
+      knownAppointmentIds = new Set();
+      lastStatusById = new Map();
+
+      $("ownerEmail").value = "";
+      $("ownerPassword").value = "";
+
+      showOnly("clientHomeView");
+    }
+
     function startRealtimeAppointments(){
       if(!firebaseReady) return;
 
@@ -1901,6 +1966,11 @@
     }
 
     function showClientHome(){
+      if(unsubscribeAppointments && !$("ownerView").classList.contains("hidden")){
+        unsubscribeAppointments();
+        unsubscribeAppointments = null;
+      }
+
       showOnly("clientHomeView");
     }
 
@@ -1926,6 +1996,7 @@
     window.openAvailableTimes = openAvailableTimes;
     window.showOwnerLogin = showOwnerLogin;
     window.ownerLogin = ownerLogin;
+    window.adminLogout = adminLogout;
     window.saveSettings = saveSettings;
     window.addBlockedDate = addBlockedDate;
     window.removeBlockedDate = removeBlockedDate;
