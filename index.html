@@ -236,22 +236,10 @@
       background:linear-gradient(135deg,rgba(255,77,77,.14),rgba(255,255,255,.04));
     }
 
-    .client-live-card h3{
-      margin:0 0 8px;
-      color:var(--text);
-    }
+    .client-live-card h3{margin:0 0 8px;color:var(--text)}
+    .client-live-card p{margin:6px 0;color:var(--muted);font-size:14px}
 
-    .client-live-card p{
-      margin:6px 0;
-      color:var(--muted);
-      font-size:14px;
-    }
-
-    .owner-popup-wrap{
-      display:grid;
-      gap:12px;
-      margin-bottom:16px;
-    }
+    .owner-popup-wrap{display:grid;gap:12px;margin-bottom:16px}
 
     .owner-popup{
       background:linear-gradient(135deg,rgba(212,160,52,.18),rgba(255,255,255,.05));
@@ -262,17 +250,8 @@
       animation:pulseNotice 1s ease-in-out infinite alternate;
     }
 
-    .owner-popup h3{
-      color:var(--text);
-      margin:0 0 8px;
-      font-size:18px;
-    }
-
-    .owner-popup p{
-      margin:5px 0;
-      color:var(--muted);
-      font-size:14px;
-    }
+    .owner-popup h3{color:var(--text);margin:0 0 8px;font-size:18px}
+    .owner-popup p{margin:5px 0;color:var(--muted);font-size:14px}
 
     .owner-popup-actions{
       display:flex;
@@ -771,7 +750,9 @@
     let firstRealtimeLoad = true;
     let knownAppointmentIds = new Set();
     let lastStatusById = new Map();
+    let lastClientStatus = "";
     let audioContextStarted = false;
+    let globalAudioContext = null;
 
     function showMessage(id,text,type="info",timeout=4500){
       const el = $(id);
@@ -869,31 +850,76 @@
 
     function startAudioContext(){
       audioContextStarted = true;
-    }
 
-    function playBeep(){
       try{
-        if(!audioContextStarted) return;
-
         const AudioContext = window.AudioContext || window.webkitAudioContext;
         if(!AudioContext) return;
 
-        const ctx = new AudioContext();
+        if(!globalAudioContext){
+          globalAudioContext = new AudioContext();
+        }
+
+        if(globalAudioContext.state === "suspended"){
+          globalAudioContext.resume();
+        }
+      }catch(error){
+        console.error(error);
+      }
+    }
+
+    function playSingleTone(duration = 520, frequency = 880){
+      try{
+        startAudioContext();
+
+        if(!globalAudioContext) return;
+
+        const ctx = globalAudioContext;
         const oscillator = ctx.createOscillator();
         const gain = ctx.createGain();
 
         oscillator.type = "sine";
-        oscillator.frequency.value = 880;
+        oscillator.frequency.value = frequency;
+
         gain.gain.setValueAtTime(.0001, ctx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(.45, ctx.currentTime + .03);
-        gain.gain.exponentialRampToValueAtTime(.0001, ctx.currentTime + .45);
+        gain.gain.exponentialRampToValueAtTime(.55, ctx.currentTime + .04);
+        gain.gain.exponentialRampToValueAtTime(.0001, ctx.currentTime + duration / 1000);
+
         oscillator.connect(gain);
         gain.connect(ctx.destination);
+
         oscillator.start();
-        oscillator.stop(ctx.currentTime + .5);
+        oscillator.stop(ctx.currentTime + duration / 1000 + .03);
       }catch(error){
         console.error(error);
       }
+    }
+
+    function playBeepPattern(times = 1, longBeep = false){
+      startAudioContext();
+
+      const duration = longBeep ? 760 : 420;
+
+      for(let i = 0; i < times; i++){
+        setTimeout(()=>{
+          playSingleTone(duration, times === 2 ? 980 : 880);
+        }, i * 620);
+      }
+    }
+
+    function playOwnerNewAppointmentBeep(){
+      playBeepPattern(1, false);
+    }
+
+    function playOwnerCancellationBeep(){
+      playBeepPattern(2, false);
+    }
+
+    function playClientConfirmedBeep(){
+      playBeepPattern(1, true);
+    }
+
+    function playClientCanceledBeep(){
+      playBeepPattern(2, false);
     }
 
     function showOwnerAlert(text){
@@ -1033,6 +1059,8 @@
     }
 
     async function registerClient(){
+      startAudioContext();
+
       const name = $("registerName").value.trim();
       const phone = $("registerPhone").value.trim();
 
@@ -1134,6 +1162,8 @@
         `;
 
         btn.onclick = async()=>{
+          startAudioContext();
+
           selectedDate = dateValue;
           selectedSlot = "";
 
@@ -1200,6 +1230,8 @@
         btn.textContent = slot;
 
         btn.onclick = ()=>{
+          startAudioContext();
+
           selectedSlot = slot;
           document.querySelectorAll(".slot").forEach(b=>b.classList.remove("active"));
           btn.classList.add("active");
@@ -1210,6 +1242,8 @@
     }
 
     async function bookAppointment(){
+      startAudioContext();
+
       if(!currentClient){
         showMessage("clientMsg","Faça seu cadastro primeiro.","err");
         return;
@@ -1230,6 +1264,8 @@
 
     async function createAppointment(client,date,time,messageBoxId){
       try{
+        startAudioContext();
+
         const confirmar = confirm(
           `Você quer confirmar este horário?\n\nData: ${formatDateBR(date)}\nHorário: ${time}`
         );
@@ -1258,6 +1294,7 @@
         });
 
         activeClientAppointmentId = appointmentRef.id;
+        lastClientStatus = "pending";
         watchClientAppointment(appointmentRef.id);
 
         showClientLiveStatus({
@@ -1268,6 +1305,8 @@
           time,
           status: "pending"
         });
+
+        playBeepPattern(1, false);
 
         showMessage(
           messageBoxId,
@@ -1311,10 +1350,14 @@
         card.classList.add("confirmed");
         $("clientLiveStatusTitle").innerHTML = "✅ Seu horário foi confirmado!";
         $("clientLiveStatusText").innerHTML = "A barbearia confirmou seu agendamento com sucesso.";
-      }else if(isCanceledStatus(status)){
+      }else if(status === "canceled_by_admin"){
         card.classList.add("canceled");
-        $("clientLiveStatusTitle").innerHTML = "⚠️ Agendamento cancelado";
-        $("clientLiveStatusText").innerHTML = "Esse horário foi cancelado.";
+        $("clientLiveStatusTitle").innerHTML = "⚠️ Horário desmarcado pela barbearia";
+        $("clientLiveStatusText").innerHTML = "A barbearia desmarcou esse horário. Escolha outro horário disponível.";
+      }else if(status === "canceled_by_client"){
+        card.classList.add("canceled");
+        $("clientLiveStatusTitle").innerHTML = "⚠️ Agendamento desmarcado";
+        $("clientLiveStatusText").innerHTML = "Você desmarcou esse corte. O horário voltou para a agenda.";
       }else{
         $("clientLiveStatusTitle").innerHTML = "⏳ Aguardando confirmação";
         $("clientLiveStatusText").innerHTML = "Seu agendamento foi solicitado. Aguarde a confirmação da barbearia.";
@@ -1342,27 +1385,57 @@
           ...snap.data()
         };
 
+        const currentStatus = item.status || "pending";
+
         showClientLiveStatus(item);
 
-        if(item.status === "confirmed"){
-          showMessage(
-            "clientMsg",
-            `✅ Seu horário foi confirmado com sucesso!<br><br>
-            <strong>Data:</strong> ${formatDateBR(item.date)}<br>
-            <strong>Horário:</strong> ${item.time}`,
-            "ok",
-            0
-          );
+        if(lastClientStatus && lastClientStatus !== currentStatus){
+          if(currentStatus === "confirmed"){
+            playClientConfirmedBeep();
 
-          showMessage(
-            "availableMsg",
-            `✅ Seu horário foi confirmado com sucesso!<br><br>
-            <strong>Data:</strong> ${formatDateBR(item.date)}<br>
-            <strong>Horário:</strong> ${item.time}`,
-            "ok",
-            0
-          );
+            showMessage(
+              "clientMsg",
+              `✅ Seu horário foi confirmado com sucesso!<br><br>
+              <strong>Data:</strong> ${formatDateBR(item.date)}<br>
+              <strong>Horário:</strong> ${item.time}`,
+              "ok",
+              0
+            );
+
+            showMessage(
+              "availableMsg",
+              `✅ Seu horário foi confirmado com sucesso!<br><br>
+              <strong>Data:</strong> ${formatDateBR(item.date)}<br>
+              <strong>Horário:</strong> ${item.time}`,
+              "ok",
+              0
+            );
+          }
+
+          if(currentStatus === "canceled_by_admin"){
+            playClientCanceledBeep();
+
+            showMessage(
+              "clientMsg",
+              `⚠️ Seu horário foi desmarcado pela barbearia.<br><br>
+              <strong>Data:</strong> ${formatDateBR(item.date)}<br>
+              <strong>Horário:</strong> ${item.time}`,
+              "err",
+              0
+            );
+
+            showMessage(
+              "availableMsg",
+              `⚠️ Seu horário foi desmarcado pela barbearia.<br><br>
+              <strong>Data:</strong> ${formatDateBR(item.date)}<br>
+              <strong>Horário:</strong> ${item.time}`,
+              "err",
+              0
+            );
+          }
         }
+
+        lastClientStatus = currentStatus;
       });
     }
 
@@ -1416,6 +1489,8 @@
     }
 
     function selectQuickSlot(date,time){
+      startAudioContext();
+
       quickSelected = {date,time};
 
       $("quickConfirmBox").classList.remove("hidden");
@@ -1435,6 +1510,8 @@
     }
 
     async function confirmQuickBooking(){
+      startAudioContext();
+
       if(!quickSelected){
         showMessage("availableMsg","Escolha um horário primeiro.","err");
         return;
@@ -1466,6 +1543,8 @@
     }
 
     async function openClientAppointments(){
+      startAudioContext();
+
       showOnly("clientAppointmentsView");
       $("clientLiveStatusView").classList.remove("hidden");
       $("myAppointmentsList").innerHTML = "";
@@ -1477,6 +1556,8 @@
     }
 
     async function loadMyAppointments(){
+      startAudioContext();
+
       const phone = cleanPhone($("myAppointmentsPhone").value);
 
       if(!phone || phone.length < 8){
@@ -1552,6 +1633,8 @@
     }
 
     async function cancelMyAppointment(id,date,time){
+      startAudioContext();
+
       const ok = confirm(
         `Deseja desmarcar este corte?\n\nData: ${formatDateBR(date)}\nHorário: ${time}`
       );
@@ -1777,12 +1860,13 @@
         appointmentsCache = sortAppointments(items);
 
         if(!firstRealtimeLoad && hasNewAppointment){
-          playBeep();
+          playOwnerNewAppointmentBeep();
           showOwnerAlert("🔔 Novo agendamento recebido! Confirme o horário no balão abaixo.");
         }
 
         if(!firstRealtimeLoad && hasClientCancellation){
-          playBeep();
+          playOwnerCancellationBeep();
+
           showOwnerAlert(
             `⚠️ Cliente desmarcou o corte.<br><br>
             <strong>${canceledClientName}</strong><br>
@@ -2175,25 +2259,34 @@
     }
 
     function openGuidedBooking(){
+      startAudioContext();
+
       showOnly("guidedView");
+
       if(activeClientAppointmentId){
         $("clientLiveStatusView").classList.remove("hidden");
       }
+
       updateClientUi();
       renderMonthOptions();
       renderClientDates();
     }
 
     async function openAvailableTimes(){
+      startAudioContext();
+
       showOnly("availableView");
+
       if(activeClientAppointmentId){
         $("clientLiveStatusView").classList.remove("hidden");
       }
+
       $("quickConfirmBox").classList.add("hidden");
       await renderAvailableTimes();
     }
 
     function showOwnerLogin(){
+      startAudioContext();
       showOnly("ownerLoginView");
     }
 
