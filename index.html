@@ -756,8 +756,14 @@
     const DEFAULT_CONFIRMATION_MESSAGE =
       "Olá, {nome}! Seu horário na {barbearia} foi confirmado para {data} às {hora}. Qualquer dúvida, pode responder por aqui. Deus abençoe!";
 
-    const DEFAULT_CLIENT_CAMPAIGN_MESSAGE =
-      "Olá, {nome}! Aqui é da {barbearia}.\\n\\nPassando para lembrar que agora você pode agendar seu corte pelo nosso sistema online.\\n\\nAcesse o link:\\n{link}\\n\\nEscolha o melhor dia e horário disponível. Esperamos você!";
+    const DEFAULT_CLIENT_CAMPAIGN_MESSAGE = `Olá, {nome}! Aqui é da {barbearia}.
+
+Passando para lembrar que agora você pode agendar seu corte pelo nosso sistema online.
+
+Acesse o link:
+{link}
+
+Escolha o melhor dia e horário disponível. Esperamos você!`;
 
     const DEFAULT_SETTINGS = {
       businessName:"Barbearia Rodrigues",
@@ -889,14 +895,20 @@
     }
 
     function getClientPublicLink(){
-      return window.location.origin + window.location.pathname;
+      return "https://agenda-rodrigues.vercel.app";
     }
 
     function buildClientCampaignMessage(client){
-      const template = $("clientCampaignMessage") ? $("clientCampaignMessage").value : settings.clientCampaignMessage;
+      const rawTemplate = $("clientCampaignMessage")
+        ? $("clientCampaignMessage").value
+        : settings.clientCampaignMessage;
+
+      const template = String(rawTemplate || DEFAULT_CLIENT_CAMPAIGN_MESSAGE)
+        .replaceAll("\\n", "\n");
+
       const link = getClientPublicLink();
 
-      return String(template || DEFAULT_CLIENT_CAMPAIGN_MESSAGE)
+      return template
         .replaceAll("{nome}", client.name || "cliente")
         .replaceAll("{barbearia}", settings.businessName || "Barbearia")
         .replaceAll("{link}", link);
@@ -914,7 +926,7 @@
     }
 
     async function saveClientCampaignMessage(){
-      const msg = $("clientCampaignMessage").value.trim();
+      const msg = $("clientCampaignMessage").value.trim().replaceAll("\\n", "\n");
 
       if(!msg){
         showMessage("clientsMsg","Digite uma mensagem para salvar.","err");
@@ -1148,7 +1160,8 @@
       $("slotDuration").value = String(settings.slotDuration || 30);
 
       if($("clientCampaignMessage")){
-        $("clientCampaignMessage").value = settings.clientCampaignMessage || DEFAULT_CLIENT_CAMPAIGN_MESSAGE;
+        $("clientCampaignMessage").value = String(settings.clientCampaignMessage || DEFAULT_CLIENT_CAMPAIGN_MESSAGE)
+          .replaceAll("\\n", "\n");
       }
 
       updateClientLink();
@@ -1828,7 +1841,7 @@
         businessName:$("businessName").value.trim() || "Barbearia Rodrigues",
         ownerWhatsapp:cleanPhone($("ownerWhatsapp").value),
         confirmationMessage:$("confirmationMessage").value.trim() || DEFAULT_CONFIRMATION_MESSAGE,
-        clientCampaignMessage:$("clientCampaignMessage") ? $("clientCampaignMessage").value.trim() || DEFAULT_CLIENT_CAMPAIGN_MESSAGE : settings.clientCampaignMessage,
+        clientCampaignMessage:$("clientCampaignMessage") ? $("clientCampaignMessage").value.trim().replaceAll("\\n", "\n") || DEFAULT_CLIENT_CAMPAIGN_MESSAGE : settings.clientCampaignMessage,
         adminEmail:$("adminEmail").value.trim() || "admin@barbearia.com",
         adminPassword:$("adminPassword").value.trim() || "1234",
         workdays,
@@ -2347,8 +2360,7 @@
     }
 
     function updateClientLink(){
-      const base = window.location.origin + window.location.pathname;
-      $("clientLink").value = base;
+      $("clientLink").value = getClientPublicLink();
     }
 
     async function copyClientLink(){
@@ -2388,7 +2400,8 @@
         $("tabClients").classList.add("active");
         $("ownerClients").classList.remove("hidden");
         if($("clientCampaignMessage")){
-          $("clientCampaignMessage").value = settings.clientCampaignMessage || DEFAULT_CLIENT_CAMPAIGN_MESSAGE;
+          $("clientCampaignMessage").value = String(settings.clientCampaignMessage || DEFAULT_CLIENT_CAMPAIGN_MESSAGE)
+            .replaceAll("\\n", "\n");
         }
         loadClients();
       }
