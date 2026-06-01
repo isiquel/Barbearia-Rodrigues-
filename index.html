@@ -3,7 +3,6 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
   <title>Barbearia Rodrigues</title>
 
   <style>
@@ -101,15 +100,6 @@
       font-size: 14px;
     }
 
-    .hero-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 20px;
-      position: relative;
-      z-index: 2;
-    }
-
     button, .btn {
       border: none;
       outline: none;
@@ -160,12 +150,6 @@
       border: 1px solid rgba(77,163,255,0.25);
     }
 
-    .grid {
-      display: grid;
-      grid-template-columns: 1.05fr 1.35fr;
-      gap: 18px;
-    }
-
     .card {
       background: rgba(24,24,24,0.92);
       border: 1px solid var(--border);
@@ -175,15 +159,24 @@
       backdrop-filter: blur(10px);
     }
 
-    .card h2 {
-      margin: 0 0 12px;
-      font-size: 21px;
+    .grid {
+      display: grid;
+      grid-template-columns: 1.05fr 1.35fr;
+      gap: 18px;
     }
 
-    .card h3 {
+    .hidden {
+      display: none !important;
+    }
+
+    h2 {
+      margin-top: 0;
+    }
+
+    h3 {
+      color: var(--gold2);
       margin: 18px 0 10px;
       font-size: 16px;
-      color: var(--gold2);
     }
 
     label {
@@ -194,7 +187,7 @@
       font-weight: 700;
     }
 
-    input, select, textarea {
+    input, select {
       width: 100%;
       border: 1px solid var(--border);
       background: #101010;
@@ -205,7 +198,7 @@
       outline: none;
     }
 
-    input:focus, select:focus, textarea:focus {
+    input:focus, select:focus {
       border-color: rgba(212,160,52,0.65);
       box-shadow: 0 0 0 3px rgba(212,160,52,0.08);
     }
@@ -221,63 +214,9 @@
       margin-bottom: 12px;
     }
 
-    .days {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
-      margin-bottom: 14px;
-    }
-
-    .day-check {
-      background: #101010;
-      border: 1px solid var(--border);
-      border-radius: 15px;
-      padding: 12px;
-      display: flex;
-      align-items: center;
-      gap: 9px;
-      cursor: pointer;
-      color: var(--text);
-      font-weight: 700;
-      font-size: 14px;
-    }
-
-    .day-check input {
-      width: auto;
-      accent-color: var(--gold);
-    }
-
-    .tabs {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 18px;
-      flex-wrap: wrap;
-    }
-
-    .tab {
-      flex: 1;
-      min-width: 130px;
-      background: rgba(255,255,255,0.07);
-      color: var(--text);
-      border: 1px solid var(--border);
-    }
-
-    .tab.active {
-      background: linear-gradient(135deg, var(--gold2), var(--gold));
-      color: #15100a;
-    }
-
-    .hidden {
-      display: none !important;
-    }
-
     .client-shell {
       max-width: 760px;
       margin: 0 auto;
-    }
-
-    .client-title {
-      margin-bottom: 16px;
     }
 
     .client-title h2 {
@@ -320,10 +259,6 @@
       font-size: 13px;
     }
 
-    .step-head strong {
-      font-size: 16px;
-    }
-
     .client-welcome {
       background: rgba(48,209,88,0.10);
       border: 1px solid rgba(48,209,88,0.22);
@@ -336,15 +271,6 @@
       gap: 10px;
       align-items: center;
       flex-wrap: wrap;
-    }
-
-    .client-welcome strong {
-      display: block;
-      margin-bottom: 3px;
-    }
-
-    .month-select {
-      margin-bottom: 12px;
     }
 
     .date-list {
@@ -407,7 +333,53 @@
       border-color: transparent;
     }
 
-    .appointment {
+    .days {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .day-check {
+      background: #101010;
+      border: 1px solid var(--border);
+      border-radius: 15px;
+      padding: 12px;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      cursor: pointer;
+      color: var(--text);
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    .day-check input {
+      width: auto;
+      accent-color: var(--gold);
+    }
+
+    .tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 18px;
+      flex-wrap: wrap;
+    }
+
+    .tab {
+      flex: 1;
+      min-width: 130px;
+      background: rgba(255,255,255,0.07);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .tab.active {
+      background: linear-gradient(135deg, var(--gold2), var(--gold));
+      color: #15100a;
+    }
+
+    .appointment, .client-item {
       background: #101010;
       border: 1px solid var(--border);
       border-radius: 18px;
@@ -419,13 +391,13 @@
       align-items: center;
     }
 
-    .appointment strong {
+    .appointment strong, .client-item strong {
       display: block;
       font-size: 15px;
       margin-bottom: 4px;
     }
 
-    .appointment span {
+    .appointment span, .client-item span {
       display: block;
       color: var(--muted);
       font-size: 13px;
@@ -436,31 +408,6 @@
       display: flex;
       flex-direction: column;
       gap: 8px;
-    }
-
-    .client-item {
-      background: #101010;
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      padding: 14px;
-      margin-bottom: 10px;
-      display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 12px;
-      align-items: center;
-    }
-
-    .client-item strong {
-      display: block;
-      font-size: 15px;
-      margin-bottom: 4px;
-    }
-
-    .client-item span {
-      display: block;
-      color: var(--muted);
-      font-size: 13px;
-      margin-top: 3px;
     }
 
     .status {
@@ -551,34 +498,16 @@
       line-height: 1.5;
     }
 
-    .login-box {
-      max-width: 440px;
-      margin: 30px auto 0;
-    }
-
-    .whatsapp-link {
-      color: #aef5c0;
-      font-weight: 800;
-      text-decoration: none;
-    }
-
-    .top-mini {
+    .admin-mini {
       display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-bottom: 14px;
+      justify-content: center;
+      margin-top: 16px;
     }
 
-    .pill {
-      background: rgba(255,255,255,0.06);
-      border: 1px solid var(--border);
-      padding: 8px 11px;
-      border-radius: 99px;
-      color: var(--muted);
+    .admin-mini button {
       font-size: 12px;
-      font-weight: 800;
+      padding: 10px 13px;
+      opacity: 0.8;
     }
 
     .blocked-list {
@@ -598,12 +527,6 @@
       align-items: center;
       font-size: 12px;
       color: var(--muted);
-    }
-
-    .blocked-item button {
-      padding: 2px 7px;
-      border-radius: 999px;
-      font-size: 11px;
     }
 
     .sound-box {
@@ -654,13 +577,8 @@
         border-radius: 24px;
       }
 
-      .appointment,
-      .client-item {
+      .appointment, .client-item {
         grid-template-columns: 1fr;
-      }
-
-      .appointment-actions {
-        flex-direction: column;
       }
 
       .date-list {
@@ -679,14 +597,6 @@
       .tab {
         min-width: 100%;
       }
-
-      .hero-actions {
-        display: none;
-      }
-
-      .client-shell .card {
-        padding: 14px;
-      }
     }
   </style>
 </head>
@@ -701,16 +611,9 @@
           <p>Agendamento moderno de cortes, direto pelo celular.</p>
         </div>
       </div>
-
-      <div id="homeButtons" class="hero-actions">
-        <button class="primary" onclick="showClient()">Agendar corte</button>
-        <button class="secondary" onclick="showOwnerLogin()">Painel do dono</button>
-      </div>
     </section>
 
-    <div id="firebaseWarning" class="message info show">
-      Conectando ao Firebase...
-    </div>
+    <div id="firebaseWarning" class="message info show">Conectando ao Firebase...</div>
 
     <section id="clientView" class="client-shell">
       <div class="card">
@@ -750,6 +653,12 @@
           <button class="primary" style="width:100%;" onclick="registerClient()">
             Entrar / Cadastrar
           </button>
+
+          <div class="admin-mini">
+            <button class="secondary" onclick="showOwnerLogin()">
+              Administrador
+            </button>
+          </div>
         </div>
 
         <div id="scheduleBox" class="hidden">
@@ -759,10 +668,8 @@
               <strong>Escolha o mês</strong>
             </div>
 
-            <div class="month-select">
-              <label>Mês do agendamento</label>
-              <select id="monthSelect" onchange="renderClientDates()"></select>
-            </div>
+            <label>Mês do agendamento</label>
+            <select id="monthSelect" onchange="renderClientDates()"></select>
           </div>
 
           <div class="step-card">
@@ -787,6 +694,12 @@
             Confirmar agendamento
           </button>
 
+          <div class="admin-mini">
+            <button class="secondary" onclick="showOwnerLogin()">
+              Administrador
+            </button>
+          </div>
+
           <p class="footer-note">
             Após confirmar, seu horário fica reservado e não aparece mais para outros clientes.
           </p>
@@ -794,21 +707,36 @@
       </div>
     </section>
 
-    <section id="ownerLoginView" class="card login-box hidden">
-      <h2>Entrar no painel do dono</h2>
+    <section id="ownerLoginView" class="card client-shell hidden">
+      <h2>Administrador</h2>
 
       <p style="color: var(--muted); line-height: 1.5;">
-        Digite a senha do dono para configurar horários, ver agendamentos e clientes cadastrados.
+        Entre com o e-mail e a senha do dono da Barbearia Rodrigues.
       </p>
 
       <div id="loginMsg" class="message"></div>
 
-      <div class="single">
-        <label>Senha</label>
-        <input id="ownerPassword" type="password" placeholder="Digite a senha" />
+      <div class="form-row">
+        <div>
+          <label>E-mail do administrador</label>
+          <input id="ownerEmail" type="email" placeholder="admin@barbearia.com" />
+        </div>
+
+        <div>
+          <label>Senha</label>
+          <input id="ownerPassword" type="password" placeholder="Digite a senha" />
+        </div>
       </div>
 
-      <button class="primary" style="width:100%;" onclick="ownerLogin()">Entrar</button>
+      <button class="primary" style="width:100%;" onclick="ownerLogin()">
+        Entrar no painel
+      </button>
+
+      <div class="admin-mini">
+        <button class="secondary" onclick="showClient()">
+          Voltar para agendamento
+        </button>
+      </div>
     </section>
 
     <section id="ownerView" class="hidden">
@@ -835,7 +763,7 @@
           <h2>Configurar atendimento</h2>
 
           <div class="sound-box">
-            🔔 O painel do dono avisa em tempo real quando chegar um novo agendamento.
+            🔔 O painel do dono avisa em tempo real quando chegar novo agendamento.
             Para o bip tocar, deixe o painel aberto no celular.
           </div>
 
@@ -844,40 +772,13 @@
           <h3>Dias de trabalho</h3>
 
           <div class="days">
-            <label class="day-check">
-              <input type="checkbox" class="workday" value="1" />
-              Segunda-feira
-            </label>
-
-            <label class="day-check">
-              <input type="checkbox" class="workday" value="2" />
-              Terça-feira
-            </label>
-
-            <label class="day-check">
-              <input type="checkbox" class="workday" value="3" />
-              Quarta-feira
-            </label>
-
-            <label class="day-check">
-              <input type="checkbox" class="workday" value="4" />
-              Quinta-feira
-            </label>
-
-            <label class="day-check">
-              <input type="checkbox" class="workday" value="5" />
-              Sexta-feira
-            </label>
-
-            <label class="day-check">
-              <input type="checkbox" class="workday" value="6" />
-              Sábado
-            </label>
-
-            <label class="day-check">
-              <input type="checkbox" class="workday" value="0" />
-              Domingo
-            </label>
+            <label class="day-check"><input type="checkbox" class="workday" value="1" /> Segunda-feira</label>
+            <label class="day-check"><input type="checkbox" class="workday" value="2" /> Terça-feira</label>
+            <label class="day-check"><input type="checkbox" class="workday" value="3" /> Quarta-feira</label>
+            <label class="day-check"><input type="checkbox" class="workday" value="4" /> Quinta-feira</label>
+            <label class="day-check"><input type="checkbox" class="workday" value="5" /> Sexta-feira</label>
+            <label class="day-check"><input type="checkbox" class="workday" value="6" /> Sábado</label>
+            <label class="day-check"><input type="checkbox" class="workday" value="0" /> Domingo</label>
           </div>
 
           <div class="form-row">
@@ -905,8 +806,22 @@
             </div>
 
             <div>
-              <label>Senha do dono</label>
+              <label>Senha antiga do dono</label>
               <input id="adminPin" type="text" placeholder="Ex: 1234" />
+            </div>
+          </div>
+
+          <h3>Acesso do administrador</h3>
+
+          <div class="form-row">
+            <div>
+              <label>E-mail do administrador</label>
+              <input id="adminEmail" type="email" placeholder="admin@barbearia.com" />
+            </div>
+
+            <div>
+              <label>Senha do administrador</label>
+              <input id="adminPassword" type="text" placeholder="Ex: 1234" />
             </div>
           </div>
 
@@ -957,24 +872,21 @@
           <div class="empty" style="text-align:left;">
             <p><strong>1.</strong> O cliente entra no link e faz cadastro.</p>
             <p><strong>2.</strong> Escolhe mês, dia e horário disponível.</p>
-            <p><strong>3.</strong> Depois que alguém agenda, aquele horário some para outros clientes.</p>
-            <p><strong>4.</strong> O painel do dono toca um bip quando chegar novo agendamento.</p>
+            <p><strong>3.</strong> Depois que alguém agenda, aquele horário some.</p>
+            <p><strong>4.</strong> O painel do dono toca bip quando chegar agendamento.</p>
             <p><strong>5.</strong> O dono confirma pelo WhatsApp com mensagem pronta.</p>
-            <p><strong>6.</strong> Os clientes cadastrados ficam salvos na aba Clientes.</p>
           </div>
         </div>
       </div>
 
       <div id="ownerAppointments" class="card hidden">
-        <div class="top-mini">
+        <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:14px;">
           <div>
             <h2>Agendamentos</h2>
-            <span class="pill">Clientes marcados</span>
+            <span class="status pending">Clientes marcados</span>
           </div>
 
-          <button class="secondary" onclick="loadAppointments()">
-            Atualizar
-          </button>
+          <button class="secondary" onclick="loadAppointments()">Atualizar</button>
         </div>
 
         <div id="appointmentsMsg" class="message"></div>
@@ -985,7 +897,7 @@
             <input id="filterDate" type="date" onchange="renderAppointmentsList()" />
           </div>
 
-          <div style="display:flex; align-items:flex-end;">
+          <div style="display:flex;align-items:flex-end;">
             <button class="secondary" style="width:100%;" onclick="clearFilter()">
               Mostrar todos
             </button>
@@ -996,15 +908,13 @@
       </div>
 
       <div id="ownerClients" class="card hidden">
-        <div class="top-mini">
+        <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:14px;">
           <div>
             <h2>Clientes cadastrados</h2>
-            <span class="pill">Lista da barbearia</span>
+            <span class="status confirmed">Lista da barbearia</span>
           </div>
 
-          <button class="secondary" onclick="loadClients()">
-            Atualizar
-          </button>
+          <button class="secondary" onclick="loadClients()">Atualizar</button>
         </div>
 
         <div id="clientsMsg" class="message"></div>
@@ -1069,7 +979,7 @@
 
       const warning = document.getElementById("firebaseWarning");
       warning.className = "message err show";
-      warning.innerHTML = "Erro ao conectar com o Firebase. Verifique a configuração.";
+      warning.innerHTML = "Erro ao conectar com o Firebase.";
     }
 
     const DEFAULT_SETTINGS = {
@@ -1078,6 +988,8 @@
       endTime: "18:00",
       slotDuration: 30,
       adminPin: "1234",
+      adminEmail: "admin@barbearia.com",
+      adminPassword: "1234",
       blockedDates: []
     };
 
@@ -1110,18 +1022,6 @@
       }
     }
 
-    function showNewAppointmentAlert() {
-      const el = $("newAppointmentAlert");
-      if (!el) return;
-
-      el.className = "message new show";
-      el.innerHTML = "🔔 Novo agendamento recebido! Veja a lista abaixo.";
-
-      setTimeout(() => {
-        el.className = "message new";
-      }, 9000);
-    }
-
     function formatDateBR(dateStr) {
       if (!dateStr || !dateStr.includes("-")) return dateStr || "";
       const [y, m, d] = dateStr.split("-");
@@ -1129,43 +1029,17 @@
     }
 
     function getDayName(date) {
-      const names = [
-        "Domingo",
-        "Segunda",
-        "Terça",
-        "Quarta",
-        "Quinta",
-        "Sexta",
-        "Sábado"
-      ];
-
-      return names[date.getDay()];
+      return ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"][date.getDay()];
     }
 
     function getMonthName(monthIndex) {
-      const names = [
-        "Janeiro",
-        "Fevereiro",
-        "Março",
-        "Abril",
-        "Maio",
-        "Junho",
-        "Julho",
-        "Agosto",
-        "Setembro",
-        "Outubro",
-        "Novembro",
-        "Dezembro"
-      ];
-
-      return names[monthIndex];
+      return ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"][monthIndex];
     }
 
     function toDateInputValue(date) {
       const y = date.getFullYear();
       const m = String(date.getMonth() + 1).padStart(2, "0");
       const d = String(date.getDate()).padStart(2, "0");
-
       return `${y}-${m}-${d}`;
     }
 
@@ -1177,7 +1051,6 @@
     function timeFromMinutes(total) {
       const h = String(Math.floor(total / 60)).padStart(2, "0");
       const m = String(total % 60).padStart(2, "0");
-
       return `${h}:${m}`;
     }
 
@@ -1192,22 +1065,6 @@
       }
 
       return slots;
-    }
-
-    function sortAppointments(items) {
-      return items.sort((a, b) => {
-        const aKey = `${a.date || ""} ${a.time || ""}`;
-        const bKey = `${b.date || ""} ${b.time || ""}`;
-        return aKey.localeCompare(bKey);
-      });
-    }
-
-    function sortClients(items) {
-      return items.sort((a, b) => {
-        const aName = String(a.name || "").toLowerCase();
-        const bName = String(b.name || "").toLowerCase();
-        return aName.localeCompare(bName);
-      });
     }
 
     function cleanPhone(phone) {
@@ -1229,6 +1086,18 @@
       }
 
       return `https://wa.me/${finalPhone}`;
+    }
+
+    function sortAppointments(items) {
+      return items.sort((a, b) => {
+        const aKey = `${a.date || ""} ${a.time || ""}`;
+        const bKey = `${b.date || ""} ${b.time || ""}`;
+        return aKey.localeCompare(bKey);
+      });
+    }
+
+    function sortClients(items) {
+      return items.sort((a, b) => String(a.name || "").localeCompare(String(b.name || "")));
     }
 
     function startAudioContext() {
@@ -1258,27 +1127,21 @@
 
         oscillator.start();
         oscillator.stop(ctx.currentTime + 0.5);
-
-        setTimeout(() => {
-          const oscillator2 = ctx.createOscillator();
-          const gain2 = ctx.createGain();
-
-          oscillator2.type = "sine";
-          oscillator2.frequency.value = 1175;
-
-          gain2.gain.setValueAtTime(0.0001, ctx.currentTime);
-          gain2.gain.exponentialRampToValueAtTime(0.35, ctx.currentTime + 0.03);
-          gain2.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.35);
-
-          oscillator2.connect(gain2);
-          gain2.connect(ctx.destination);
-
-          oscillator2.start();
-          oscillator2.stop(ctx.currentTime + 0.4);
-        }, 220);
       } catch (error) {
         console.error("Erro no bip:", error);
       }
+    }
+
+    function showNewAppointmentAlert() {
+      const el = $("newAppointmentAlert");
+      if (!el) return;
+
+      el.className = "message new show";
+      el.innerHTML = "🔔 Novo agendamento recebido! Veja a lista abaixo.";
+
+      setTimeout(() => {
+        el.className = "message new";
+      }, 9000);
     }
 
     function loadClientFromStorage() {
@@ -1416,11 +1279,7 @@
         renderClientDates();
       } catch (error) {
         console.error(error);
-        showMessage(
-          "clientMsg",
-          "Não foi possível carregar as configurações. Confira as regras do Firestore.",
-          "err"
-        );
+        showMessage("clientMsg", "Não foi possível carregar as configurações.", "err");
       }
     }
 
@@ -1433,6 +1292,8 @@
       $("endTime").value = settings.endTime || "18:00";
       $("slotDuration").value = String(settings.slotDuration || 30);
       $("adminPin").value = settings.adminPin || "1234";
+      $("adminEmail").value = settings.adminEmail || "admin@barbearia.com";
+      $("adminPassword").value = settings.adminPassword || "1234";
 
       renderBlockedDates();
       updateClientLink();
@@ -1472,28 +1333,19 @@
 
       const monthValue = $("monthSelect") ? $("monthSelect").value : "";
       selectedMonth = monthValue;
-
-      if (!monthValue) {
-        container.innerHTML = `
-          <div class="empty">
-            Escolha um mês para ver os dias disponíveis.
-          </div>
-        `;
-        return;
-      }
-
       selectedDate = "";
       selectedSlot = "";
       bookedSlots = [];
+
       renderSlots();
+
+      if (!monthValue) return;
 
       const [year, month] = monthValue.split("-").map(Number);
       const today = new Date();
       today.setHours(0, 0, 0, 0);
 
-      const firstDay = new Date(year, month - 1, 1);
       const lastDay = new Date(year, month, 0);
-
       let count = 0;
 
       for (let day = 1; day <= lastDay.getDate(); day++) {
@@ -1506,9 +1358,7 @@
         const dateValue = toDateInputValue(date);
 
         const isWorkday = settings.workdays.includes(dayNumber);
-        const isBlocked =
-          Array.isArray(settings.blockedDates) &&
-          settings.blockedDates.includes(dateValue);
+        const isBlocked = Array.isArray(settings.blockedDates) && settings.blockedDates.includes(dateValue);
 
         if (!isWorkday || isBlocked) continue;
 
@@ -1539,11 +1389,7 @@
       }
 
       if (count === 0) {
-        container.innerHTML = `
-          <div class="empty">
-            Nenhum dia disponível neste mês.
-          </div>
-        `;
+        container.innerHTML = `<div class="empty">Nenhum dia disponível neste mês.</div>`;
       }
     }
 
@@ -1553,11 +1399,7 @@
       if (!selectedDate || !firebaseReady) return;
 
       try {
-        const q = query(
-          collection(db, "appointments"),
-          where("date", "==", selectedDate)
-        );
-
+        const q = query(collection(db, "appointments"), where("date", "==", selectedDate));
         const snap = await getDocs(q);
 
         snap.forEach((docItem) => {
@@ -1580,11 +1422,7 @@
       container.innerHTML = "";
 
       if (!selectedDate) {
-        container.innerHTML = `
-          <div class="empty">
-            Primeiro escolha um dia.
-          </div>
-        `;
+        container.innerHTML = `<div class="empty">Primeiro escolha um dia.</div>`;
         return;
       }
 
@@ -1592,11 +1430,7 @@
       const freeSlots = slots.filter((slot) => !bookedSlots.includes(slot));
 
       if (freeSlots.length === 0) {
-        container.innerHTML = `
-          <div class="empty">
-            Não há horários vagos para este dia.
-          </div>
-        `;
+        container.innerHTML = `<div class="empty">Não há horários vagos para este dia.</div>`;
         return;
       }
 
@@ -1625,15 +1459,6 @@
         return;
       }
 
-      if (!firebaseReady) {
-        showMessage(
-          "clientMsg",
-          "O Firebase não está conectado. Verifique a configuração.",
-          "err"
-        );
-        return;
-      }
-
       if (!selectedDate) {
         showMessage("clientMsg", "Escolha uma data para o corte.", "err");
         return;
@@ -1648,12 +1473,7 @@
         await loadBookedSlots();
 
         if (bookedSlots.includes(selectedSlot)) {
-          showMessage(
-            "clientMsg",
-            "Esse horário acabou de ser preenchido por outro cliente. Escolha outro horário.",
-            "err"
-          );
-
+          showMessage("clientMsg", "Esse horário acabou de ser preenchido. Escolha outro horário.", "err");
           renderSlots();
           return;
         }
@@ -1670,7 +1490,7 @@
 
         showMessage(
           "clientMsg",
-          `Agendamento solicitado para <strong>${formatDateBR(selectedDate)}</strong> às <strong>${selectedSlot}</strong>. Aguarde a confirmação da barbearia pelo WhatsApp.`,
+          `Agendamento solicitado para <strong>${formatDateBR(selectedDate)}</strong> às <strong>${selectedSlot}</strong>. Aguarde a confirmação pelo WhatsApp.`,
           "ok",
           8000
         );
@@ -1681,24 +1501,11 @@
         renderSlots();
       } catch (error) {
         console.error(error);
-        showMessage(
-          "clientMsg",
-          "Não foi possível confirmar o agendamento. Verifique as regras do Firestore.",
-          "err"
-        );
+        showMessage("clientMsg", "Não foi possível confirmar o agendamento.", "err");
       }
     }
 
     async function saveSettings() {
-      if (!firebaseReady) {
-        showMessage(
-          "settingsMsg",
-          "O Firebase não está conectado. Verifique a configuração.",
-          "err"
-        );
-        return;
-      }
-
       const workdays = Array.from(document.querySelectorAll(".workday"))
         .filter((check) => check.checked)
         .map((check) => Number(check.value));
@@ -1707,6 +1514,8 @@
       const endTime = $("endTime").value;
       const slotDuration = Number($("slotDuration").value);
       const adminPin = $("adminPin").value.trim() || "1234";
+      const adminEmail = $("adminEmail").value.trim() || "admin@barbearia.com";
+      const adminPassword = $("adminPassword").value.trim() || "1234";
 
       if (workdays.length === 0) {
         showMessage("settingsMsg", "Escolha pelo menos um dia de trabalho.", "err");
@@ -1714,12 +1523,7 @@
       }
 
       if (minutesFromTime(startTime) >= minutesFromTime(endTime)) {
-        showMessage(
-          "settingsMsg",
-          "O horário inicial precisa ser menor que o horário final.",
-          "err"
-        );
-
+        showMessage("settingsMsg", "O horário inicial precisa ser menor que o horário final.", "err");
         return;
       }
 
@@ -1730,6 +1534,8 @@
         endTime,
         slotDuration,
         adminPin,
+        adminEmail,
+        adminPassword,
         blockedDates: settings.blockedDates || []
       };
 
@@ -1744,12 +1550,7 @@
         updateClientLink();
       } catch (error) {
         console.error(error);
-
-        showMessage(
-          "settingsMsg",
-          "Erro ao salvar configurações. Verifique as regras do Firestore.",
-          "err"
-        );
+        showMessage("settingsMsg", "Erro ao salvar configurações.", "err");
       }
     }
 
@@ -1772,16 +1573,11 @@
       $("blockDate").value = "";
 
       await saveSettings();
-      renderBlockedDates();
-      renderClientDates();
     }
 
     async function removeBlockedDate(date) {
       settings.blockedDates = (settings.blockedDates || []).filter((d) => d !== date);
-
       await saveSettings();
-      renderBlockedDates();
-      renderClientDates();
     }
 
     function renderBlockedDates() {
@@ -1793,12 +1589,7 @@
       const dates = settings.blockedDates || [];
 
       if (dates.length === 0) {
-        list.innerHTML = `
-          <span style="color: var(--muted); font-size: 13px;">
-            Nenhuma data bloqueada.
-          </span>
-        `;
-
+        list.innerHTML = `<span style="color: var(--muted); font-size: 13px;">Nenhuma data bloqueada.</span>`;
         return;
       }
 
@@ -1820,22 +1611,25 @@
     async function ownerLogin() {
       await loadSettings();
 
-      const pin = $("ownerPassword").value.trim();
+      const email = $("ownerEmail").value.trim().toLowerCase();
+      const password = $("ownerPassword").value.trim();
 
-      if (pin === settings.adminPin) {
+      const savedEmail = String(settings.adminEmail || "admin@barbearia.com").trim().toLowerCase();
+      const savedPassword = String(settings.adminPassword || "1234").trim();
+
+      if (email === savedEmail && password === savedPassword) {
         startAudioContext();
 
         $("ownerLoginView").classList.add("hidden");
         $("clientView").classList.add("hidden");
         $("ownerView").classList.remove("hidden");
-        $("homeButtons").classList.remove("hidden");
 
         updateClientLink();
         startRealtimeAppointments();
         loadAppointments();
         loadClients();
       } else {
-        showMessage("loginMsg", "Senha incorreta.", "err");
+        showMessage("loginMsg", "E-mail ou senha incorretos.", "err");
       }
     }
 
@@ -1854,6 +1648,7 @@
         collection(db, "appointments"),
         (snapshot) => {
           let hasNewAppointment = false;
+          const items = [];
 
           snapshot.docChanges().forEach((change) => {
             const id = change.doc.id;
@@ -1871,8 +1666,6 @@
             }
           });
 
-          const items = [];
-
           snapshot.forEach((docItem) => {
             items.push({
               id: docItem.id,
@@ -1885,29 +1678,11 @@
           if (!firstRealtimeLoad && hasNewAppointment) {
             playBeep();
             showNewAppointmentAlert();
-
-            if (!$("ownerAppointments").classList.contains("hidden")) {
-              showMessage(
-                "appointmentsMsg",
-                "🔔 Novo agendamento recebido!",
-                "ok",
-                7000
-              );
-            }
           }
 
           firstRealtimeLoad = false;
 
           renderAppointmentsList();
-        },
-        (error) => {
-          console.error(error);
-          showMessage(
-            "appointmentsMsg",
-            "Não foi possível escutar novos agendamentos em tempo real. Verifique as regras do Firestore.",
-            "err",
-            8000
-          );
         }
       );
     }
@@ -1915,21 +1690,7 @@
     async function loadAppointments() {
       const container = $("appointmentsList");
 
-      container.innerHTML = `
-        <div class="empty">
-          Carregando agendamentos...
-        </div>
-      `;
-
-      if (!firebaseReady) {
-        container.innerHTML = `
-          <div class="empty">
-            O Firebase não está conectado.
-          </div>
-        `;
-
-        return;
-      }
+      container.innerHTML = `<div class="empty">Carregando agendamentos...</div>`;
 
       try {
         const snap = await getDocs(collection(db, "appointments"));
@@ -1947,13 +1708,7 @@
       } catch (error) {
         console.error(error);
 
-        container.innerHTML = `
-          <div class="empty">
-            Não foi possível carregar os agendamentos.
-            <br><br>
-            Verifique as regras do Firestore.
-          </div>
-        `;
+        container.innerHTML = `<div class="empty">Não foi possível carregar os agendamentos.</div>`;
       }
     }
 
@@ -1962,7 +1717,6 @@
       if (!container) return;
 
       const filterDate = $("filterDate") ? $("filterDate").value : "";
-
       let items = [...appointmentsCache];
 
       if (filterDate) {
@@ -1972,12 +1726,7 @@
       items = sortAppointments(items);
 
       if (items.length === 0) {
-        container.innerHTML = `
-          <div class="empty">
-            Nenhum agendamento encontrado.
-          </div>
-        `;
-
+        container.innerHTML = `<div class="empty">Nenhum agendamento encontrado.</div>`;
         return;
       }
 
@@ -1985,16 +1734,8 @@
 
       items.forEach((item) => {
         const status = item.status || "pending";
-
-        const statusText =
-          status === "confirmed"
-            ? "Confirmado"
-            : "Aguardando confirmação";
-
-        const statusClass =
-          status === "confirmed"
-            ? "confirmed"
-            : "pending";
+        const statusText = status === "confirmed" ? "Confirmado" : "Aguardando confirmação";
+        const statusClass = status === "confirmed" ? "confirmed" : "pending";
 
         const message =
           `Olá, ${item.name || "cliente"}! ` +
@@ -2011,43 +1752,20 @@
           <div>
             <strong>${item.name || "Cliente"}</strong>
             <span>Data: ${formatDateBR(item.date)} às ${item.time}</span>
-            <span>
-              WhatsApp:
-              <a class="whatsapp-link" href="${whatsappUrl}" target="_blank">
-                ${item.phone || ""}
-              </a>
-            </span>
-            <span class="status ${statusClass}">
-              ${statusText}
-            </span>
+            <span>WhatsApp: ${item.phone || ""}</span>
+            <span class="status ${statusClass}">${statusText}</span>
           </div>
 
           <div class="appointment-actions">
-            <button class="success" type="button" data-action="confirm">
-              Confirmar pelo WhatsApp
-            </button>
-
-            <button class="blue" type="button" data-action="mark">
-              Marcar como confirmado
-            </button>
-
-            <button class="danger" type="button" data-action="cancel">
-              Cancelar
-            </button>
+            <button class="success" type="button" data-action="confirm">Confirmar pelo WhatsApp</button>
+            <button class="blue" type="button" data-action="mark">Marcar confirmado</button>
+            <button class="danger" type="button" data-action="cancel">Cancelar</button>
           </div>
         `;
 
-        div.querySelector('[data-action="confirm"]').onclick = () => {
-          confirmByWhatsapp(item.id, whatsappUrl);
-        };
-
-        div.querySelector('[data-action="mark"]').onclick = () => {
-          markAppointmentConfirmed(item.id);
-        };
-
-        div.querySelector('[data-action="cancel"]').onclick = () => {
-          cancelAppointment(item.id);
-        };
+        div.querySelector('[data-action="confirm"]').onclick = () => confirmByWhatsapp(item.id, whatsappUrl);
+        div.querySelector('[data-action="mark"]').onclick = () => markAppointmentConfirmed(item.id);
+        div.querySelector('[data-action="cancel"]').onclick = () => cancelAppointment(item.id);
 
         container.appendChild(div);
       });
@@ -2062,21 +1780,12 @@
 
         window.open(whatsappUrl, "_blank");
 
-        showMessage(
-          "appointmentsMsg",
-          "Agendamento marcado como confirmado. O WhatsApp foi aberto com a mensagem pronta.",
-          "ok",
-          7000
-        );
+        showMessage("appointmentsMsg", "Agendamento confirmado. WhatsApp aberto com mensagem pronta.", "ok", 7000);
 
         await loadAppointments();
       } catch (error) {
         console.error(error);
-        showMessage(
-          "appointmentsMsg",
-          "Não foi possível confirmar o agendamento.",
-          "err"
-        );
+        showMessage("appointmentsMsg", "Não foi possível confirmar.", "err");
       }
     }
 
@@ -2087,36 +1796,23 @@
           confirmedAt: serverTimestamp()
         });
 
-        showMessage(
-          "appointmentsMsg",
-          "Agendamento marcado como confirmado.",
-          "ok"
-        );
+        showMessage("appointmentsMsg", "Agendamento marcado como confirmado.", "ok");
 
         await loadAppointments();
       } catch (error) {
         console.error(error);
-        showMessage(
-          "appointmentsMsg",
-          "Não foi possível marcar como confirmado.",
-          "err"
-        );
+        showMessage("appointmentsMsg", "Não foi possível marcar como confirmado.", "err");
       }
     }
 
     async function cancelAppointment(id) {
       const ok = confirm("Deseja cancelar este agendamento?");
-
       if (!ok) return;
 
       try {
         await deleteDoc(doc(db, "appointments", id));
 
-        showMessage(
-          "appointmentsMsg",
-          "Agendamento cancelado com sucesso.",
-          "ok"
-        );
+        showMessage("appointmentsMsg", "Agendamento cancelado.", "ok");
 
         await loadAppointments();
 
@@ -2140,21 +1836,7 @@
 
       if (!container) return;
 
-      container.innerHTML = `
-        <div class="empty">
-          Carregando clientes...
-        </div>
-      `;
-
-      if (!firebaseReady) {
-        container.innerHTML = `
-          <div class="empty">
-            O Firebase não está conectado.
-          </div>
-        `;
-
-        return;
-      }
+      container.innerHTML = `<div class="empty">Carregando clientes...</div>`;
 
       try {
         const snap = await getDocs(collection(db, "clientes"));
@@ -2171,14 +1853,7 @@
         renderClientsList();
       } catch (error) {
         console.error(error);
-
-        container.innerHTML = `
-          <div class="empty">
-            Não foi possível carregar os clientes.
-            <br><br>
-            Verifique as regras do Firestore.
-          </div>
-        `;
+        container.innerHTML = `<div class="empty">Não foi possível carregar os clientes.</div>`;
       }
     }
 
@@ -2186,10 +1861,7 @@
       const container = $("clientsList");
       if (!container) return;
 
-      const search = String($("clientSearch") ? $("clientSearch").value : "")
-        .toLowerCase()
-        .trim();
-
+      const search = String($("clientSearch") ? $("clientSearch").value : "").toLowerCase().trim();
       let items = [...clientsCache];
 
       if (search) {
@@ -2203,12 +1875,7 @@
       items = sortClients(items);
 
       if (items.length === 0) {
-        container.innerHTML = `
-          <div class="empty">
-            Nenhum cliente encontrado.
-          </div>
-        `;
-
+        container.innerHTML = `<div class="empty">Nenhum cliente encontrado.</div>`;
         return;
       }
 
@@ -2217,8 +1884,7 @@
       items.forEach((item) => {
         const promoMessage =
           `Olá, ${item.name || "cliente"}! Aqui é da Barbearia Rodrigues. ` +
-          `Passando para avisar que temos horários disponíveis para corte. ` +
-          `Quando quiser agendar, é só responder por aqui.`;
+          `Passando para avisar que temos horários disponíveis para corte.`;
 
         const whatsappUrl = makeWhatsAppUrl(item.phone, promoMessage);
 
@@ -2229,13 +1895,10 @@
           <div>
             <strong>${item.name || "Cliente"}</strong>
             <span>WhatsApp: ${item.phone || ""}</span>
-            <span>ID: ${item.id || ""}</span>
           </div>
 
           <div class="appointment-actions">
-            <a class="btn success" href="${whatsappUrl}" target="_blank">
-              Chamar no WhatsApp
-            </a>
+            <a class="btn success" href="${whatsappUrl}" target="_blank">Chamar no WhatsApp</a>
           </div>
         `;
 
@@ -2245,7 +1908,7 @@
 
     function updateClientLink() {
       const base = window.location.origin + window.location.pathname;
-      $("clientLink").value = `${base}?cliente=1`;
+      $("clientLink").value = base;
     }
 
     async function copyClientLink() {
@@ -2293,14 +1956,6 @@
       $("ownerLoginView").classList.add("hidden");
       $("ownerView").classList.add("hidden");
 
-      const params = new URLSearchParams(window.location.search);
-
-      if (params.get("cliente") === "1") {
-        $("homeButtons").classList.add("hidden");
-      } else {
-        $("homeButtons").classList.remove("hidden");
-      }
-
       updateClientUi();
       renderMonthOptions();
       renderClientDates();
@@ -2310,7 +1965,6 @@
       $("clientView").classList.add("hidden");
       $("ownerLoginView").classList.remove("hidden");
       $("ownerView").classList.add("hidden");
-      $("homeButtons").classList.remove("hidden");
     }
 
     window.showClient = showClient;
@@ -2337,13 +1991,7 @@
 
     updateClientUi();
 
-    const params = new URLSearchParams(window.location.search);
-
-    if (params.get("dono") === "1" || params.get("admin") === "1") {
-      showOwnerLogin();
-    } else {
-      showClient();
-    }
+    showClient();
   </script>
 </body>
 </html>
