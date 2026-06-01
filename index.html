@@ -7,595 +7,647 @@
 
   <style>
     :root {
-      --bg: #080808;
-      --card: #181818;
-      --text: #f5f5f5;
-      --muted: #b8b8b8;
-      --gold: #d4a034;
-      --gold2: #f0c76c;
-      --danger: #ff4d4d;
-      --success: #30d158;
-      --blue: #4da3ff;
-      --border: rgba(255,255,255,0.08);
-      --shadow: 0 18px 45px rgba(0,0,0,0.45);
-      --radius: 22px;
+      --bg:#080808;
+      --card:#181818;
+      --soft:#101010;
+      --text:#f5f5f5;
+      --muted:#b8b8b8;
+      --gold:#d4a034;
+      --gold2:#f0c76c;
+      --danger:#ff4d4d;
+      --success:#30d158;
+      --blue:#4da3ff;
+      --border:rgba(255,255,255,.09);
+      --shadow:0 18px 45px rgba(0,0,0,.45);
+      --radius:22px;
     }
 
     * {
-      box-sizing: border-box;
+      box-sizing:border-box;
     }
 
     body {
-      margin: 0;
-      font-family: Arial, Helvetica, sans-serif;
+      margin:0;
+      font-family:Arial, Helvetica, sans-serif;
       background:
-        radial-gradient(circle at top left, rgba(212,160,52,0.16), transparent 35%),
-        radial-gradient(circle at bottom right, rgba(212,160,52,0.10), transparent 35%),
+        radial-gradient(circle at top left, rgba(212,160,52,.16), transparent 35%),
+        radial-gradient(circle at bottom right, rgba(212,160,52,.10), transparent 35%),
         var(--bg);
-      color: var(--text);
-      min-height: 100vh;
+      color:var(--text);
+      min-height:100vh;
     }
 
     .app {
-      width: 100%;
-      max-width: 1180px;
-      margin: 0 auto;
-      padding: 16px;
+      width:100%;
+      max-width:1120px;
+      margin:0 auto;
+      padding:16px;
     }
 
     .hero {
       background:
-        linear-gradient(135deg, rgba(212,160,52,0.18), rgba(255,255,255,0.03)),
+        linear-gradient(135deg, rgba(212,160,52,.18), rgba(255,255,255,.03)),
         linear-gradient(180deg, #161616, #0f0f0f);
-      border: 1px solid var(--border);
-      border-radius: 30px;
-      padding: 22px;
-      box-shadow: var(--shadow);
-      position: relative;
-      overflow: hidden;
-      margin-bottom: 18px;
+      border:1px solid var(--border);
+      border-radius:30px;
+      padding:22px;
+      box-shadow:var(--shadow);
+      margin-bottom:18px;
+      position:relative;
+      overflow:hidden;
     }
 
     .hero::after {
-      content: "";
-      position: absolute;
-      width: 220px;
-      height: 220px;
-      border-radius: 50%;
-      background: rgba(212,160,52,0.18);
-      right: -80px;
-      top: -80px;
-      filter: blur(4px);
+      content:"";
+      position:absolute;
+      width:220px;
+      height:220px;
+      border-radius:50%;
+      background:rgba(212,160,52,.18);
+      right:-80px;
+      top:-80px;
+      filter:blur(4px);
     }
 
     .brand {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      position: relative;
-      z-index: 2;
+      display:flex;
+      align-items:center;
+      gap:14px;
+      position:relative;
+      z-index:2;
     }
 
     .logo {
-      width: 62px;
-      height: 62px;
-      border-radius: 20px;
-      background: linear-gradient(135deg, var(--gold), #7a510f);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 31px;
-      box-shadow: 0 14px 30px rgba(212,160,52,0.25);
+      width:62px;
+      height:62px;
+      border-radius:20px;
+      background:linear-gradient(135deg, var(--gold), #7a510f);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:31px;
+      box-shadow:0 14px 30px rgba(212,160,52,.25);
     }
 
     .brand h1 {
-      margin: 0;
-      font-size: 29px;
-      letter-spacing: -0.5px;
+      margin:0;
+      font-size:29px;
+      letter-spacing:-.5px;
     }
 
     .brand p {
-      margin: 5px 0 0;
-      color: var(--muted);
-      font-size: 14px;
-    }
-
-    button, .btn {
-      border: none;
-      outline: none;
-      padding: 13px 16px;
-      border-radius: 15px;
-      cursor: pointer;
-      font-weight: 800;
-      font-size: 14px;
-      transition: 0.2s;
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-    }
-
-    button:hover, .btn:hover {
-      transform: translateY(-1px);
-      opacity: 0.94;
-    }
-
-    .primary {
-      background: linear-gradient(135deg, var(--gold2), var(--gold));
-      color: #15100a;
-    }
-
-    .secondary {
-      background: rgba(255,255,255,0.08);
-      color: var(--text);
-      border: 1px solid var(--border);
-    }
-
-    .danger {
-      background: rgba(255,77,77,0.13);
-      color: #ffb0b0;
-      border: 1px solid rgba(255,77,77,0.25);
-    }
-
-    .success {
-      background: rgba(48,209,88,0.12);
-      color: #aef5c0;
-      border: 1px solid rgba(48,209,88,0.25);
-    }
-
-    .blue {
-      background: rgba(77,163,255,0.13);
-      color: #b9dcff;
-      border: 1px solid rgba(77,163,255,0.25);
+      margin:5px 0 0;
+      color:var(--muted);
+      font-size:14px;
     }
 
     .card {
-      background: rgba(24,24,24,0.92);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 18px;
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(10px);
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: 1.05fr 1.35fr;
-      gap: 18px;
-    }
-
-    .hidden {
-      display: none !important;
-    }
-
-    h2 {
-      margin-top: 0;
-    }
-
-    h3 {
-      color: var(--gold2);
-      margin: 18px 0 10px;
-      font-size: 16px;
-    }
-
-    label {
-      display: block;
-      margin-bottom: 7px;
-      font-size: 13px;
-      color: var(--muted);
-      font-weight: 700;
-    }
-
-    input, select {
-      width: 100%;
-      border: 1px solid var(--border);
-      background: #101010;
-      color: var(--text);
-      border-radius: 14px;
-      padding: 13px;
-      font-size: 15px;
-      outline: none;
-    }
-
-    input:focus, select:focus {
-      border-color: rgba(212,160,52,0.65);
-      box-shadow: 0 0 0 3px rgba(212,160,52,0.08);
-    }
-
-    .form-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      margin-bottom: 12px;
-    }
-
-    .single {
-      margin-bottom: 12px;
+      background:rgba(24,24,24,.92);
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      padding:18px;
+      box-shadow:var(--shadow);
+      backdrop-filter:blur(10px);
     }
 
     .client-shell {
-      max-width: 760px;
-      margin: 0 auto;
+      max-width:760px;
+      margin:0 auto;
     }
 
-    .client-title h2 {
-      font-size: 25px;
-      margin-bottom: 6px;
+    h2 {
+      margin:0 0 8px;
+      font-size:24px;
     }
 
-    .client-title p {
-      color: var(--muted);
-      margin: 0;
-      line-height: 1.5;
-      font-size: 14px;
+    h3 {
+      color:var(--gold2);
+      margin:18px 0 10px;
+      font-size:16px;
     }
 
-    .step-card {
-      background: rgba(255,255,255,0.035);
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      padding: 15px;
-      margin-bottom: 14px;
+    p {
+      line-height:1.5;
     }
 
-    .step-head {
-      display: flex;
-      align-items: center;
-      gap: 9px;
-      margin-bottom: 12px;
+    label {
+      display:block;
+      margin-bottom:7px;
+      color:var(--muted);
+      font-weight:700;
+      font-size:13px;
     }
 
-    .step-number {
-      width: 29px;
-      height: 29px;
-      border-radius: 999px;
-      background: linear-gradient(135deg, var(--gold2), var(--gold));
-      color: #15100a;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 900;
-      font-size: 13px;
+    input, select, textarea {
+      width:100%;
+      border:1px solid var(--border);
+      background:var(--soft);
+      color:var(--text);
+      border-radius:14px;
+      padding:13px;
+      font-size:15px;
+      outline:none;
     }
 
-    .client-welcome {
-      background: rgba(48,209,88,0.10);
-      border: 1px solid rgba(48,209,88,0.22);
-      border-radius: 18px;
-      padding: 13px;
-      margin-bottom: 14px;
-      color: #c9ffd5;
-      display: flex;
-      justify-content: space-between;
-      gap: 10px;
-      align-items: center;
-      flex-wrap: wrap;
+    textarea {
+      min-height:100px;
+      resize:vertical;
     }
 
-    .date-list {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(125px, 1fr));
-      gap: 10px;
-      margin: 10px 0 4px;
+    input:focus, select:focus, textarea:focus {
+      border-color:rgba(212,160,52,.65);
+      box-shadow:0 0 0 3px rgba(212,160,52,.08);
     }
 
-    .date-btn {
-      background: #101010;
-      color: var(--text);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 14px;
-      text-align: left;
-      cursor: pointer;
-      transition: 0.2s;
-      min-height: 72px;
+    button, .btn {
+      border:none;
+      outline:none;
+      padding:13px 16px;
+      border-radius:15px;
+      cursor:pointer;
+      font-weight:800;
+      font-size:14px;
+      transition:.2s;
+      text-decoration:none;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
     }
 
-    .date-btn strong {
-      display: block;
-      font-size: 15px;
-      margin-bottom: 4px;
+    button:hover, .btn:hover {
+      transform:translateY(-1px);
+      opacity:.94;
     }
 
-    .date-btn span {
-      color: var(--muted);
-      font-size: 12px;
+    .primary {
+      background:linear-gradient(135deg, var(--gold2), var(--gold));
+      color:#15100a;
     }
 
-    .date-btn.active {
-      border-color: var(--gold);
-      background: rgba(212,160,52,0.13);
-      box-shadow: 0 0 0 3px rgba(212,160,52,0.07);
+    .secondary {
+      background:rgba(255,255,255,.08);
+      color:var(--text);
+      border:1px solid var(--border);
     }
 
-    .slots {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(86px, 1fr));
-      gap: 10px;
-      margin: 10px 0 4px;
+    .danger {
+      background:rgba(255,77,77,.13);
+      color:#ffb0b0;
+      border:1px solid rgba(255,77,77,.25);
     }
 
-    .slot {
-      background: #101010;
-      border: 1px solid var(--border);
-      color: var(--text);
-      border-radius: 15px;
-      padding: 14px 10px;
-      font-weight: 900;
-      cursor: pointer;
-      min-height: 48px;
+    .success {
+      background:rgba(48,209,88,.12);
+      color:#aef5c0;
+      border:1px solid rgba(48,209,88,.25);
     }
 
-    .slot.active {
-      background: linear-gradient(135deg, var(--gold2), var(--gold));
-      color: #15100a;
-      border-color: transparent;
+    .blue {
+      background:rgba(77,163,255,.13);
+      color:#b9dcff;
+      border:1px solid rgba(77,163,255,.25);
     }
 
-    .days {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
-      margin-bottom: 14px;
+    .hidden {
+      display:none !important;
     }
 
-    .day-check {
-      background: #101010;
-      border: 1px solid var(--border);
-      border-radius: 15px;
-      padding: 12px;
-      display: flex;
-      align-items: center;
-      gap: 9px;
-      cursor: pointer;
-      color: var(--text);
-      font-weight: 700;
-      font-size: 14px;
+    .home-actions {
+      display:grid;
+      grid-template-columns:1fr;
+      gap:12px;
+      margin-top:18px;
     }
 
-    .day-check input {
-      width: auto;
-      accent-color: var(--gold);
+    .big-action {
+      min-height:82px;
+      font-size:18px;
+      border-radius:20px;
+      justify-content:flex-start;
+      padding:18px;
+      text-align:left;
     }
 
-    .tabs {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 18px;
-      flex-wrap: wrap;
-    }
-
-    .tab {
-      flex: 1;
-      min-width: 130px;
-      background: rgba(255,255,255,0.07);
-      color: var(--text);
-      border: 1px solid var(--border);
-    }
-
-    .tab.active {
-      background: linear-gradient(135deg, var(--gold2), var(--gold));
-      color: #15100a;
-    }
-
-    .appointment, .client-item {
-      background: #101010;
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      padding: 14px;
-      margin-bottom: 10px;
-      display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 12px;
-      align-items: center;
-    }
-
-    .appointment strong, .client-item strong {
-      display: block;
-      font-size: 15px;
-      margin-bottom: 4px;
-    }
-
-    .appointment span, .client-item span {
-      display: block;
-      color: var(--muted);
-      font-size: 13px;
-      margin-top: 3px;
-    }
-
-    .appointment-actions {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .status {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      padding: 7px 10px;
-      border-radius: 99px;
-      font-size: 12px;
-      font-weight: 900;
-      border: 1px solid transparent;
-      margin-top: 8px;
-    }
-
-    .status.pending {
-      background: rgba(212,160,52,0.14);
-      color: var(--gold2);
-      border-color: rgba(212,160,52,0.28);
-    }
-
-    .status.confirmed {
-      background: rgba(48,209,88,0.12);
-      color: #aef5c0;
-      border-color: rgba(48,209,88,0.25);
-    }
-
-    .message {
-      padding: 13px;
-      border-radius: 16px;
-      margin: 12px 0;
-      font-size: 14px;
-      line-height: 1.4;
-      display: none;
-    }
-
-    .message.show {
-      display: block;
-    }
-
-    .message.ok {
-      background: rgba(48,209,88,0.12);
-      color: #b7f8c8;
-      border: 1px solid rgba(48,209,88,0.25);
-    }
-
-    .message.err {
-      background: rgba(255,77,77,0.12);
-      color: #ffc0c0;
-      border: 1px solid rgba(255,77,77,0.25);
-    }
-
-    .message.info {
-      background: rgba(212,160,52,0.12);
-      color: #ffe2a1;
-      border: 1px solid rgba(212,160,52,0.23);
-    }
-
-    .message.new {
-      background: rgba(48,209,88,0.14);
-      color: #bcffcb;
-      border: 1px solid rgba(48,209,88,0.35);
-      animation: pulseNotice 1s ease-in-out infinite alternate;
-    }
-
-    @keyframes pulseNotice {
-      from {
-        box-shadow: 0 0 0 rgba(48,209,88,0);
-      }
-      to {
-        box-shadow: 0 0 22px rgba(48,209,88,0.25);
-      }
-    }
-
-    .empty {
-      text-align: center;
-      color: var(--muted);
-      padding: 28px 10px;
-      border: 1px dashed var(--border);
-      border-radius: 18px;
-      background: rgba(255,255,255,0.03);
-    }
-
-    .footer-note {
-      margin-top: 18px;
-      color: var(--muted);
-      font-size: 12px;
-      text-align: center;
-      line-height: 1.5;
+    .big-action small {
+      display:block;
+      font-size:12px;
+      font-weight:600;
+      opacity:.75;
+      margin-top:4px;
     }
 
     .admin-mini {
-      display: flex;
-      justify-content: center;
-      margin-top: 16px;
+      display:flex;
+      justify-content:center;
+      margin-top:16px;
     }
 
     .admin-mini button {
-      font-size: 12px;
-      padding: 10px 13px;
-      opacity: 0.8;
+      font-size:12px;
+      padding:10px 13px;
+      opacity:.85;
+    }
+
+    .message {
+      padding:13px;
+      border-radius:16px;
+      margin:12px 0;
+      font-size:14px;
+      line-height:1.4;
+      display:none;
+    }
+
+    .message.show {
+      display:block;
+    }
+
+    .message.ok {
+      background:rgba(48,209,88,.12);
+      color:#b7f8c8;
+      border:1px solid rgba(48,209,88,.25);
+    }
+
+    .message.err {
+      background:rgba(255,77,77,.12);
+      color:#ffc0c0;
+      border:1px solid rgba(255,77,77,.25);
+    }
+
+    .message.info {
+      background:rgba(212,160,52,.12);
+      color:#ffe2a1;
+      border:1px solid rgba(212,160,52,.23);
+    }
+
+    .message.new {
+      background:rgba(48,209,88,.14);
+      color:#bcffcb;
+      border:1px solid rgba(48,209,88,.35);
+      animation:pulseNotice 1s ease-in-out infinite alternate;
+    }
+
+    @keyframes pulseNotice {
+      from { box-shadow:0 0 0 rgba(48,209,88,0); }
+      to { box-shadow:0 0 22px rgba(48,209,88,.25); }
+    }
+
+    .form-row {
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:12px;
+      margin-bottom:12px;
+    }
+
+    .single {
+      margin-bottom:12px;
+    }
+
+    .back-row {
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-bottom:14px;
+    }
+
+    .step-card {
+      background:rgba(255,255,255,.035);
+      border:1px solid var(--border);
+      border-radius:18px;
+      padding:15px;
+      margin-bottom:14px;
+    }
+
+    .step-head {
+      display:flex;
+      align-items:center;
+      gap:9px;
+      margin-bottom:12px;
+    }
+
+    .step-number {
+      width:29px;
+      height:29px;
+      border-radius:999px;
+      background:linear-gradient(135deg, var(--gold2), var(--gold));
+      color:#15100a;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-weight:900;
+      font-size:13px;
+    }
+
+    .date-list {
+      display:grid;
+      grid-template-columns:repeat(auto-fit, minmax(125px,1fr));
+      gap:10px;
+      margin:10px 0 4px;
+    }
+
+    .date-btn {
+      background:var(--soft);
+      color:var(--text);
+      border:1px solid var(--border);
+      border-radius:16px;
+      padding:14px;
+      text-align:left;
+      cursor:pointer;
+      min-height:72px;
+    }
+
+    .date-btn strong {
+      display:block;
+      font-size:15px;
+      margin-bottom:4px;
+    }
+
+    .date-btn span {
+      color:var(--muted);
+      font-size:12px;
+    }
+
+    .date-btn.active {
+      border-color:var(--gold);
+      background:rgba(212,160,52,.13);
+      box-shadow:0 0 0 3px rgba(212,160,52,.07);
+    }
+
+    .slots {
+      display:grid;
+      grid-template-columns:repeat(auto-fit, minmax(86px,1fr));
+      gap:10px;
+      margin:10px 0 4px;
+    }
+
+    .slot {
+      background:var(--soft);
+      border:1px solid var(--border);
+      color:var(--text);
+      border-radius:15px;
+      padding:14px 10px;
+      font-weight:900;
+      cursor:pointer;
+      min-height:48px;
+    }
+
+    .slot.active {
+      background:linear-gradient(135deg, var(--gold2), var(--gold));
+      color:#15100a;
+      border-color:transparent;
+    }
+
+    .available-day {
+      background:rgba(255,255,255,.035);
+      border:1px solid var(--border);
+      border-radius:18px;
+      padding:14px;
+      margin-bottom:12px;
+    }
+
+    .available-day h3 {
+      margin:0 0 10px;
+    }
+
+    .available-slots {
+      display:grid;
+      grid-template-columns:repeat(auto-fit, minmax(84px,1fr));
+      gap:8px;
+    }
+
+    .confirm-box {
+      background:rgba(212,160,52,.10);
+      border:1px solid rgba(212,160,52,.24);
+      border-radius:18px;
+      padding:14px;
+      margin:12px 0;
+    }
+
+    .grid {
+      display:grid;
+      grid-template-columns:1.05fr 1.35fr;
+      gap:18px;
+    }
+
+    .days {
+      display:grid;
+      grid-template-columns:repeat(2,1fr);
+      gap:10px;
+      margin-bottom:14px;
+    }
+
+    .day-check {
+      background:var(--soft);
+      border:1px solid var(--border);
+      border-radius:15px;
+      padding:12px;
+      display:flex;
+      align-items:center;
+      gap:9px;
+      cursor:pointer;
+      color:var(--text);
+      font-weight:700;
+      font-size:14px;
+    }
+
+    .day-check input {
+      width:auto;
+      accent-color:var(--gold);
+    }
+
+    .tabs {
+      display:flex;
+      gap:10px;
+      margin-bottom:18px;
+      flex-wrap:wrap;
+    }
+
+    .tab {
+      flex:1;
+      min-width:130px;
+      background:rgba(255,255,255,.07);
+      color:var(--text);
+      border:1px solid var(--border);
+    }
+
+    .tab.active {
+      background:linear-gradient(135deg, var(--gold2), var(--gold));
+      color:#15100a;
+    }
+
+    .appointment, .client-item {
+      background:var(--soft);
+      border:1px solid var(--border);
+      border-radius:18px;
+      padding:14px;
+      margin-bottom:10px;
+      display:grid;
+      grid-template-columns:1fr auto;
+      gap:12px;
+      align-items:center;
+    }
+
+    .appointment strong, .client-item strong {
+      display:block;
+      font-size:15px;
+      margin-bottom:4px;
+    }
+
+    .appointment span, .client-item span {
+      display:block;
+      color:var(--muted);
+      font-size:13px;
+      margin-top:3px;
+    }
+
+    .appointment-actions {
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+    }
+
+    .status {
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding:7px 10px;
+      border-radius:99px;
+      font-size:12px;
+      font-weight:900;
+      border:1px solid transparent;
+      margin-top:8px;
+    }
+
+    .status.pending {
+      background:rgba(212,160,52,.14);
+      color:var(--gold2);
+      border-color:rgba(212,160,52,.28);
+    }
+
+    .status.confirmed {
+      background:rgba(48,209,88,.12);
+      color:#aef5c0;
+      border-color:rgba(48,209,88,.25);
+    }
+
+    .empty {
+      text-align:center;
+      color:var(--muted);
+      padding:28px 10px;
+      border:1px dashed var(--border);
+      border-radius:18px;
+      background:rgba(255,255,255,.03);
+    }
+
+    .footer-note {
+      margin-top:18px;
+      color:var(--muted);
+      font-size:12px;
+      text-align:center;
+      line-height:1.5;
+    }
+
+    .client-welcome {
+      background:rgba(48,209,88,.10);
+      border:1px solid rgba(48,209,88,.22);
+      border-radius:18px;
+      padding:13px;
+      margin-bottom:14px;
+      color:#c9ffd5;
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      align-items:center;
+      flex-wrap:wrap;
     }
 
     .blocked-list {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 8px;
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      margin-top:8px;
     }
 
     .blocked-item {
-      padding: 8px 10px;
-      background: rgba(255,255,255,0.06);
-      border: 1px solid var(--border);
-      border-radius: 99px;
-      display: inline-flex;
-      gap: 8px;
-      align-items: center;
-      font-size: 12px;
-      color: var(--muted);
+      padding:8px 10px;
+      background:rgba(255,255,255,.06);
+      border:1px solid var(--border);
+      border-radius:99px;
+      display:inline-flex;
+      gap:8px;
+      align-items:center;
+      font-size:12px;
+      color:var(--muted);
     }
 
     .sound-box {
-      background: rgba(77,163,255,0.10);
-      border: 1px solid rgba(77,163,255,0.20);
-      color: #cfe8ff;
-      padding: 12px;
-      border-radius: 16px;
-      font-size: 13px;
-      line-height: 1.5;
-      margin-bottom: 12px;
+      background:rgba(77,163,255,.10);
+      border:1px solid rgba(77,163,255,.20);
+      color:#cfe8ff;
+      padding:12px;
+      border-radius:16px;
+      font-size:13px;
+      line-height:1.5;
+      margin-bottom:12px;
     }
 
-    @media (max-width: 850px) {
+    @media (max-width:850px) {
       .app {
-        padding: 12px;
+        padding:12px;
       }
 
       .grid {
-        grid-template-columns: 1fr;
+        grid-template-columns:1fr;
       }
 
       .brand h1 {
-        font-size: 22px;
+        font-size:22px;
       }
 
       .brand p {
-        font-size: 12px;
+        font-size:12px;
       }
 
       .logo {
-        width: 54px;
-        height: 54px;
-        font-size: 27px;
-        border-radius: 18px;
-      }
-
-      .form-row {
-        grid-template-columns: 1fr;
-      }
-
-      .days {
-        grid-template-columns: 1fr;
+        width:54px;
+        height:54px;
+        font-size:27px;
+        border-radius:18px;
       }
 
       .hero {
-        padding: 18px;
-        border-radius: 24px;
+        padding:18px;
+        border-radius:24px;
       }
 
-      .appointment, .client-item {
-        grid-template-columns: 1fr;
+      .form-row {
+        grid-template-columns:1fr;
+      }
+
+      .days {
+        grid-template-columns:1fr;
       }
 
       .date-list {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns:repeat(2,1fr);
       }
 
-      .slots {
-        grid-template-columns: repeat(3, 1fr);
+      .slots,
+      .available-slots {
+        grid-template-columns:repeat(3,1fr);
       }
 
       button, .btn {
-        width: 100%;
-        min-height: 46px;
+        width:100%;
+        min-height:46px;
       }
 
       .tab {
-        min-width: 100%;
+        min-width:100%;
+      }
+
+      .appointment, .client-item {
+        grid-template-columns:1fr;
       }
     }
   </style>
@@ -607,20 +659,82 @@
       <div class="brand">
         <div class="logo">✂️</div>
         <div>
-          <h1>Barbearia Rodrigues</h1>
-          <p>Agendamento moderno de cortes, direto pelo celular.</p>
+          <h1 id="brandName">Barbearia Rodrigues</h1>
+          <p id="brandSubtitle">Agendamento moderno de cortes, direto pelo celular.</p>
         </div>
       </div>
     </section>
 
     <div id="firebaseWarning" class="message info show">Conectando ao Firebase...</div>
 
-    <section id="clientView" class="client-shell">
+    <section id="clientHomeView" class="client-shell">
       <div class="card">
-        <div class="client-title">
-          <h2>Agende seu corte</h2>
-          <p>Faça seu cadastro, escolha o mês, o dia e o horário disponível.</p>
+        <h2>O que você deseja fazer?</h2>
+        <p style="color:var(--muted);margin-top:0;">Escolha uma opção abaixo.</p>
+
+        <div class="home-actions">
+          <button class="primary big-action" onclick="openGuidedBooking()">
+            ✂️ Agendar corte
+            <small>Escolha mês, dia e horário passo a passo.</small>
+          </button>
+
+          <button class="secondary big-action" onclick="openAvailableTimes()">
+            🕒 Ver horários disponíveis
+            <small>Veja os próximos horários livres e toque para agendar.</small>
+          </button>
         </div>
+
+        <div class="admin-mini">
+          <button class="secondary" onclick="showOwnerLogin()">Administrador</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="availableView" class="client-shell hidden">
+      <div class="card">
+        <div class="back-row">
+          <button class="secondary" onclick="showClientHome()">← Voltar</button>
+        </div>
+
+        <h2>Horários disponíveis</h2>
+        <p style="color:var(--muted);margin-top:0;">Toque em um horário livre para agendar.</p>
+
+        <div id="availableMsg" class="message"></div>
+        <div id="availableList"></div>
+
+        <div id="quickConfirmBox" class="hidden">
+          <div class="confirm-box">
+            <h3>Confirmar horário</h3>
+            <p id="quickConfirmText"></p>
+
+            <div id="quickClientBox">
+              <div class="form-row">
+                <div>
+                  <label>Seu nome</label>
+                  <input id="quickName" type="text" placeholder="Ex: João Silva" />
+                </div>
+
+                <div>
+                  <label>WhatsApp</label>
+                  <input id="quickPhone" type="tel" placeholder="Ex: 11999999999" />
+                </div>
+              </div>
+            </div>
+
+            <button class="primary" onclick="confirmQuickBooking()">Confirmar agendamento</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="guidedView" class="client-shell hidden">
+      <div class="card">
+        <div class="back-row">
+          <button class="secondary" onclick="showClientHome()">← Voltar</button>
+        </div>
+
+        <h2>Agende seu corte</h2>
+        <p style="color:var(--muted);margin-top:0;">Siga os passos abaixo.</p>
 
         <div id="clientMsg" class="message"></div>
 
@@ -650,15 +764,7 @@
             </div>
           </div>
 
-          <button class="primary" style="width:100%;" onclick="registerClient()">
-            Entrar / Cadastrar
-          </button>
-
-          <div class="admin-mini">
-            <button class="secondary" onclick="showOwnerLogin()">
-              Administrador
-            </button>
-          </div>
+          <button class="primary" onclick="registerClient()">Entrar / Cadastrar</button>
         </div>
 
         <div id="scheduleBox" class="hidden">
@@ -690,29 +796,14 @@
             <div id="slotList" class="slots"></div>
           </div>
 
-          <button class="primary" style="width:100%;" onclick="bookAppointment()">
-            Confirmar agendamento
-          </button>
-
-          <div class="admin-mini">
-            <button class="secondary" onclick="showOwnerLogin()">
-              Administrador
-            </button>
-          </div>
-
-          <p class="footer-note">
-            Após confirmar, seu horário fica reservado e não aparece mais para outros clientes.
-          </p>
+          <button class="primary" onclick="bookAppointment()">Confirmar agendamento</button>
         </div>
       </div>
     </section>
 
     <section id="ownerLoginView" class="card client-shell hidden">
       <h2>Administrador</h2>
-
-      <p style="color: var(--muted); line-height: 1.5;">
-        Entre com o e-mail e a senha do dono da Barbearia Rodrigues.
-      </p>
+      <p style="color:var(--muted);">Entre com o e-mail e a senha do dono.</p>
 
       <div id="loginMsg" class="message"></div>
 
@@ -728,14 +819,10 @@
         </div>
       </div>
 
-      <button class="primary" style="width:100%;" onclick="ownerLogin()">
-        Entrar no painel
-      </button>
+      <button class="primary" onclick="ownerLogin()">Entrar no painel</button>
 
       <div class="admin-mini">
-        <button class="secondary" onclick="showClient()">
-          Voltar para agendamento
-        </button>
+        <button class="secondary" onclick="showClientHome()">Voltar</button>
       </div>
     </section>
 
@@ -745,29 +832,53 @@
       </div>
 
       <div class="tabs">
-        <button id="tabSchedule" class="tab active" onclick="openOwnerTab('schedule')">
-          Configurações
-        </button>
-
-        <button id="tabAppointments" class="tab" onclick="openOwnerTab('appointments')">
-          Agendamentos
-        </button>
-
-        <button id="tabClients" class="tab" onclick="openOwnerTab('clients')">
-          Clientes
-        </button>
+        <button id="tabSchedule" class="tab active" onclick="openOwnerTab('schedule')">Configurações</button>
+        <button id="tabAppointments" class="tab" onclick="openOwnerTab('appointments')">Agendamentos</button>
+        <button id="tabClients" class="tab" onclick="openOwnerTab('clients')">Clientes</button>
       </div>
 
       <div id="ownerSchedule" class="grid">
         <div class="card">
-          <h2>Configurar atendimento</h2>
+          <h2>Configurar aplicativo</h2>
 
           <div class="sound-box">
             🔔 O painel do dono avisa em tempo real quando chegar novo agendamento.
-            Para o bip tocar, deixe o painel aberto no celular.
           </div>
 
           <div id="settingsMsg" class="message"></div>
+
+          <h3>Dados da barbearia</h3>
+
+          <div class="form-row">
+            <div>
+              <label>Nome da barbearia</label>
+              <input id="businessName" type="text" placeholder="Barbearia Rodrigues" />
+            </div>
+
+            <div>
+              <label>WhatsApp do dono</label>
+              <input id="ownerWhatsapp" type="tel" placeholder="Ex: 11999999999" />
+            </div>
+          </div>
+
+          <div class="single">
+            <label>Mensagem de confirmação</label>
+            <textarea id="confirmationMessage"></textarea>
+          </div>
+
+          <h3>Acesso do administrador</h3>
+
+          <div class="form-row">
+            <div>
+              <label>E-mail do administrador</label>
+              <input id="adminEmail" type="email" placeholder="admin@barbearia.com" />
+            </div>
+
+            <div>
+              <label>Senha do administrador</label>
+              <input id="adminPassword" type="text" placeholder="Ex: 1234" />
+            </div>
+          </div>
 
           <h3>Dias de trabalho</h3>
 
@@ -793,47 +904,20 @@
             </div>
           </div>
 
-          <div class="form-row">
-            <div>
-              <label>Duração de cada corte</label>
-              <select id="slotDuration">
-                <option value="20">20 minutos</option>
-                <option value="30" selected>30 minutos</option>
-                <option value="40">40 minutos</option>
-                <option value="45">45 minutos</option>
-                <option value="60">1 hora</option>
-              </select>
-            </div>
-
-            <div>
-              <label>Senha antiga do dono</label>
-              <input id="adminPin" type="text" placeholder="Ex: 1234" />
-            </div>
+          <div class="single">
+            <label>Duração de cada corte</label>
+            <select id="slotDuration">
+              <option value="20">20 minutos</option>
+              <option value="30" selected>30 minutos</option>
+              <option value="40">40 minutos</option>
+              <option value="45">45 minutos</option>
+              <option value="60">1 hora</option>
+            </select>
           </div>
 
-          <h3>Acesso do administrador</h3>
-
-          <div class="form-row">
-            <div>
-              <label>E-mail do administrador</label>
-              <input id="adminEmail" type="email" placeholder="admin@barbearia.com" />
-            </div>
-
-            <div>
-              <label>Senha do administrador</label>
-              <input id="adminPassword" type="text" placeholder="Ex: 1234" />
-            </div>
-          </div>
-
-          <button class="primary" style="width:100%;" onclick="saveSettings()">
-            Salvar configurações
-          </button>
+          <button class="primary" onclick="saveSettings()">Salvar configurações</button>
 
           <h3>Bloquear um dia específico</h3>
-
-          <p style="color: var(--muted); font-size: 13px; line-height: 1.5;">
-            Use isso para folgas, viagens, feriados ou dias que você não vai atender.
-          </p>
 
           <div class="form-row">
             <div>
@@ -841,10 +925,8 @@
               <input id="blockDate" type="date" />
             </div>
 
-            <div style="display:flex; align-items:flex-end;">
-              <button class="secondary" style="width:100%;" onclick="addBlockedDate()">
-                Bloquear data
-              </button>
+            <div style="display:flex;align-items:flex-end;">
+              <button class="secondary" onclick="addBlockedDate()">Bloquear data</button>
             </div>
           </div>
 
@@ -853,28 +935,21 @@
 
         <div class="card">
           <h2>Link para clientes</h2>
-
-          <p style="color: var(--muted); line-height: 1.5;">
-            Envie este link para seus clientes fazerem cadastro e agendamento.
-          </p>
+          <p style="color:var(--muted);">Use um domínio próprio depois para não aparecer GitHub no link.</p>
 
           <div class="single">
-            <label>Link do cliente</label>
+            <label>Link atual do cliente</label>
             <input id="clientLink" type="text" readonly />
           </div>
 
-          <button class="success" style="width:100%;" onclick="copyClientLink()">
-            Copiar link do cliente
-          </button>
+          <button class="success" onclick="copyClientLink()">Copiar link</button>
 
-          <h3>Resumo de funcionamento</h3>
-
+          <h3>Como usar para outro cliente</h3>
           <div class="empty" style="text-align:left;">
-            <p><strong>1.</strong> O cliente entra no link e faz cadastro.</p>
-            <p><strong>2.</strong> Escolhe mês, dia e horário disponível.</p>
-            <p><strong>3.</strong> Depois que alguém agenda, aquele horário some.</p>
-            <p><strong>4.</strong> O painel do dono toca bip quando chegar agendamento.</p>
-            <p><strong>5.</strong> O dono confirma pelo WhatsApp com mensagem pronta.</p>
+            <p><strong>1.</strong> Troque o nome da barbearia.</p>
+            <p><strong>2.</strong> Coloque o WhatsApp do dono.</p>
+            <p><strong>3.</strong> Troque e-mail e senha do administrador.</p>
+            <p><strong>4.</strong> Depois use um domínio próprio, exemplo: agenda.barbeariarodrigues.com.br</p>
           </div>
         </div>
       </div>
@@ -885,7 +960,6 @@
             <h2>Agendamentos</h2>
             <span class="status pending">Clientes marcados</span>
           </div>
-
           <button class="secondary" onclick="loadAppointments()">Atualizar</button>
         </div>
 
@@ -898,9 +972,7 @@
           </div>
 
           <div style="display:flex;align-items:flex-end;">
-            <button class="secondary" style="width:100%;" onclick="clearFilter()">
-              Mostrar todos
-            </button>
+            <button class="secondary" onclick="clearFilter()">Mostrar todos</button>
           </div>
         </div>
 
@@ -913,7 +985,6 @@
             <h2>Clientes cadastrados</h2>
             <span class="status confirmed">Lista da barbearia</span>
           </div>
-
           <button class="secondary" onclick="loadClients()">Atualizar</button>
         </div>
 
@@ -929,7 +1000,7 @@
     </section>
 
     <p class="footer-note">
-      Barbearia Rodrigues © Sistema de agendamento online.
+      <span id="footerBrand">Barbearia Rodrigues</span> © Sistema de agendamento online.
     </p>
   </div>
 
@@ -969,25 +1040,25 @@
       app = initializeApp(firebaseConfig);
       db = getFirestore(app);
       firebaseReady = true;
-
-      const warning = document.getElementById("firebaseWarning");
-      warning.classList.remove("show");
-      warning.innerHTML = "";
+      $("firebaseWarning").classList.remove("show");
     } catch (error) {
       console.error(error);
       firebaseReady = false;
-
-      const warning = document.getElementById("firebaseWarning");
-      warning.className = "message err show";
-      warning.innerHTML = "Erro ao conectar com o Firebase.";
+      $("firebaseWarning").className = "message err show";
+      $("firebaseWarning").innerHTML = "Erro ao conectar com o Firebase.";
     }
 
+    const DEFAULT_CONFIRMATION_MESSAGE =
+      "Olá, {nome}! Seu horário na {barbearia} foi confirmado para {data} às {hora}. Qualquer dúvida, pode responder por aqui. Deus abençoe!";
+
     const DEFAULT_SETTINGS = {
-      workdays: [1, 2, 3, 4, 5, 6],
+      businessName: "Barbearia Rodrigues",
+      ownerWhatsapp: "",
+      confirmationMessage: DEFAULT_CONFIRMATION_MESSAGE,
+      workdays: [1,2,3,4,5,6],
       startTime: "08:00",
       endTime: "18:00",
       slotDuration: 30,
-      adminPin: "1234",
       adminEmail: "admin@barbearia.com",
       adminPassword: "1234",
       blockedDates: []
@@ -997,6 +1068,7 @@
     let selectedDate = "";
     let selectedSlot = "";
     let selectedMonth = "";
+    let quickSelected = null;
     let bookedSlots = [];
     let appointmentsCache = [];
     let clientsCache = [];
@@ -1006,15 +1078,15 @@
     let knownAppointmentIds = new Set();
     let audioContextStarted = false;
 
-    const $ = (id) => document.getElementById(id);
+    function $(id) {
+      return document.getElementById(id);
+    }
 
     function showMessage(id, text, type = "info", timeout = 4500) {
       const el = $(id);
       if (!el) return;
-
       el.className = "message show " + type;
       el.innerHTML = text;
-
       if (timeout > 0) {
         setTimeout(() => {
           el.className = "message";
@@ -1022,35 +1094,47 @@
       }
     }
 
+    function showOnly(viewId) {
+      [
+        "clientHomeView",
+        "availableView",
+        "guidedView",
+        "ownerLoginView",
+        "ownerView"
+      ].forEach(id => $(id).classList.add("hidden"));
+
+      $(viewId).classList.remove("hidden");
+    }
+
     function formatDateBR(dateStr) {
       if (!dateStr || !dateStr.includes("-")) return dateStr || "";
-      const [y, m, d] = dateStr.split("-");
+      const [y,m,d] = dateStr.split("-");
       return `${d}/${m}/${y}`;
     }
 
     function getDayName(date) {
-      return ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"][date.getDay()];
+      return ["Domingo","Segunda","Terça","Quarta","Quinta","Sexta","Sábado"][date.getDay()];
     }
 
-    function getMonthName(monthIndex) {
-      return ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"][monthIndex];
+    function getMonthName(i) {
+      return ["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"][i];
     }
 
     function toDateInputValue(date) {
       const y = date.getFullYear();
-      const m = String(date.getMonth() + 1).padStart(2, "0");
-      const d = String(date.getDate()).padStart(2, "0");
+      const m = String(date.getMonth() + 1).padStart(2,"0");
+      const d = String(date.getDate()).padStart(2,"0");
       return `${y}-${m}-${d}`;
     }
 
     function minutesFromTime(time) {
-      const [h, m] = time.split(":").map(Number);
+      const [h,m] = time.split(":").map(Number);
       return h * 60 + m;
     }
 
     function timeFromMinutes(total) {
-      const h = String(Math.floor(total / 60)).padStart(2, "0");
-      const m = String(total % 60).padStart(2, "0");
+      const h = String(Math.floor(total / 60)).padStart(2,"0");
+      const m = String(total % 60).padStart(2,"0");
       return `${h}:${m}`;
     }
 
@@ -1068,7 +1152,7 @@
     }
 
     function cleanPhone(phone) {
-      return String(phone || "").replace(/\D/g, "");
+      return String(phone || "").replace(/\D/g,"");
     }
 
     function makeWhatsAppUrl(phone, message = "") {
@@ -1076,28 +1160,13 @@
       if (!phoneClean) return "#";
 
       let finalPhone = phoneClean;
-
-      if (!finalPhone.startsWith("55")) {
-        finalPhone = "55" + finalPhone;
-      }
+      if (!finalPhone.startsWith("55")) finalPhone = "55" + finalPhone;
 
       if (message) {
         return `https://wa.me/${finalPhone}?text=${encodeURIComponent(message)}`;
       }
 
       return `https://wa.me/${finalPhone}`;
-    }
-
-    function sortAppointments(items) {
-      return items.sort((a, b) => {
-        const aKey = `${a.date || ""} ${a.time || ""}`;
-        const bKey = `${b.date || ""} ${b.time || ""}`;
-        return aKey.localeCompare(bKey);
-      });
-    }
-
-    function sortClients(items) {
-      return items.sort((a, b) => String(a.name || "").localeCompare(String(b.name || "")));
     }
 
     function startAudioContext() {
@@ -1107,7 +1176,6 @@
     function playBeep() {
       try {
         if (!audioContextStarted) return;
-
         const AudioContext = window.AudioContext || window.webkitAudioContext;
         if (!AudioContext) return;
 
@@ -1117,42 +1185,41 @@
 
         oscillator.type = "sine";
         oscillator.frequency.value = 880;
-
-        gain.gain.setValueAtTime(0.0001, ctx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.45, ctx.currentTime + 0.03);
-        gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.45);
-
+        gain.gain.setValueAtTime(.0001, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(.45, ctx.currentTime + .03);
+        gain.gain.exponentialRampToValueAtTime(.0001, ctx.currentTime + .45);
         oscillator.connect(gain);
         gain.connect(ctx.destination);
-
         oscillator.start();
-        oscillator.stop(ctx.currentTime + 0.5);
+        oscillator.stop(ctx.currentTime + .5);
       } catch (error) {
-        console.error("Erro no bip:", error);
+        console.error(error);
       }
     }
 
     function showNewAppointmentAlert() {
       const el = $("newAppointmentAlert");
-      if (!el) return;
-
       el.className = "message new show";
       el.innerHTML = "🔔 Novo agendamento recebido! Veja a lista abaixo.";
-
       setTimeout(() => {
         el.className = "message new";
       }, 9000);
     }
 
+    function sortAppointments(items) {
+      return items.sort((a,b) => `${a.date || ""} ${a.time || ""}`.localeCompare(`${b.date || ""} ${b.time || ""}`));
+    }
+
+    function sortClients(items) {
+      return items.sort((a,b) => String(a.name || "").localeCompare(String(b.name || "")));
+    }
+
     function loadClientFromStorage() {
       try {
-        const saved = localStorage.getItem("barbeariaRodriguesClient");
+        const saved = localStorage.getItem("barbeariaClient");
         if (!saved) return null;
-
         const parsed = JSON.parse(saved);
-
         if (!parsed || !parsed.name || !parsed.phone) return null;
-
         return parsed;
       } catch {
         return null;
@@ -1160,11 +1227,64 @@
     }
 
     function saveClientToStorage(client) {
-      localStorage.setItem("barbeariaRodriguesClient", JSON.stringify(client));
+      localStorage.setItem("barbeariaClient", JSON.stringify(client));
     }
 
     function clearClientStorage() {
-      localStorage.removeItem("barbeariaRodriguesClient");
+      localStorage.removeItem("barbeariaClient");
+    }
+
+    function updateBrand() {
+      const name = settings.businessName || "Barbearia Rodrigues";
+      $("brandName").textContent = name;
+      $("footerBrand").textContent = name;
+      document.title = name;
+    }
+
+    async function loadSettings() {
+      if (!firebaseReady) {
+        settings = { ...DEFAULT_SETTINGS };
+        applySettingsToForm();
+        return;
+      }
+
+      try {
+        const ref = doc(db, "barbeariaRodrigues", "settings");
+        const snap = await getDoc(ref);
+
+        if (snap.exists()) {
+          settings = { ...DEFAULT_SETTINGS, ...snap.data() };
+        } else {
+          await setDoc(ref, DEFAULT_SETTINGS);
+          settings = { ...DEFAULT_SETTINGS };
+        }
+
+        applySettingsToForm();
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    function applySettingsToForm() {
+      updateBrand();
+
+      document.querySelectorAll(".workday").forEach(check => {
+        check.checked = settings.workdays.includes(Number(check.value));
+      });
+
+      $("businessName").value = settings.businessName || "";
+      $("ownerWhatsapp").value = settings.ownerWhatsapp || "";
+      $("confirmationMessage").value = settings.confirmationMessage || DEFAULT_CONFIRMATION_MESSAGE;
+      $("adminEmail").value = settings.adminEmail || "admin@barbearia.com";
+      $("adminPassword").value = settings.adminPassword || "1234";
+      $("startTime").value = settings.startTime || "08:00";
+      $("endTime").value = settings.endTime || "18:00";
+      $("slotDuration").value = String(settings.slotDuration || 30);
+
+      updateClientLink();
+      renderBlockedDates();
+      renderMonthOptions();
+      updateClientUi();
     }
 
     function updateClientUi() {
@@ -1181,66 +1301,61 @@
       }
     }
 
+    async function saveOrUpdateClient(name, phone) {
+      const phoneClean = cleanPhone(phone);
+      const clientId = phoneClean;
+      const clientRef = doc(db, "clientes", clientId);
+      const clientSnap = await getDoc(clientRef);
+
+      const data = {
+        id: clientId,
+        name,
+        phone: phoneClean,
+        updatedAt: serverTimestamp()
+      };
+
+      if (clientSnap.exists()) {
+        await updateDoc(clientRef, data);
+      } else {
+        await setDoc(clientRef, {
+          ...data,
+          createdAt: serverTimestamp()
+        });
+      }
+
+      return {
+        id: clientId,
+        name,
+        phone: phoneClean
+      };
+    }
+
     async function registerClient() {
       const name = $("registerName").value.trim();
       const phone = $("registerPhone").value.trim();
-      const phoneClean = cleanPhone(phone);
-
-      if (!firebaseReady) {
-        showMessage("clientMsg", "O Firebase não está conectado.", "err");
-        return;
-      }
 
       if (!name || name.length < 3) {
         showMessage("clientMsg", "Digite seu nome corretamente.", "err");
         return;
       }
 
-      if (!phoneClean || phoneClean.length < 8) {
+      if (cleanPhone(phone).length < 8) {
         showMessage("clientMsg", "Digite seu WhatsApp corretamente.", "err");
         return;
       }
 
       try {
-        const clientId = phoneClean;
-        const clientRef = doc(db, "clientes", clientId);
-        const clientSnap = await getDoc(clientRef);
-
-        const clientData = {
-          id: clientId,
-          name,
-          phone: phoneClean,
-          updatedAt: serverTimestamp()
-        };
-
-        if (clientSnap.exists()) {
-          await updateDoc(clientRef, clientData);
-        } else {
-          await setDoc(clientRef, {
-            ...clientData,
-            createdAt: serverTimestamp()
-          });
-        }
-
-        currentClient = {
-          id: clientId,
-          name,
-          phone: phoneClean
-        };
-
+        currentClient = await saveOrUpdateClient(name, phone);
         saveClientToStorage(currentClient);
-
         $("registerName").value = "";
         $("registerPhone").value = "";
-
         updateClientUi();
         renderMonthOptions();
         renderClientDates();
-
-        showMessage("clientMsg", "Cadastro realizado com sucesso. Agora escolha seu mês, dia e horário.", "ok", 6000);
+        showMessage("clientMsg", "Cadastro realizado. Agora escolha o mês, o dia e o horário.", "ok", 6000);
       } catch (error) {
         console.error(error);
-        showMessage("clientMsg", "Não foi possível cadastrar o cliente. Verifique as regras do Firestore.", "err");
+        showMessage("clientMsg", "Não foi possível cadastrar. Verifique as regras do Firestore.", "err");
       }
     }
 
@@ -1254,74 +1369,23 @@
       renderSlots();
     }
 
-    async function loadSettings() {
-      if (!firebaseReady) {
-        settings = { ...DEFAULT_SETTINGS };
-        applySettingsToForm();
-        renderMonthOptions();
-        renderClientDates();
-        return;
-      }
-
-      try {
-        const ref = doc(db, "barbeariaRodrigues", "settings");
-        const snap = await getDoc(ref);
-
-        if (snap.exists()) {
-          settings = { ...DEFAULT_SETTINGS, ...snap.data() };
-        } else {
-          await setDoc(ref, DEFAULT_SETTINGS);
-          settings = { ...DEFAULT_SETTINGS };
-        }
-
-        applySettingsToForm();
-        renderMonthOptions();
-        renderClientDates();
-      } catch (error) {
-        console.error(error);
-        showMessage("clientMsg", "Não foi possível carregar as configurações.", "err");
-      }
-    }
-
-    function applySettingsToForm() {
-      document.querySelectorAll(".workday").forEach((check) => {
-        check.checked = settings.workdays.includes(Number(check.value));
-      });
-
-      $("startTime").value = settings.startTime || "08:00";
-      $("endTime").value = settings.endTime || "18:00";
-      $("slotDuration").value = String(settings.slotDuration || 30);
-      $("adminPin").value = settings.adminPin || "1234";
-      $("adminEmail").value = settings.adminEmail || "admin@barbearia.com";
-      $("adminPassword").value = settings.adminPassword || "1234";
-
-      renderBlockedDates();
-      updateClientLink();
-    }
-
     function renderMonthOptions() {
       const select = $("monthSelect");
       if (!select) return;
-
       select.innerHTML = "";
 
       const today = new Date();
 
       for (let i = 0; i < 6; i++) {
         const date = new Date(today.getFullYear(), today.getMonth() + i, 1);
-        const value = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
-
+        const value = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2,"0")}`;
         const option = document.createElement("option");
         option.value = value;
         option.textContent = `${getMonthName(date.getMonth())} de ${date.getFullYear()}`;
-
         select.appendChild(option);
       }
 
-      if (!selectedMonth) {
-        selectedMonth = select.value;
-      }
-
+      if (!selectedMonth) selectedMonth = select.value;
       select.value = selectedMonth;
     }
 
@@ -1330,56 +1394,42 @@
       if (!container) return;
 
       container.innerHTML = "";
-
-      const monthValue = $("monthSelect") ? $("monthSelect").value : "";
+      const monthValue = $("monthSelect").value;
       selectedMonth = monthValue;
       selectedDate = "";
       selectedSlot = "";
       bookedSlots = [];
-
       renderSlots();
-
-      if (!monthValue) return;
 
       const [year, month] = monthValue.split("-").map(Number);
       const today = new Date();
-      today.setHours(0, 0, 0, 0);
-
+      today.setHours(0,0,0,0);
       const lastDay = new Date(year, month, 0);
       let count = 0;
 
       for (let day = 1; day <= lastDay.getDate(); day++) {
         const date = new Date(year, month - 1, day);
-        date.setHours(0, 0, 0, 0);
-
+        date.setHours(0,0,0,0);
         if (date < today) continue;
 
-        const dayNumber = date.getDay();
         const dateValue = toDateInputValue(date);
-
-        const isWorkday = settings.workdays.includes(dayNumber);
+        const isWorkday = settings.workdays.includes(date.getDay());
         const isBlocked = Array.isArray(settings.blockedDates) && settings.blockedDates.includes(dateValue);
 
         if (!isWorkday || isBlocked) continue;
 
         const btn = document.createElement("button");
         btn.className = "date-btn";
-
         btn.innerHTML = `
-          <strong>${String(day).padStart(2, "0")}/${String(month).padStart(2, "0")}</strong>
+          <strong>${String(day).padStart(2,"0")}/${String(month).padStart(2,"0")}</strong>
           <span>${getDayName(date)}</span>
         `;
 
         btn.onclick = async () => {
           selectedDate = dateValue;
           selectedSlot = "";
-
-          document.querySelectorAll(".date-btn").forEach((b) => {
-            b.classList.remove("active");
-          });
-
+          document.querySelectorAll(".date-btn").forEach(b => b.classList.remove("active"));
           btn.classList.add("active");
-
           await loadBookedSlots();
           renderSlots();
         };
@@ -1393,26 +1443,24 @@
       }
     }
 
+    async function loadBookedSlotsForDate(dateStr) {
+      const slots = [];
+
+      if (!dateStr || !firebaseReady) return slots;
+
+      const q = query(collection(db, "appointments"), where("date", "==", dateStr));
+      const snap = await getDocs(q);
+
+      snap.forEach(docItem => {
+        const data = docItem.data();
+        if (data && data.time) slots.push(data.time);
+      });
+
+      return slots;
+    }
+
     async function loadBookedSlots() {
-      bookedSlots = [];
-
-      if (!selectedDate || !firebaseReady) return;
-
-      try {
-        const q = query(collection(db, "appointments"), where("date", "==", selectedDate));
-        const snap = await getDocs(q);
-
-        snap.forEach((docItem) => {
-          const data = docItem.data();
-
-          if (data && data.time) {
-            bookedSlots.push(data.time);
-          }
-        });
-      } catch (error) {
-        console.error(error);
-        showMessage("clientMsg", "Erro ao buscar horários disponíveis.", "err");
-      }
+      bookedSlots = await loadBookedSlotsForDate(selectedDate);
     }
 
     function renderSlots() {
@@ -1427,25 +1475,21 @@
       }
 
       const slots = generateSlots();
-      const freeSlots = slots.filter((slot) => !bookedSlots.includes(slot));
+      const freeSlots = slots.filter(slot => !bookedSlots.includes(slot));
 
       if (freeSlots.length === 0) {
         container.innerHTML = `<div class="empty">Não há horários vagos para este dia.</div>`;
         return;
       }
 
-      freeSlots.forEach((slot) => {
+      freeSlots.forEach(slot => {
         const btn = document.createElement("button");
         btn.className = "slot";
         btn.textContent = slot;
 
         btn.onclick = () => {
           selectedSlot = slot;
-
-          document.querySelectorAll(".slot").forEach((b) => {
-            b.classList.remove("active");
-          });
-
+          document.querySelectorAll(".slot").forEach(b => b.classList.remove("active"));
           btn.classList.add("active");
         };
 
@@ -1460,67 +1504,170 @@
       }
 
       if (!selectedDate) {
-        showMessage("clientMsg", "Escolha uma data para o corte.", "err");
+        showMessage("clientMsg", "Escolha uma data.", "err");
         return;
       }
 
       if (!selectedSlot) {
-        showMessage("clientMsg", "Escolha um horário disponível.", "err");
+        showMessage("clientMsg", "Escolha um horário.", "err");
         return;
       }
 
-      try {
-        await loadBookedSlots();
+      await createAppointment(currentClient, selectedDate, selectedSlot, "clientMsg");
+    }
 
-        if (bookedSlots.includes(selectedSlot)) {
-          showMessage("clientMsg", "Esse horário acabou de ser preenchido. Escolha outro horário.", "err");
-          renderSlots();
+    async function createAppointment(client, date, time, messageBoxId) {
+      try {
+        const takenSlots = await loadBookedSlotsForDate(date);
+
+        if (takenSlots.includes(time)) {
+          showMessage(messageBoxId, "Esse horário acabou de ser preenchido. Escolha outro horário.", "err");
           return;
         }
 
         await addDoc(collection(db, "appointments"), {
-          clientId: currentClient.id,
-          name: currentClient.name,
-          phone: currentClient.phone,
-          date: selectedDate,
-          time: selectedSlot,
+          clientId: client.id,
+          name: client.name,
+          phone: client.phone,
+          date,
+          time,
           status: "pending",
           createdAt: serverTimestamp()
         });
 
         showMessage(
-          "clientMsg",
-          `Agendamento solicitado para <strong>${formatDateBR(selectedDate)}</strong> às <strong>${selectedSlot}</strong>. Aguarde a confirmação pelo WhatsApp.`,
+          messageBoxId,
+          `Agendamento solicitado para <strong>${formatDateBR(date)}</strong> às <strong>${time}</strong>. Aguarde confirmação pelo WhatsApp.`,
           "ok",
           8000
         );
 
         selectedSlot = "";
+        quickSelected = null;
 
-        await loadBookedSlots();
-        renderSlots();
+        if (messageBoxId === "clientMsg") {
+          await loadBookedSlots();
+          renderSlots();
+        }
+
+        if (messageBoxId === "availableMsg") {
+          $("quickConfirmBox").classList.add("hidden");
+          await renderAvailableTimes();
+        }
       } catch (error) {
         console.error(error);
-        showMessage("clientMsg", "Não foi possível confirmar o agendamento.", "err");
+        showMessage(messageBoxId, "Não foi possível confirmar o agendamento.", "err");
       }
+    }
+
+    async function renderAvailableTimes() {
+      const container = $("availableList");
+      container.innerHTML = `<div class="empty">Carregando horários...</div>`;
+
+      const today = new Date();
+      today.setHours(0,0,0,0);
+      const slots = generateSlots();
+      let daysShown = 0;
+      let html = "";
+
+      for (let i = 0; i < 21; i++) {
+        const date = new Date(today);
+        date.setDate(today.getDate() + i);
+
+        const dateValue = toDateInputValue(date);
+        const isWorkday = settings.workdays.includes(date.getDay());
+        const isBlocked = Array.isArray(settings.blockedDates) && settings.blockedDates.includes(dateValue);
+
+        if (!isWorkday || isBlocked) continue;
+
+        const taken = await loadBookedSlotsForDate(dateValue);
+        const free = slots.filter(s => !taken.includes(s));
+
+        if (free.length === 0) continue;
+
+        html += `
+          <div class="available-day">
+            <h3>${getDayName(date)} — ${formatDateBR(dateValue)}</h3>
+            <div class="available-slots">
+              ${free.map(time => `
+                <button class="slot" onclick="selectQuickSlot('${dateValue}', '${time}')">${time}</button>
+              `).join("")}
+            </div>
+          </div>
+        `;
+
+        daysShown++;
+
+        if (daysShown >= 7) break;
+      }
+
+      if (!html) {
+        html = `<div class="empty">Nenhum horário disponível nos próximos dias.</div>`;
+      }
+
+      container.innerHTML = html;
+    }
+
+    function selectQuickSlot(date, time) {
+      quickSelected = { date, time };
+      $("quickConfirmBox").classList.remove("hidden");
+      $("quickConfirmText").innerHTML = `
+        Data: <strong>${formatDateBR(date)}</strong><br>
+        Horário: <strong>${time}</strong>
+      `;
+
+      if (currentClient) {
+        $("quickClientBox").classList.add("hidden");
+      } else {
+        $("quickClientBox").classList.remove("hidden");
+      }
+
+      $("quickConfirmBox").scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+
+    async function confirmQuickBooking() {
+      if (!quickSelected) {
+        showMessage("availableMsg", "Escolha um horário primeiro.", "err");
+        return;
+      }
+
+      let client = currentClient;
+
+      if (!client) {
+        const name = $("quickName").value.trim();
+        const phone = $("quickPhone").value.trim();
+
+        if (!name || name.length < 3) {
+          showMessage("availableMsg", "Digite seu nome corretamente.", "err");
+          return;
+        }
+
+        if (cleanPhone(phone).length < 8) {
+          showMessage("availableMsg", "Digite seu WhatsApp corretamente.", "err");
+          return;
+        }
+
+        client = await saveOrUpdateClient(name, phone);
+        currentClient = client;
+        saveClientToStorage(client);
+        updateClientUi();
+      }
+
+      await createAppointment(client, quickSelected.date, quickSelected.time, "availableMsg");
     }
 
     async function saveSettings() {
       const workdays = Array.from(document.querySelectorAll(".workday"))
-        .filter((check) => check.checked)
-        .map((check) => Number(check.value));
-
-      const startTime = $("startTime").value;
-      const endTime = $("endTime").value;
-      const slotDuration = Number($("slotDuration").value);
-      const adminPin = $("adminPin").value.trim() || "1234";
-      const adminEmail = $("adminEmail").value.trim() || "admin@barbearia.com";
-      const adminPassword = $("adminPassword").value.trim() || "1234";
+        .filter(check => check.checked)
+        .map(check => Number(check.value));
 
       if (workdays.length === 0) {
         showMessage("settingsMsg", "Escolha pelo menos um dia de trabalho.", "err");
         return;
       }
+
+      const startTime = $("startTime").value;
+      const endTime = $("endTime").value;
 
       if (minutesFromTime(startTime) >= minutesFromTime(endTime)) {
         showMessage("settingsMsg", "O horário inicial precisa ser menor que o horário final.", "err");
@@ -1529,25 +1676,22 @@
 
       settings = {
         ...settings,
+        businessName: $("businessName").value.trim() || "Barbearia Rodrigues",
+        ownerWhatsapp: cleanPhone($("ownerWhatsapp").value),
+        confirmationMessage: $("confirmationMessage").value.trim() || DEFAULT_CONFIRMATION_MESSAGE,
+        adminEmail: $("adminEmail").value.trim() || "admin@barbearia.com",
+        adminPassword: $("adminPassword").value.trim() || "1234",
         workdays,
         startTime,
         endTime,
-        slotDuration,
-        adminPin,
-        adminEmail,
-        adminPassword,
+        slotDuration: Number($("slotDuration").value),
         blockedDates: settings.blockedDates || []
       };
 
       try {
         await setDoc(doc(db, "barbeariaRodrigues", "settings"), settings);
-
         showMessage("settingsMsg", "Configurações salvas com sucesso.", "ok");
-
-        renderMonthOptions();
-        renderClientDates();
-        renderBlockedDates();
-        updateClientLink();
+        applySettingsToForm();
       } catch (error) {
         console.error(error);
         showMessage("settingsMsg", "Erro ao salvar configurações.", "err");
@@ -1562,21 +1706,18 @@
         return;
       }
 
-      if (!Array.isArray(settings.blockedDates)) {
-        settings.blockedDates = [];
-      }
+      if (!Array.isArray(settings.blockedDates)) settings.blockedDates = [];
 
       if (!settings.blockedDates.includes(date)) {
         settings.blockedDates.push(date);
       }
 
       $("blockDate").value = "";
-
       await saveSettings();
     }
 
     async function removeBlockedDate(date) {
-      settings.blockedDates = (settings.blockedDates || []).filter((d) => d !== date);
+      settings.blockedDates = (settings.blockedDates || []).filter(d => d !== date);
       await saveSettings();
     }
 
@@ -1585,25 +1726,21 @@
       if (!list) return;
 
       list.innerHTML = "";
-
       const dates = settings.blockedDates || [];
 
       if (dates.length === 0) {
-        list.innerHTML = `<span style="color: var(--muted); font-size: 13px;">Nenhuma data bloqueada.</span>`;
+        list.innerHTML = `<span style="color:var(--muted);font-size:13px;">Nenhuma data bloqueada.</span>`;
         return;
       }
 
-      dates.sort().forEach((date) => {
+      dates.sort().forEach(date => {
         const item = document.createElement("div");
         item.className = "blocked-item";
-
         item.innerHTML = `
           ${formatDateBR(date)}
           <button class="danger" type="button">x</button>
         `;
-
         item.querySelector("button").onclick = () => removeBlockedDate(date);
-
         list.appendChild(item);
       });
     }
@@ -1619,11 +1756,7 @@
 
       if (email === savedEmail && password === savedPassword) {
         startAudioContext();
-
-        $("ownerLoginView").classList.add("hidden");
-        $("clientView").classList.add("hidden");
-        $("ownerView").classList.remove("hidden");
-
+        showOnly("ownerView");
         updateClientLink();
         startRealtimeAppointments();
         loadAppointments();
@@ -1644,70 +1777,49 @@
       firstRealtimeLoad = true;
       knownAppointmentIds = new Set();
 
-      unsubscribeAppointments = onSnapshot(
-        collection(db, "appointments"),
-        (snapshot) => {
-          let hasNewAppointment = false;
-          const items = [];
+      unsubscribeAppointments = onSnapshot(collection(db, "appointments"), snapshot => {
+        let hasNewAppointment = false;
+        const items = [];
 
-          snapshot.docChanges().forEach((change) => {
-            const id = change.doc.id;
+        snapshot.docChanges().forEach(change => {
+          const id = change.doc.id;
 
-            if (change.type === "added") {
-              if (!knownAppointmentIds.has(id) && !firstRealtimeLoad) {
-                hasNewAppointment = true;
-              }
-
-              knownAppointmentIds.add(id);
-            }
-
-            if (change.type === "removed") {
-              knownAppointmentIds.delete(id);
-            }
-          });
-
-          snapshot.forEach((docItem) => {
-            items.push({
-              id: docItem.id,
-              ...docItem.data()
-            });
-          });
-
-          appointmentsCache = sortAppointments(items);
-
-          if (!firstRealtimeLoad && hasNewAppointment) {
-            playBeep();
-            showNewAppointmentAlert();
+          if (change.type === "added") {
+            if (!knownAppointmentIds.has(id) && !firstRealtimeLoad) hasNewAppointment = true;
+            knownAppointmentIds.add(id);
           }
 
-          firstRealtimeLoad = false;
+          if (change.type === "removed") knownAppointmentIds.delete(id);
+        });
 
-          renderAppointmentsList();
+        snapshot.forEach(docItem => {
+          items.push({ id: docItem.id, ...docItem.data() });
+        });
+
+        appointmentsCache = sortAppointments(items);
+
+        if (!firstRealtimeLoad && hasNewAppointment) {
+          playBeep();
+          showNewAppointmentAlert();
         }
-      );
+
+        firstRealtimeLoad = false;
+        renderAppointmentsList();
+      });
     }
 
     async function loadAppointments() {
       const container = $("appointmentsList");
-
       container.innerHTML = `<div class="empty">Carregando agendamentos...</div>`;
 
       try {
         const snap = await getDocs(collection(db, "appointments"));
         const items = [];
-
-        snap.forEach((docItem) => {
-          items.push({
-            id: docItem.id,
-            ...docItem.data()
-          });
-        });
-
+        snap.forEach(docItem => items.push({ id: docItem.id, ...docItem.data() }));
         appointmentsCache = sortAppointments(items);
         renderAppointmentsList();
       } catch (error) {
         console.error(error);
-
         container.innerHTML = `<div class="empty">Não foi possível carregar os agendamentos.</div>`;
       }
     }
@@ -1719,10 +1831,7 @@
       const filterDate = $("filterDate") ? $("filterDate").value : "";
       let items = [...appointmentsCache];
 
-      if (filterDate) {
-        items = items.filter((item) => item.date === filterDate);
-      }
-
+      if (filterDate) items = items.filter(item => item.date === filterDate);
       items = sortAppointments(items);
 
       if (items.length === 0) {
@@ -1732,22 +1841,16 @@
 
       container.innerHTML = "";
 
-      items.forEach((item) => {
+      items.forEach(item => {
         const status = item.status || "pending";
         const statusText = status === "confirmed" ? "Confirmado" : "Aguardando confirmação";
         const statusClass = status === "confirmed" ? "confirmed" : "pending";
 
-        const message =
-          `Olá, ${item.name || "cliente"}! ` +
-          `Seu horário na Barbearia Rodrigues foi confirmado para ` +
-          `${formatDateBR(item.date)} às ${item.time}. ` +
-          `Qualquer dúvida, pode responder por aqui. Deus abençoe!`;
-
+        const message = buildConfirmationMessage(item);
         const whatsappUrl = makeWhatsAppUrl(item.phone, message);
 
         const div = document.createElement("div");
         div.className = "appointment";
-
         div.innerHTML = `
           <div>
             <strong>${item.name || "Cliente"}</strong>
@@ -1771,6 +1874,16 @@
       });
     }
 
+    function buildConfirmationMessage(item) {
+      const template = settings.confirmationMessage || DEFAULT_CONFIRMATION_MESSAGE;
+
+      return template
+        .replaceAll("{nome}", item.name || "cliente")
+        .replaceAll("{barbearia}", settings.businessName || "Barbearia")
+        .replaceAll("{data}", formatDateBR(item.date))
+        .replaceAll("{hora}", item.time || "");
+    }
+
     async function confirmByWhatsapp(id, whatsappUrl) {
       try {
         await updateDoc(doc(db, "appointments", id), {
@@ -1779,9 +1892,7 @@
         });
 
         window.open(whatsappUrl, "_blank");
-
         showMessage("appointmentsMsg", "Agendamento confirmado. WhatsApp aberto com mensagem pronta.", "ok", 7000);
-
         await loadAppointments();
       } catch (error) {
         console.error(error);
@@ -1795,9 +1906,7 @@
           status: "confirmed",
           confirmedAt: serverTimestamp()
         });
-
         showMessage("appointmentsMsg", "Agendamento marcado como confirmado.", "ok");
-
         await loadAppointments();
       } catch (error) {
         console.error(error);
@@ -1811,9 +1920,7 @@
 
       try {
         await deleteDoc(doc(db, "appointments", id));
-
         showMessage("appointmentsMsg", "Agendamento cancelado.", "ok");
-
         await loadAppointments();
 
         if (selectedDate) {
@@ -1833,7 +1940,6 @@
 
     async function loadClients() {
       const container = $("clientsList");
-
       if (!container) return;
 
       container.innerHTML = `<div class="empty">Carregando clientes...</div>`;
@@ -1841,14 +1947,7 @@
       try {
         const snap = await getDocs(collection(db, "clientes"));
         const items = [];
-
-        snap.forEach((docItem) => {
-          items.push({
-            id: docItem.id,
-            ...docItem.data()
-          });
-        });
-
+        snap.forEach(docItem => items.push({ id: docItem.id, ...docItem.data() }));
         clientsCache = sortClients(items);
         renderClientsList();
       } catch (error) {
@@ -1865,7 +1964,7 @@
       let items = [...clientsCache];
 
       if (search) {
-        items = items.filter((item) => {
+        items = items.filter(item => {
           const name = String(item.name || "").toLowerCase();
           const phone = String(item.phone || "").toLowerCase();
           return name.includes(search) || phone.includes(search);
@@ -1881,16 +1980,15 @@
 
       container.innerHTML = "";
 
-      items.forEach((item) => {
+      items.forEach(item => {
         const promoMessage =
-          `Olá, ${item.name || "cliente"}! Aqui é da Barbearia Rodrigues. ` +
+          `Olá, ${item.name || "cliente"}! Aqui é da ${settings.businessName || "barbearia"}. ` +
           `Passando para avisar que temos horários disponíveis para corte.`;
 
         const whatsappUrl = makeWhatsAppUrl(item.phone, promoMessage);
 
         const div = document.createElement("div");
         div.className = "client-item";
-
         div.innerHTML = `
           <div>
             <strong>${item.name || "Cliente"}</strong>
@@ -1951,23 +2049,30 @@
       }
     }
 
-    function showClient() {
-      $("clientView").classList.remove("hidden");
-      $("ownerLoginView").classList.add("hidden");
-      $("ownerView").classList.add("hidden");
+    function showClientHome() {
+      showOnly("clientHomeView");
+    }
 
+    function openGuidedBooking() {
+      showOnly("guidedView");
       updateClientUi();
       renderMonthOptions();
       renderClientDates();
     }
 
-    function showOwnerLogin() {
-      $("clientView").classList.add("hidden");
-      $("ownerLoginView").classList.remove("hidden");
-      $("ownerView").classList.add("hidden");
+    async function openAvailableTimes() {
+      showOnly("availableView");
+      $("quickConfirmBox").classList.add("hidden");
+      await renderAvailableTimes();
     }
 
-    window.showClient = showClient;
+    function showOwnerLogin() {
+      showOnly("ownerLoginView");
+    }
+
+    window.showClientHome = showClientHome;
+    window.openGuidedBooking = openGuidedBooking;
+    window.openAvailableTimes = openAvailableTimes;
     window.showOwnerLogin = showOwnerLogin;
     window.ownerLogin = ownerLogin;
     window.saveSettings = saveSettings;
@@ -1984,14 +2089,14 @@
     window.renderClientsList = renderClientsList;
     window.renderAppointmentsList = renderAppointmentsList;
     window.renderClientDates = renderClientDates;
+    window.selectQuickSlot = selectQuickSlot;
+    window.confirmQuickBooking = confirmQuickBooking;
 
     currentClient = loadClientFromStorage();
 
     await loadSettings();
 
-    updateClientUi();
-
-    showClient();
+    showClientHome();
   </script>
 </body>
 </html>
