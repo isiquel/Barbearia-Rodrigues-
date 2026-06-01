@@ -212,9 +212,22 @@
       border-radius:99px;display:inline-flex;gap:8px;align-items:center;font-size:12px;color:var(--muted);
     }
 
-    .sound-box{
+    .sound-box,.campaign-box{
       background:rgba(77,163,255,.10);border:1px solid rgba(77,163,255,.20);color:#cfe8ff;
       padding:12px;border-radius:16px;font-size:13px;line-height:1.5;margin-bottom:12px;
+    }
+
+    .campaign-box{
+      background:rgba(212,160,52,.10);
+      border-color:rgba(212,160,52,.25);
+      color:#ffe2a1;
+    }
+
+    .campaign-actions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:10px;
     }
 
     .client-live-card{
@@ -268,7 +281,7 @@
       .tab{min-width:100%}.appointment,.client-item{grid-template-columns:1fr}
       .admin-topbar{align-items:stretch}
       .admin-topbar-actions{width:100%}
-      .owner-popup-actions{width:100%}
+      .owner-popup-actions,.campaign-actions{width:100%}
     }
   </style>
 </head>
@@ -604,7 +617,7 @@
 
         <div class="card">
           <h2>Link para clientes</h2>
-          <p style="color:var(--muted);">Use um domínio próprio depois para não aparecer GitHub no link.</p>
+          <p style="color:var(--muted);">Use esse link para os clientes agendarem pelo celular.</p>
 
           <div class="single">
             <label>Link atual do cliente</label>
@@ -618,7 +631,7 @@
             <p><strong>1.</strong> Troque o nome da barbearia.</p>
             <p><strong>2.</strong> Coloque o WhatsApp do dono.</p>
             <p><strong>3.</strong> Troque e-mail e senha do administrador.</p>
-            <p><strong>4.</strong> Depois use um domínio próprio.</p>
+            <p><strong>4.</strong> Compartilhe o link com os clientes.</p>
           </div>
         </div>
       </div>
@@ -658,6 +671,27 @@
         </div>
 
         <div id="clientsMsg" class="message"></div>
+
+        <div class="campaign-box">
+          <h3 style="margin-top:0;">Mensagem para clientes</h3>
+          <p style="margin-top:0;color:#ffe2a1;">
+            Use <strong>{nome}</strong>, <strong>{barbearia}</strong> e <strong>{link}</strong> na mensagem.
+          </p>
+
+          <div class="single">
+            <label>Mensagem padrão de divulgação</label>
+            <textarea id="clientCampaignMessage"></textarea>
+          </div>
+
+          <div class="campaign-actions">
+            <button class="primary" onclick="saveClientCampaignMessage()">Salvar mensagem</button>
+            <button class="success" onclick="startClientCampaign()">Enviar para todos</button>
+          </div>
+
+          <div id="campaignProgressBox" class="message info">
+            Campanha iniciada.
+          </div>
+        </div>
 
         <div class="single">
           <label>Pesquisar cliente</label>
@@ -722,10 +756,14 @@
     const DEFAULT_CONFIRMATION_MESSAGE =
       "Olá, {nome}! Seu horário na {barbearia} foi confirmado para {data} às {hora}. Qualquer dúvida, pode responder por aqui. Deus abençoe!";
 
+    const DEFAULT_CLIENT_CAMPAIGN_MESSAGE =
+      "Olá, {nome}! Aqui é da {barbearia}.\\n\\nPassando para lembrar que agora você pode agendar seu corte pelo nosso sistema online.\\n\\nAcesse o link:\\n{link}\\n\\nEscolha o melhor dia e horário disponível. Esperamos você!";
+
     const DEFAULT_SETTINGS = {
       businessName:"Barbearia Rodrigues",
       ownerWhatsapp:"",
       confirmationMessage:DEFAULT_CONFIRMATION_MESSAGE,
+      clientCampaignMessage:DEFAULT_CLIENT_CAMPAIGN_MESSAGE,
       workdays:[1,2,3,4,5,6],
       startTime:"08:00",
       endTime:"18:00",
@@ -753,6 +791,8 @@
     let lastClientStatus = "";
     let audioContextStarted = false;
     let globalAudioContext = null;
+    let campaignQueue = [];
+    let campaignIndex = 0;
 
     function showMessage(id,text,type="info",timeout=4500){
       const el = $(id);
@@ -848,6 +888,115 @@
       return `https://wa.me/${finalPhone}`;
     }
 
+    function getClientPublicLink(){
+      return window.location.origin + window.location.pathname;
+    }
+
+    function buildClientCampaignMessage(client){
+      const template = $("clientCampaignMessage") ? $("clientCampaignMessage").value : settings.clientCampaignMessage;
+      const link = getClientPublicLink();
+
+      return String(template || DEFAULT_CLIENT_CAMPAIGN_MESSAGE)
+        .replaceAll("{nome}", client.name || "cliente")
+        .replaceAll("{barbearia}", settings.businessName || "Barbearia")
+        .replaceAll("{link}", link);
+    }
+
+    function openWhatsAppForClient(client){
+      if(!client || !client.phone){
+        showMessage("clientsMsg","Esse cliente não tem WhatsApp cadastrado.","err",5000);
+        return;
+      }
+
+      const message = buildClientCampaignMessage(client);
+      const url = makeWhatsAppUrl(client.phone,message);
+      window.open(url,"_blank");
+    }
+
+    async function saveClientCampaignMessage(){
+      const msg = $("clientCampaignMessage").value.trim();
+
+      if(!msg){
+        showMessage("clientsMsg","Digite uma mensagem para salvar.","err");
+        return;
+      }
+
+      settings.clientCampaignMessage = msg;
+
+      try{
+        await setDoc(doc(db,"barbeariaRodrigues","settings"),settings);
+        showMessage("clientsMsg","Mensagem padrão salva com sucesso.","ok",6000);
+      }catch(error){
+        console.error(error);
+        showMessage("clientsMsg","Não foi possível salvar a mensagem.","err");
+      }
+    }
+
+    async function startClientCampaign(){
+      if(clientsCache.length === 0){
+        await loadClients();
+      }
+
+      campaignQueue = clientsCache.filter(c=>c && c.phone);
+      campaignIndex = 0;
+
+      if(campaignQueue.length === 0){
+        showMessage("clientsMsg","Nenhum cliente com WhatsApp encontrado.","err",6000);
+        return;
+      }
+
+      showCampaignProgress();
+      sendNextCampaignClient();
+    }
+
+    function showCampaignProgress(){
+      const box = $("campaignProgressBox");
+
+      if(!box) return;
+
+      if(campaignQueue.length === 0){
+        box.className = "message info";
+        return;
+      }
+
+      if(campaignIndex >= campaignQueue.length){
+        box.className = "message ok show";
+        box.innerHTML = `
+          ✅ Campanha finalizada.<br>
+          Clientes processados: <strong>${campaignQueue.length}</strong>.
+        `;
+        return;
+      }
+
+      const client = campaignQueue[campaignIndex];
+
+      box.className = "message info show";
+      box.innerHTML = `
+        Campanha em andamento.<br>
+        Cliente <strong>${campaignIndex + 1}</strong> de <strong>${campaignQueue.length}</strong>: ${client.name || "Cliente"}<br><br>
+        <button class="success" onclick="sendNextCampaignClient()">Abrir WhatsApp do próximo cliente</button>
+        <button class="danger" onclick="cancelClientCampaign()">Encerrar campanha</button>
+      `;
+    }
+
+    function sendNextCampaignClient(){
+      if(campaignIndex >= campaignQueue.length){
+        showCampaignProgress();
+        return;
+      }
+
+      const client = campaignQueue[campaignIndex];
+      openWhatsAppForClient(client);
+      campaignIndex++;
+      showCampaignProgress();
+    }
+
+    function cancelClientCampaign(){
+      campaignQueue = [];
+      campaignIndex = 0;
+      showMessage("campaignProgressBox","Campanha encerrada.","info",6000);
+    }
+
     function startAudioContext(){
       audioContextStarted = true;
 
@@ -906,21 +1055,10 @@
       }
     }
 
-    function playOwnerNewAppointmentBeep(){
-      playBeepPattern(1, false);
-    }
-
-    function playOwnerCancellationBeep(){
-      playBeepPattern(2, false);
-    }
-
-    function playClientConfirmedBeep(){
-      playBeepPattern(1, true);
-    }
-
-    function playClientCanceledBeep(){
-      playBeepPattern(2, false);
-    }
+    function playOwnerNewAppointmentBeep(){playBeepPattern(1, false)}
+    function playOwnerCancellationBeep(){playBeepPattern(2, false)}
+    function playClientConfirmedBeep(){playBeepPattern(1, true)}
+    function playClientCanceledBeep(){playBeepPattern(2, false)}
 
     function showOwnerAlert(text){
       const el = $("newAppointmentAlert");
@@ -1008,6 +1146,10 @@
       $("startTime").value = settings.startTime || "08:00";
       $("endTime").value = settings.endTime || "18:00";
       $("slotDuration").value = String(settings.slotDuration || 30);
+
+      if($("clientCampaignMessage")){
+        $("clientCampaignMessage").value = settings.clientCampaignMessage || DEFAULT_CLIENT_CAMPAIGN_MESSAGE;
+      }
 
       updateClientLink();
       renderBlockedDates();
@@ -1686,6 +1828,7 @@
         businessName:$("businessName").value.trim() || "Barbearia Rodrigues",
         ownerWhatsapp:cleanPhone($("ownerWhatsapp").value),
         confirmationMessage:$("confirmationMessage").value.trim() || DEFAULT_CONFIRMATION_MESSAGE,
+        clientCampaignMessage:$("clientCampaignMessage") ? $("clientCampaignMessage").value.trim() || DEFAULT_CLIENT_CAMPAIGN_MESSAGE : settings.clientCampaignMessage,
         adminEmail:$("adminEmail").value.trim() || "admin@barbearia.com",
         adminPassword:$("adminPassword").value.trim() || "1234",
         workdays,
@@ -2174,10 +2317,13 @@
           </div>
 
           <div class="appointment-actions">
-            <a class="btn success" href="${whatsappUrl}" target="_blank">Chamar no WhatsApp</a>
+            <button class="success" type="button" data-action="campaign-single">Enviar mensagem</button>
+            <a class="btn blue" href="${whatsappUrl}" target="_blank">Chamar no WhatsApp</a>
             <button class="danger" type="button" onclick="deleteClient('${item.id}')">Excluir cliente</button>
           </div>
         `;
+
+        div.querySelector('[data-action="campaign-single"]').onclick = ()=>openWhatsAppForClient(item);
 
         container.appendChild(div);
       });
@@ -2241,6 +2387,9 @@
       if(tab === "clients"){
         $("tabClients").classList.add("active");
         $("ownerClients").classList.remove("hidden");
+        if($("clientCampaignMessage")){
+          $("clientCampaignMessage").value = settings.clientCampaignMessage || DEFAULT_CLIENT_CAMPAIGN_MESSAGE;
+        }
         loadClients();
       }
     }
@@ -2317,6 +2466,10 @@
     window.cancelMyAppointment = cancelMyAppointment;
     window.deleteClient = deleteClient;
     window.deleteAppointmentHistory = deleteAppointmentHistory;
+    window.saveClientCampaignMessage = saveClientCampaignMessage;
+    window.startClientCampaign = startClientCampaign;
+    window.sendNextCampaignClient = sendNextCampaignClient;
+    window.cancelClientCampaign = cancelClientCampaign;
 
     currentClient = loadClientFromStorage();
 
