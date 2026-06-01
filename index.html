@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
   <title>Barbearia Rodrigues</title>
 
   <style>
@@ -323,12 +324,6 @@
       border-color: transparent;
     }
 
-    .slot.booked {
-      opacity: 0.35;
-      cursor: not-allowed;
-      text-decoration: line-through;
-    }
-
     .appointment {
       background: #101010;
       border: 1px solid var(--border);
@@ -512,8 +507,7 @@
     </section>
 
     <div id="firebaseWarning" class="message info show">
-      Antes de publicar, coloque sua configuração do Firebase no código, na parte marcada como
-      <strong>firebaseConfig</strong>. Sem isso, o app não consegue salvar os agendamentos online.
+      Conectando ao Firebase...
     </div>
 
     <section id="clientView" class="card">
@@ -585,6 +579,7 @@
           <div id="settingsMsg" class="message"></div>
 
           <h3>Dias de trabalho</h3>
+
           <div class="days">
             <label class="day-check">
               <input type="checkbox" class="workday" value="1" />
@@ -627,6 +622,7 @@
               <label>Horário de início</label>
               <input id="startTime" type="time" value="08:00" />
             </div>
+
             <div>
               <label>Horário de término</label>
               <input id="endTime" type="time" value="18:00" />
@@ -644,6 +640,7 @@
                 <option value="60">1 hora</option>
               </select>
             </div>
+
             <div>
               <label>Senha do dono</label>
               <input id="adminPin" type="text" placeholder="Ex: 1234" />
@@ -655,6 +652,7 @@
           </button>
 
           <h3>Bloquear um dia específico</h3>
+
           <p style="color: var(--muted); font-size: 13px; line-height: 1.5;">
             Use isso para folgas, viagens, feriados ou dias que você não vai atender.
           </p>
@@ -664,6 +662,7 @@
               <label>Data para bloquear</label>
               <input id="blockDate" type="date" />
             </div>
+
             <div style="display:flex; align-items:flex-end;">
               <button class="secondary" style="width:100%;" onclick="addBlockedDate()">
                 Bloquear data
@@ -676,6 +675,7 @@
 
         <div class="card">
           <h2>Link para clientes</h2>
+
           <p style="color: var(--muted); line-height: 1.5;">
             Envie este link para seus clientes fazerem o agendamento.
           </p>
@@ -690,6 +690,7 @@
           </button>
 
           <h3>Resumo de funcionamento</h3>
+
           <div class="empty" style="text-align:left;">
             <p><strong>1.</strong> O dono configura os dias e horários.</p>
             <p><strong>2.</strong> O cliente entra no link e escolhe um horário vago.</p>
@@ -716,6 +717,7 @@
             <label>Filtrar por data</label>
             <input id="filterDate" type="date" onchange="loadAppointments()" />
           </div>
+
           <div style="display:flex; align-items:flex-end;">
             <button class="secondary" style="width:100%;" onclick="clearFilter()">
               Mostrar todos
@@ -733,22 +735,8 @@
   </div>
 
   <script type="module">
-    /*
-      =====================================================
-      CONFIGURAÇÃO DO FIREBASE
-      =====================================================
-
-      1. Acesse: https://console.firebase.google.com
-      2. Crie um projeto.
-      3. Ative o Firestore Database.
-      4. Vá em Configurações do projeto > Seus apps > Web.
-      5. Copie a configuração e cole abaixo.
-
-      Enquanto estiver assim com dados vazios, o app abre,
-      mas não consegue salvar online.
-    */
-
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
     import {
       getFirestore,
       doc,
@@ -765,12 +753,12 @@
     } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
     const firebaseConfig = {
-      apiKey: "COLE_AQUI_SUA_API_KEY",
-      authDomain: "COLE_AQUI.firebaseapp.com",
-      projectId: "COLE_AQUI_SEU_PROJECT_ID",
-      storageBucket: "COLE_AQUI.appspot.com",
-      messagingSenderId: "COLE_AQUI",
-      appId: "COLE_AQUI"
+      apiKey: "AIzaSyCt0pxFAZofV3peBQkr5jnk__bT1QBulvQ",
+      authDomain: "barbearia-rodrigues-b4731.firebaseapp.com",
+      projectId: "barbearia-rodrigues-b4731",
+      storageBucket: "barbearia-rodrigues-b4731.firebasestorage.app",
+      messagingSenderId: "854031454959",
+      appId: "1:854031454959:web:b4d0404916fc29efa6811a"
     };
 
     let app = null;
@@ -778,20 +766,20 @@
     let firebaseReady = false;
 
     try {
-      if (
-        firebaseConfig.apiKey &&
-        firebaseConfig.apiKey !== "COLE_AQUI_SUA_API_KEY" &&
-        firebaseConfig.projectId &&
-        firebaseConfig.projectId !== "COLE_AQUI_SEU_PROJECT_ID"
-      ) {
-        app = initializeApp(firebaseConfig);
-        db = getFirestore(app);
-        firebaseReady = true;
-        document.getElementById("firebaseWarning").classList.remove("show");
-      }
+      app = initializeApp(firebaseConfig);
+      db = getFirestore(app);
+      firebaseReady = true;
+
+      const warning = document.getElementById("firebaseWarning");
+      warning.classList.remove("show");
+      warning.innerHTML = "";
     } catch (error) {
       console.error(error);
       firebaseReady = false;
+
+      const warning = document.getElementById("firebaseWarning");
+      warning.className = "message err show";
+      warning.innerHTML = "Erro ao conectar com o Firebase. Verifique a configuração.";
     }
 
     const DEFAULT_SETTINGS = {
@@ -823,6 +811,7 @@
     }
 
     function formatDateBR(dateStr) {
+      if (!dateStr || !dateStr.includes("-")) return dateStr || "";
       const [y, m, d] = dateStr.split("-");
       return `${d}/${m}/${y}`;
     }
@@ -837,6 +826,7 @@
         "Sexta",
         "Sábado"
       ];
+
       return names[date.getDay()];
     }
 
@@ -844,6 +834,7 @@
       const y = date.getFullYear();
       const m = String(date.getMonth() + 1).padStart(2, "0");
       const d = String(date.getDate()).padStart(2, "0");
+
       return `${y}-${m}-${d}`;
     }
 
@@ -855,6 +846,7 @@
     function timeFromMinutes(total) {
       const h = String(Math.floor(total / 60)).padStart(2, "0");
       const m = String(total % 60).padStart(2, "0");
+
       return `${h}:${m}`;
     }
 
@@ -894,7 +886,11 @@
         renderClientDates();
       } catch (error) {
         console.error(error);
-        showMessage("clientMsg", "Não foi possível carregar as configurações.", "err");
+        showMessage(
+          "clientMsg",
+          "Não foi possível carregar as configurações. Confira as regras do Firestore.",
+          "err"
+        );
       }
     }
 
@@ -929,12 +925,15 @@
         const dateValue = toDateInputValue(date);
 
         const isWorkday = settings.workdays.includes(dayNumber);
-        const isBlocked = Array.isArray(settings.blockedDates) && settings.blockedDates.includes(dateValue);
+        const isBlocked =
+          Array.isArray(settings.blockedDates) &&
+          settings.blockedDates.includes(dateValue);
 
         if (!isWorkday || isBlocked) continue;
 
         const btn = document.createElement("button");
         btn.className = "date-btn";
+
         btn.innerHTML = `
           <strong>${formatDateBR(dateValue)}</strong>
           <span>${getDayName(date)}</span>
@@ -944,7 +943,10 @@
           selectedDate = dateValue;
           selectedSlot = "";
 
-          document.querySelectorAll(".date-btn").forEach((b) => b.classList.remove("active"));
+          document.querySelectorAll(".date-btn").forEach((b) => {
+            b.classList.remove("active");
+          });
+
           btn.classList.add("active");
 
           await loadBookedSlots();
@@ -964,6 +966,8 @@
           </div>
         `;
       }
+
+      renderSlots();
     }
 
     async function loadBookedSlots() {
@@ -978,8 +982,13 @@
         );
 
         const snap = await getDocs(q);
+
         snap.forEach((docItem) => {
-          bookedSlots.push(docItem.data().time);
+          const data = docItem.data();
+
+          if (data && data.time) {
+            bookedSlots.push(data.time);
+          }
         });
       } catch (error) {
         console.error(error);
@@ -1012,18 +1021,18 @@
         return;
       }
 
-      slots.forEach((slot) => {
-        const isBooked = bookedSlots.includes(slot);
-
-        if (isBooked) return;
-
+      freeSlots.forEach((slot) => {
         const btn = document.createElement("button");
         btn.className = "slot";
         btn.textContent = slot;
 
         btn.onclick = () => {
           selectedSlot = slot;
-          document.querySelectorAll(".slot").forEach((b) => b.classList.remove("active"));
+
+          document.querySelectorAll(".slot").forEach((b) => {
+            b.classList.remove("active");
+          });
+
           btn.classList.add("active");
         };
 
@@ -1038,7 +1047,7 @@
       if (!firebaseReady) {
         showMessage(
           "clientMsg",
-          "O Firebase ainda não foi configurado. Coloque a configuração do Firebase no código para salvar agendamentos online.",
+          "O Firebase não está conectado. Verifique a configuração.",
           "err"
         );
         return;
@@ -1055,7 +1064,7 @@
       }
 
       if (!name || name.length < 3) {
-        showMessage("clientMsg", "Digite seu nome completo.", "err");
+        showMessage("clientMsg", "Digite seu nome corretamente.", "err");
         return;
       }
 
@@ -1073,6 +1082,7 @@
             "Esse horário acabou de ser preenchido por outro cliente. Escolha outro horário.",
             "err"
           );
+
           renderSlots();
           return;
         }
@@ -1100,7 +1110,11 @@
         renderSlots();
       } catch (error) {
         console.error(error);
-        showMessage("clientMsg", "Não foi possível confirmar o agendamento.", "err");
+        showMessage(
+          "clientMsg",
+          "Não foi possível confirmar o agendamento. Verifique as regras do Firestore.",
+          "err"
+        );
       }
     }
 
@@ -1108,7 +1122,7 @@
       if (!firebaseReady) {
         showMessage(
           "settingsMsg",
-          "Configure o Firebase no código antes de salvar online.",
+          "O Firebase não está conectado. Verifique a configuração.",
           "err"
         );
         return;
@@ -1129,7 +1143,12 @@
       }
 
       if (minutesFromTime(startTime) >= minutesFromTime(endTime)) {
-        showMessage("settingsMsg", "O horário inicial precisa ser menor que o horário final.", "err");
+        showMessage(
+          "settingsMsg",
+          "O horário inicial precisa ser menor que o horário final.",
+          "err"
+        );
+
         return;
       }
 
@@ -1145,12 +1164,20 @@
 
       try {
         await setDoc(doc(db, "barbeariaRodrigues", "settings"), settings);
+
         showMessage("settingsMsg", "Configurações salvas com sucesso.", "ok");
+
         renderClientDates();
         renderBlockedDates();
+        updateClientLink();
       } catch (error) {
         console.error(error);
-        showMessage("settingsMsg", "Erro ao salvar configurações.", "err");
+
+        showMessage(
+          "settingsMsg",
+          "Erro ao salvar configurações. Verifique as regras do Firestore.",
+          "err"
+        );
       }
     }
 
@@ -1171,6 +1198,7 @@
       }
 
       $("blockDate").value = "";
+
       await saveSettings();
       renderBlockedDates();
       renderClientDates();
@@ -1178,6 +1206,7 @@
 
     async function removeBlockedDate(date) {
       settings.blockedDates = (settings.blockedDates || []).filter((d) => d !== date);
+
       await saveSettings();
       renderBlockedDates();
       renderClientDates();
@@ -1192,19 +1221,26 @@
       const dates = settings.blockedDates || [];
 
       if (dates.length === 0) {
-        list.innerHTML = `<span style="color: var(--muted); font-size: 13px;">Nenhuma data bloqueada.</span>`;
+        list.innerHTML = `
+          <span style="color: var(--muted); font-size: 13px;">
+            Nenhuma data bloqueada.
+          </span>
+        `;
+
         return;
       }
 
       dates.sort().forEach((date) => {
         const item = document.createElement("div");
         item.className = "blocked-item";
+
         item.innerHTML = `
           ${formatDateBR(date)}
           <button class="danger" type="button">x</button>
         `;
 
         item.querySelector("button").onclick = () => removeBlockedDate(date);
+
         list.appendChild(item);
       });
     }
@@ -1218,6 +1254,7 @@
         $("ownerLoginView").classList.add("hidden");
         $("clientView").classList.add("hidden");
         $("ownerView").classList.remove("hidden");
+
         updateClientLink();
         loadAppointments();
       } else {
@@ -1227,14 +1264,20 @@
 
     async function loadAppointments() {
       const container = $("appointmentsList");
-      container.innerHTML = `<div class="empty">Carregando agendamentos...</div>`;
+
+      container.innerHTML = `
+        <div class="empty">
+          Carregando agendamentos...
+        </div>
+      `;
 
       if (!firebaseReady) {
         container.innerHTML = `
           <div class="empty">
-            Configure o Firebase para carregar agendamentos online.
+            O Firebase não está conectado.
           </div>
         `;
+
         return;
       }
 
@@ -1249,6 +1292,7 @@
             where("date", "==", filterDate),
             orderBy("time", "asc")
           );
+
           snap = await getDocs(q);
         } else {
           const q = query(
@@ -1256,6 +1300,7 @@
             orderBy("date", "asc"),
             orderBy("time", "asc")
           );
+
           snap = await getDocs(q);
         }
 
@@ -1274,6 +1319,7 @@
               Nenhum agendamento encontrado.
             </div>
           `;
+
           return;
         }
 
@@ -1281,7 +1327,9 @@
 
         items.forEach((item) => {
           const phoneClean = String(item.phone || "").replace(/\D/g, "");
-          const whatsappUrl = `https://wa.me/55${phoneClean}`;
+          const whatsappUrl = phoneClean
+            ? `https://wa.me/55${phoneClean}`
+            : "#";
 
           const div = document.createElement("div");
           div.className = "appointment";
@@ -1290,7 +1338,8 @@
             <div>
               <strong>${item.name || "Cliente"}</strong>
               <span>Data: ${formatDateBR(item.date)} às ${item.time}</span>
-              <span>WhatsApp:
+              <span>
+                WhatsApp:
                 <a class="whatsapp-link" href="${whatsappUrl}" target="_blank">
                   ${item.phone || ""}
                 </a>
@@ -1303,13 +1352,17 @@
           `;
 
           div.querySelector("button").onclick = () => cancelAppointment(item.id);
+
           container.appendChild(div);
         });
       } catch (error) {
         console.error(error);
+
         container.innerHTML = `
           <div class="empty">
             Não foi possível carregar os agendamentos.
+            <br><br>
+            Pode ser necessário criar o índice no Firestore ou ajustar as regras.
           </div>
         `;
       }
@@ -1317,10 +1370,12 @@
 
     async function cancelAppointment(id) {
       const ok = confirm("Deseja cancelar este agendamento?");
+
       if (!ok) return;
 
       try {
         await deleteDoc(doc(db, "appointments", id));
+
         loadAppointments();
 
         if (selectedDate) {
@@ -1359,6 +1414,7 @@
     function openOwnerTab(tab) {
       $("tabSchedule").classList.remove("active");
       $("tabAppointments").classList.remove("active");
+
       $("ownerSchedule").classList.add("hidden");
       $("ownerAppointments").classList.add("hidden");
 
@@ -1378,6 +1434,7 @@
       $("clientView").classList.remove("hidden");
       $("ownerLoginView").classList.add("hidden");
       $("ownerView").classList.add("hidden");
+
       renderClientDates();
     }
 
