@@ -309,7 +309,7 @@
       </div>
 
       <div class="brand-contact">
-        <div id="brandAddress">📍 Av. Tupassi, 4985 - Jardim Progresso</div>
+        <div id="brandAddress">📍 Av. Tupassi, 4985 - Jardim Progresso, Assis Chateaubriand - PR</div>
         <div id="brandWhatsapp">📲 WhatsApp: (44) 99925-8615</div>
       </div>
     </section>
@@ -566,12 +566,12 @@
 
           <div class="single">
             <label>Endereço da barbearia</label>
-            <input id="businessAddress" type="text" placeholder="Av. Tupassi, 4985 - Jardim Progresso" />
+            <input id="businessAddress" type="text" placeholder="Av. Tupassi, 4985 - Jardim Progresso, Assis Chateaubriand - PR" />
           </div>
 
           <div class="single">
             <label>Link do Google Maps</label>
-            <input id="businessMapLink" type="text" placeholder="Cole o link do Google Maps ou deixe automático" />
+            <input id="businessMapLink" type="text" placeholder="Opcional. Se deixar vazio, o app abre rota automática." />
           </div>
 
           <div class="single">
@@ -667,7 +667,7 @@
           <div class="empty" style="text-align:left;">
             <p><strong>1.</strong> Troque o nome da barbearia.</p>
             <p><strong>2.</strong> Coloque o WhatsApp do dono.</p>
-            <p><strong>3.</strong> Coloque o endereço.</p>
+            <p><strong>3.</strong> Coloque o endereço completo com cidade e estado.</p>
             <p><strong>4.</strong> Compartilhe o link com os clientes.</p>
           </div>
         </div>
@@ -812,7 +812,7 @@ Escolha o melhor dia e horário disponível. Esperamos você!`;
 
     const DEFAULT_SETTINGS = {
       businessName:"Barbearia Rodrigues",
-      businessAddress:"Av. Tupassi, 4985 - Jardim Progresso",
+      businessAddress:"Av. Tupassi, 4985 - Jardim Progresso, Assis Chateaubriand - PR",
       businessMapLink:"",
       ownerWhatsapp:"44999258615",
       confirmationMessage:DEFAULT_CONFIRMATION_MESSAGE,
@@ -842,7 +842,6 @@ Escolha o melhor dia e horário disponível. Esperamos você!`;
     let knownAppointmentIds = new Set();
     let lastStatusById = new Map();
     let lastClientStatus = "";
-    let audioContextStarted = false;
     let globalAudioContext = null;
     let campaignQueue = [];
     let campaignIndex = 0;
@@ -958,10 +957,13 @@ Escolha o melhor dia e horário disponível. Esperamos você!`;
 
     function getBusinessMapLink(){
       const saved = String(settings.businessMapLink || "").trim();
-      if(saved) return saved;
+
+      if(saved && !saved.includes("/search/")){
+        return saved;
+      }
 
       const address = settings.businessAddress || DEFAULT_SETTINGS.businessAddress;
-      return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`;
+      return `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(address)}&travelmode=driving`;
     }
 
     function openBusinessMap(){
@@ -1085,8 +1087,6 @@ Escolha o melhor dia e horário disponível. Esperamos você!`;
     }
 
     function startAudioContext(){
-      audioContextStarted = true;
-
       try{
         const AudioContext = window.AudioContext || window.webkitAudioContext;
         if(!AudioContext) return;
