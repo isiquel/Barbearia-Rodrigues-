@@ -41,6 +41,14 @@
     .logo{
       width:62px;height:62px;border-radius:20px;background:linear-gradient(135deg,var(--gold),#7a510f);
       display:flex;align-items:center;justify-content:center;font-size:31px;box-shadow:0 14px 30px rgba(212,160,52,.25);
+      overflow:hidden;flex:none;
+    }
+
+    .logo img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
     }
 
     .brand h1{margin:0;font-size:29px;letter-spacing:-.5px}
@@ -74,6 +82,11 @@
       border-color:rgba(212,160,52,.65);box-shadow:0 0 0 3px rgba(212,160,52,.08);
     }
 
+    input[readonly]{
+      opacity:.85;
+      cursor:not-allowed;
+    }
+
     button,.btn{
       border:none;outline:none;padding:13px 16px;border-radius:15px;cursor:pointer;font-weight:800;
       font-size:14px;transition:.2s;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:8px;
@@ -86,7 +99,6 @@
     .danger{background:rgba(255,77,77,.13);color:#ffb0b0;border:1px solid rgba(255,77,77,.25)}
     .success{background:rgba(48,209,88,.12);color:#aef5c0;border:1px solid rgba(48,209,88,.25)}
     .blue{background:rgba(77,163,255,.13);color:#b9dcff;border:1px solid rgba(77,163,255,.25)}
-
     .hidden{display:none!important}
 
     .home-actions{display:grid;grid-template-columns:1fr;gap:12px;margin-top:18px}
@@ -183,9 +195,18 @@
 
     .day-check input{width:auto;accent-color:var(--gold)}
 
-    .tabs{display:flex;gap:10px;margin-bottom:18px;flex-wrap:wrap}
-    .tab{flex:1;min-width:130px;background:rgba(255,255,255,.07);color:var(--text);border:1px solid var(--border)}
+    .tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px}
+    .tab{
+      min-height:62px;
+      background:rgba(255,255,255,.07);color:var(--text);border:1px solid var(--border);
+      border-radius:19px;
+      font-size:15px;
+      box-shadow:0 8px 24px rgba(0,0,0,.25);
+    }
+
     .tab.active{background:linear-gradient(135deg,var(--gold2),var(--gold));color:#15100a}
+    .tab.blue-tab.active{background:linear-gradient(135deg,#8cc8ff,var(--blue));color:#06101b}
+    .tab.green-tab.active{background:linear-gradient(135deg,#83ee9f,var(--success));color:#061408}
 
     .appointment,.client-item{
       background:var(--soft);border:1px solid var(--border);border-radius:18px;padding:14px;margin-bottom:10px;
@@ -217,15 +238,21 @@
       padding:13px;margin-bottom:14px;color:#c9ffd5;display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap;
     }
 
-    .blocked-list{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+    .blocked-list{display:grid;gap:8px;margin-top:8px}
     .blocked-item{
-      padding:8px 10px;background:rgba(255,255,255,.06);border:1px solid var(--border);
-      border-radius:99px;display:inline-flex;gap:8px;align-items:center;font-size:12px;color:var(--muted);
+      padding:10px;background:rgba(255,255,255,.06);border:1px solid var(--border);
+      border-radius:14px;display:flex;gap:8px;align-items:center;justify-content:space-between;font-size:13px;color:var(--muted);
     }
 
-    .sound-box,.campaign-box{
+    .sound-box,.campaign-box,.locked-box{
       background:rgba(77,163,255,.10);border:1px solid rgba(77,163,255,.20);color:#cfe8ff;
       padding:12px;border-radius:16px;font-size:13px;line-height:1.5;margin-bottom:12px;
+    }
+
+    .locked-box{
+      background:rgba(212,160,52,.10);
+      border-color:rgba(212,160,52,.25);
+      color:#ffe2a1;
     }
 
     .campaign-box{
@@ -284,15 +311,172 @@
       margin-top:12px;
     }
 
+    details.admin-section{
+      border:1px solid var(--border);
+      border-radius:18px;
+      margin-bottom:12px;
+      background:rgba(255,255,255,.03);
+      overflow:hidden;
+    }
+
+    details.admin-section summary{
+      list-style:none;
+      cursor:pointer;
+      padding:15px;
+      font-weight:900;
+      color:#ffe2a1;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+    }
+
+    details.admin-section summary::-webkit-details-marker{display:none}
+
+    details.admin-section summary::after{
+      content:"＋";
+      font-size:18px;
+      color:var(--gold2);
+    }
+
+    details.admin-section[open] summary::after{
+      content:"−";
+    }
+
+    .admin-section-body{
+      padding:0 15px 15px;
+    }
+
+    .logo-preview-wrap{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-bottom:12px;
+    }
+
+    .logo-preview{
+      width:86px;
+      height:86px;
+      border-radius:24px;
+      overflow:hidden;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:linear-gradient(135deg,var(--gold),#7a510f);
+      border:1px solid rgba(255,255,255,.14);
+      font-size:38px;
+    }
+
+    .logo-preview img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
+    }
+
+    .toast-host{
+      position:fixed;
+      left:14px;
+      right:14px;
+      bottom:14px;
+      z-index:9999;
+      display:grid;
+      gap:10px;
+      pointer-events:none;
+    }
+
+    .toast{
+      pointer-events:auto;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      border-radius:18px;
+      padding:14px 16px;
+      box-shadow:0 20px 45px rgba(0,0,0,.42);
+      border:1px solid rgba(255,255,255,.12);
+      animation:toastIn .18s ease;
+      font-size:14px;
+      line-height:1.4;
+    }
+
+    .toast button{
+      width:auto;
+      min-height:auto;
+      padding:8px 10px;
+      border-radius:12px;
+    }
+
+    .toast.ok{background:rgba(48,209,88,.13);color:#c8ffd5;border-color:rgba(48,209,88,.28)}
+    .toast.err{background:rgba(255,90,95,.14);color:#ffd0d2;border-color:rgba(255,90,95,.28)}
+    .toast.info{background:rgba(77,163,255,.14);color:#d8ebff;border-color:rgba(77,163,255,.28)}
+    .toast.warn{background:rgba(212,160,52,.14);color:#ffe7b5;border-color:rgba(212,160,52,.30)}
+
+    @keyframes toastIn{
+      from{opacity:0; transform:translateY(12px)}
+      to{opacity:1; transform:translateY(0)}
+    }
+
+    .app-modal{
+      width:min(92vw,420px);
+      border:none;
+      padding:0;
+      background:transparent;
+    }
+
+    .app-modal::backdrop{
+      background:rgba(0,0,0,.58);
+      backdrop-filter:blur(3px);
+    }
+
+    .app-modal-card{
+      background:#111;
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:24px;
+      padding:20px;
+      box-shadow:0 24px 56px rgba(0,0,0,.46);
+    }
+
+    .app-modal-icon{
+      width:52px;
+      height:52px;
+      border-radius:18px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:24px;
+      background:rgba(255,255,255,.06);
+      margin-bottom:10px;
+    }
+
+    .app-modal-card h3{
+      margin:0 0 8px;
+      font-size:22px;
+      color:var(--text);
+    }
+
+    .app-modal-card p{
+      margin:0;
+      color:var(--muted);
+    }
+
+    .app-modal-actions{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:10px;
+      margin-top:18px;
+    }
+
     @media(max-width:850px){
       .app{padding:12px}.grid{grid-template-columns:1fr}.brand h1{font-size:22px}.brand p{font-size:12px}
       .logo{width:54px;height:54px;font-size:27px;border-radius:18px}.hero{padding:18px;border-radius:24px}
       .form-row{grid-template-columns:1fr}.days{grid-template-columns:1fr}.date-list{grid-template-columns:repeat(2,1fr)}
       .slots,.available-slots{grid-template-columns:repeat(3,1fr)}button,.btn{width:100%;min-height:46px}
-      .tab{min-width:100%}.appointment,.client-item{grid-template-columns:1fr}
+      .tabs{grid-template-columns:1fr}.appointment,.client-item{grid-template-columns:1fr}
       .admin-topbar{align-items:stretch}
       .admin-topbar-actions{width:100%}
       .owner-popup-actions,.campaign-actions,.contact-actions{grid-template-columns:1fr;width:100%}
+      .app-modal-actions{grid-template-columns:1fr}
     }
   </style>
 </head>
@@ -301,7 +485,7 @@
   <div class="app">
     <section class="hero">
       <div class="brand">
-        <div class="logo">✂️</div>
+        <div class="logo" id="mainLogo">✂️</div>
         <div>
           <h1 id="brandName">Barbearia Rodrigues</h1>
           <p id="brandSubtitle">Agendamento moderno de cortes, direto pelo celular.</p>
@@ -523,7 +707,6 @@
         </div>
 
         <div class="admin-topbar-actions">
-          <button class="secondary" onclick="showClientHome()">Área do cliente</button>
           <button class="danger" onclick="adminLogout()">Sair do administrador</button>
         </div>
       </div>
@@ -535,9 +718,9 @@
       <div id="ownerPopupContainer" class="owner-popup-wrap"></div>
 
       <div class="tabs">
-        <button id="tabSchedule" class="tab active" onclick="openOwnerTab('schedule')">Configurações</button>
-        <button id="tabAppointments" class="tab" onclick="openOwnerTab('appointments')">Agendamentos</button>
-        <button id="tabClients" class="tab" onclick="openOwnerTab('clients')">Clientes</button>
+        <button id="tabSchedule" class="tab active" onclick="openOwnerTab('schedule')">⚙️ Configurações</button>
+        <button id="tabAppointments" class="tab blue-tab" onclick="openOwnerTab('appointments')">📅 Agendamentos</button>
+        <button id="tabClients" class="tab green-tab" onclick="openOwnerTab('clients')">👥 Clientes</button>
       </div>
 
       <div id="ownerSchedule" class="grid">
@@ -550,2031 +733,5 @@
 
           <div id="settingsMsg" class="message"></div>
 
-          <h3>Dados da barbearia</h3>
-
-          <div class="form-row">
-            <div>
-              <label>Nome da barbearia</label>
-              <input id="businessName" type="text" placeholder="Barbearia Rodrigues" />
-            </div>
-
-            <div>
-              <label>WhatsApp do dono</label>
-              <input id="ownerWhatsapp" type="tel" placeholder="Ex: 44999258615" />
-            </div>
-          </div>
-
-          <div class="single">
-            <label>Endereço da barbearia</label>
-            <input id="businessAddress" type="text" placeholder="Av. Tupassi, 4985 - Jardim Progresso, Assis Chateaubriand - PR" />
-          </div>
-
-          <div class="single">
-            <label>Link do Google Maps</label>
-            <input id="businessMapLink" type="text" placeholder="Opcional. Se deixar vazio, o app abre rota automática." />
-          </div>
-
-          <div class="single">
-            <label>Mensagem de confirmação</label>
-            <textarea id="confirmationMessage"></textarea>
-          </div>
-
-          <h3>Acesso do administrador</h3>
-
-          <div class="form-row">
-            <div>
-              <label>E-mail do administrador</label>
-              <input id="adminEmail" type="email" placeholder="admin@barbearia.com" />
-            </div>
-
-            <div>
-              <label>Senha do administrador</label>
-              <input id="adminPassword" type="text" placeholder="Ex: 1234" />
-            </div>
-          </div>
-
-          <h3>Dias de trabalho</h3>
-
-          <div class="days">
-            <label class="day-check"><input type="checkbox" class="workday" value="1" /> Segunda-feira</label>
-            <label class="day-check"><input type="checkbox" class="workday" value="2" /> Terça-feira</label>
-            <label class="day-check"><input type="checkbox" class="workday" value="3" /> Quarta-feira</label>
-            <label class="day-check"><input type="checkbox" class="workday" value="4" /> Quinta-feira</label>
-            <label class="day-check"><input type="checkbox" class="workday" value="5" /> Sexta-feira</label>
-            <label class="day-check"><input type="checkbox" class="workday" value="6" /> Sábado</label>
-            <label class="day-check"><input type="checkbox" class="workday" value="0" /> Domingo</label>
-          </div>
-
-          <div class="form-row">
-            <div>
-              <label>Horário de início</label>
-              <input id="startTime" type="time" value="08:00" />
-            </div>
-
-            <div>
-              <label>Horário de término</label>
-              <input id="endTime" type="time" value="18:00" />
-            </div>
-          </div>
-
-          <div class="single">
-            <label>Duração de cada corte</label>
-            <select id="slotDuration">
-              <option value="20">20 minutos</option>
-              <option value="30" selected>30 minutos</option>
-              <option value="40">40 minutos</option>
-              <option value="45">45 minutos</option>
-              <option value="60">1 hora</option>
-            </select>
-          </div>
-
-          <button class="primary" onclick="saveSettings()">Salvar configurações</button>
-
-          <h3>Bloquear um dia específico</h3>
-
-          <div class="form-row">
-            <div>
-              <label>Data para bloquear</label>
-              <input id="blockDate" type="date" />
-            </div>
-
-            <div style="display:flex;align-items:flex-end;">
-              <button class="secondary" onclick="addBlockedDate()">Bloquear data</button>
-            </div>
-          </div>
-
-          <div id="blockedDatesList" class="blocked-list"></div>
-        </div>
-
-        <div class="card">
-          <h2>Link para clientes</h2>
-          <p style="color:var(--muted);">Use esse link para os clientes agendarem pelo celular.</p>
-
-          <div class="single">
-            <label>Link atual do cliente</label>
-            <input id="clientLink" type="text" readonly />
-          </div>
-
-          <button class="success" onclick="copyClientLink()">Copiar link</button>
-
-          <h3>Contato rápido</h3>
-          <div class="contact-actions">
-            <button class="success" onclick="openBusinessWhatsApp()">Falar no WhatsApp</button>
-            <button class="blue" onclick="openBusinessMap()">Ver localização</button>
-          </div>
-
-          <h3>Como usar para outro cliente</h3>
-          <div class="empty" style="text-align:left;">
-            <p><strong>1.</strong> Troque o nome da barbearia.</p>
-            <p><strong>2.</strong> Coloque o WhatsApp do dono.</p>
-            <p><strong>3.</strong> Coloque o endereço completo com cidade e estado.</p>
-            <p><strong>4.</strong> Compartilhe o link com os clientes.</p>
-          </div>
-        </div>
-      </div>
-
-      <div id="ownerAppointments" class="card hidden">
-        <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:14px;">
-          <div>
-            <h2>Agendamentos</h2>
-            <span class="status pending">Clientes marcados e cancelamentos</span>
-          </div>
-          <button class="secondary" onclick="loadAppointments()">Atualizar</button>
-        </div>
-
-        <div id="appointmentsMsg" class="message"></div>
-
-        <div class="form-row">
-          <div>
-            <label>Filtrar por data</label>
-            <input id="filterDate" type="date" onchange="renderAppointmentsList()" />
-          </div>
-
-          <div style="display:flex;align-items:flex-end;">
-            <button class="secondary" onclick="clearFilter()">Mostrar todos</button>
-          </div>
-        </div>
-
-        <div id="appointmentsList"></div>
-      </div>
-
-      <div id="ownerClients" class="card hidden">
-        <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:14px;">
-          <div>
-            <h2>Clientes cadastrados</h2>
-            <span class="status confirmed">Lista da barbearia</span>
-          </div>
-          <button class="secondary" onclick="loadClients()">Atualizar</button>
-        </div>
-
-        <div id="clientsMsg" class="message"></div>
-
-        <div class="campaign-box">
-          <h3 style="margin-top:0;">Mensagem para clientes</h3>
-          <p style="margin-top:0;color:#ffe2a1;">
-            Use <strong>{nome}</strong>, <strong>{barbearia}</strong>, <strong>{link}</strong>, <strong>{endereco}</strong> e <strong>{whatsapp}</strong>.
-          </p>
-
-          <div class="single">
-            <label>Mensagem padrão de divulgação</label>
-            <textarea id="clientCampaignMessage"></textarea>
-          </div>
-
-          <div class="campaign-actions">
-            <button class="primary" onclick="saveClientCampaignMessage()">Salvar mensagem</button>
-            <button class="success" onclick="startClientCampaign()">Enviar para todos</button>
-          </div>
-
-          <div id="campaignProgressBox" class="message info">
-            Campanha iniciada.
-          </div>
-        </div>
-
-        <div class="single">
-          <label>Pesquisar cliente</label>
-          <input id="clientSearch" type="text" placeholder="Digite nome ou WhatsApp" oninput="renderClientsList()" />
-        </div>
-
-        <div id="clientsList"></div>
-      </div>
-    </section>
-
-    <p class="footer-note">
-      <span id="footerBrand">Barbearia Rodrigues</span> © Sistema de agendamento online.
-    </p>
-  </div>
-
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-
-    import {
-      getFirestore,
-      doc,
-      getDoc,
-      setDoc,
-      updateDoc,
-      collection,
-      addDoc,
-      getDocs,
-      query,
-      where,
-      deleteDoc,
-      serverTimestamp,
-      onSnapshot
-    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyCt0pxFAZofV3peBQkr5jnk__bT1QBulvQ",
-      authDomain: "barbearia-rodrigues-b4731.firebaseapp.com",
-      projectId: "barbearia-rodrigues-b4731",
-      storageBucket: "barbearia-rodrigues-b4731.firebasestorage.app",
-      messagingSenderId: "854031454959",
-      appId: "1:854031454959:web:b4d0404916fc29efa6811a"
-    };
-
-    let app = null;
-    let db = null;
-    let firebaseReady = false;
-
-    function $(id){return document.getElementById(id)}
-
-    try{
-      app = initializeApp(firebaseConfig);
-      db = getFirestore(app);
-      firebaseReady = true;
-      $("firebaseWarning").classList.remove("show");
-    }catch(error){
-      console.error(error);
-      firebaseReady = false;
-      $("firebaseWarning").className = "message err show";
-      $("firebaseWarning").innerHTML = "Erro ao conectar com o Firebase.";
-    }
-
-    const CLIENT_PUBLIC_LINK = "https://agenda-rodrigues.vercel.app";
-
-    const DEFAULT_CONFIRMATION_MESSAGE =
-      "Olá, {nome}! Seu horário na {barbearia} foi confirmado para {data} às {hora}. Qualquer dúvida, pode responder por aqui. Deus abençoe!";
-
-    const DEFAULT_CLIENT_CAMPAIGN_MESSAGE = `Olá, {nome}! Aqui é da {barbearia}.
-
-Passando para lembrar que agora você pode agendar seu corte pelo nosso sistema online.
-
-Acesse o link:
-{link}
-
-📍 Endereço:
-{endereco}
-
-📲 WhatsApp:
-{whatsapp}
-
-Escolha o melhor dia e horário disponível. Esperamos você!`;
-
-    const DEFAULT_SETTINGS = {
-      businessName:"Barbearia Rodrigues",
-      businessAddress:"Av. Tupassi, 4985 - Jardim Progresso, Assis Chateaubriand - PR",
-      businessMapLink:"",
-      ownerWhatsapp:"44999258615",
-      confirmationMessage:DEFAULT_CONFIRMATION_MESSAGE,
-      clientCampaignMessage:DEFAULT_CLIENT_CAMPAIGN_MESSAGE,
-      workdays:[1,2,3,4,5,6],
-      startTime:"08:00",
-      endTime:"18:00",
-      slotDuration:30,
-      adminEmail:"admin@barbearia.com",
-      adminPassword:"1234",
-      blockedDates:[]
-    };
-
-    let settings = {...DEFAULT_SETTINGS};
-    let selectedDate = "";
-    let selectedSlot = "";
-    let selectedMonth = "";
-    let quickSelected = null;
-    let bookedSlots = [];
-    let appointmentsCache = [];
-    let clientsCache = [];
-    let currentClient = null;
-    let unsubscribeAppointments = null;
-    let unsubscribeClientAppointment = null;
-    let activeClientAppointmentId = "";
-    let firstRealtimeLoad = true;
-    let knownAppointmentIds = new Set();
-    let lastStatusById = new Map();
-    let lastClientStatus = "";
-    let globalAudioContext = null;
-    let campaignQueue = [];
-    let campaignIndex = 0;
-
-    function showMessage(id,text,type="info",timeout=4500){
-      const el = $(id);
-      if(!el) return;
-      el.className = "message show " + type;
-      el.innerHTML = text;
-      if(timeout > 0){
-        setTimeout(()=>{el.className = "message"}, timeout);
-      }
-    }
-
-    function showOnly(viewId){
-      [
-        "clientHomeView",
-        "availableView",
-        "guidedView",
-        "clientAppointmentsView",
-        "ownerLoginView",
-        "ownerView"
-      ].forEach(id => $(id).classList.add("hidden"));
-
-      if(viewId === "ownerView" || viewId === "ownerLoginView"){
-        $("clientLiveStatusView").classList.add("hidden");
-      }
-
-      $(viewId).classList.remove("hidden");
-    }
-
-    function formatDateBR(dateStr){
-      if(!dateStr || !dateStr.includes("-")) return dateStr || "";
-      const [y,m,d] = dateStr.split("-");
-      return `${d}/${m}/${y}`;
-    }
-
-    function getDayName(date){
-      return ["Domingo","Segunda","Terça","Quarta","Quinta","Sexta","Sábado"][date.getDay()];
-    }
-
-    function getMonthName(i){
-      return ["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"][i];
-    }
-
-    function toDateInputValue(date){
-      const y = date.getFullYear();
-      const m = String(date.getMonth()+1).padStart(2,"0");
-      const d = String(date.getDate()).padStart(2,"0");
-      return `${y}-${m}-${d}`;
-    }
-
-    function minutesFromTime(time){
-      const [h,m] = time.split(":").map(Number);
-      return h * 60 + m;
-    }
-
-    function timeFromMinutes(total){
-      const h = String(Math.floor(total / 60)).padStart(2,"0");
-      const m = String(total % 60).padStart(2,"0");
-      return `${h}:${m}`;
-    }
-
-    function generateSlots(){
-      const slots = [];
-      const start = minutesFromTime(settings.startTime);
-      const end = minutesFromTime(settings.endTime);
-      const duration = Number(settings.slotDuration || 30);
-
-      for(let t = start; t + duration <= end; t += duration){
-        slots.push(timeFromMinutes(t));
-      }
-
-      return slots;
-    }
-
-    function cleanPhone(phone){
-      return String(phone || "").replace(/\D/g,"");
-    }
-
-    function formatPhoneBR(phone){
-      const p = cleanPhone(phone);
-      if(p.length === 11){
-        return `(${p.slice(0,2)}) ${p.slice(2,7)}-${p.slice(7)}`;
-      }
-      if(p.length === 10){
-        return `(${p.slice(0,2)}) ${p.slice(2,6)}-${p.slice(6)}`;
-      }
-      return phone || "";
-    }
-
-    function isCanceledStatus(status){
-      return status === "canceled_by_client" || status === "canceled_by_admin";
-    }
-
-    function makeWhatsAppUrl(phone,message=""){
-      const phoneClean = cleanPhone(phone);
-      if(!phoneClean) return "#";
-
-      let finalPhone = phoneClean;
-      if(!finalPhone.startsWith("55")) finalPhone = "55" + finalPhone;
-
-      if(message){
-        return `https://wa.me/${finalPhone}?text=${encodeURIComponent(message)}`;
-      }
-
-      return `https://wa.me/${finalPhone}`;
-    }
-
-    function getClientPublicLink(){
-      return CLIENT_PUBLIC_LINK;
-    }
-
-    function getBusinessMapLink(){
-      const saved = String(settings.businessMapLink || "").trim();
-
-      if(saved && !saved.includes("/search/")){
-        return saved;
-      }
-
-      const address = settings.businessAddress || DEFAULT_SETTINGS.businessAddress;
-      return `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(address)}&travelmode=driving`;
-    }
-
-    function openBusinessMap(){
-      window.open(getBusinessMapLink(), "_blank");
-    }
-
-    function openBusinessWhatsApp(){
-      const message = `Olá! Vim pelo agendamento online da ${settings.businessName || "barbearia"}.`;
-      window.open(makeWhatsAppUrl(settings.ownerWhatsapp,message), "_blank");
-    }
-
-    function buildClientCampaignMessage(client){
-      const rawTemplate = $("clientCampaignMessage")
-        ? $("clientCampaignMessage").value
-        : settings.clientCampaignMessage;
-
-      const template = String(rawTemplate || DEFAULT_CLIENT_CAMPAIGN_MESSAGE)
-        .replaceAll("\\n", "\n");
-
-      return template
-        .replaceAll("{nome}", client.name || "cliente")
-        .replaceAll("{barbearia}", settings.businessName || "Barbearia")
-        .replaceAll("{link}", getClientPublicLink())
-        .replaceAll("{endereco}", settings.businessAddress || DEFAULT_SETTINGS.businessAddress)
-        .replaceAll("{whatsapp}", formatPhoneBR(settings.ownerWhatsapp || DEFAULT_SETTINGS.ownerWhatsapp));
-    }
-
-    function openWhatsAppForClient(client){
-      if(!client || !client.phone){
-        showMessage("clientsMsg","Esse cliente não tem WhatsApp cadastrado.","err",5000);
-        return;
-      }
-
-      const message = buildClientCampaignMessage(client);
-      const url = makeWhatsAppUrl(client.phone,message);
-      window.open(url,"_blank");
-    }
-
-    async function saveClientCampaignMessage(){
-      const msg = $("clientCampaignMessage").value.trim().replaceAll("\\n", "\n");
-
-      if(!msg){
-        showMessage("clientsMsg","Digite uma mensagem para salvar.","err");
-        return;
-      }
-
-      settings.clientCampaignMessage = msg;
-
-      try{
-        await setDoc(doc(db,"barbeariaRodrigues","settings"),settings);
-        showMessage("clientsMsg","Mensagem padrão salva com sucesso.","ok",6000);
-      }catch(error){
-        console.error(error);
-        showMessage("clientsMsg","Não foi possível salvar a mensagem.","err");
-      }
-    }
-
-    async function startClientCampaign(){
-      if(clientsCache.length === 0){
-        await loadClients();
-      }
-
-      campaignQueue = clientsCache.filter(c=>c && c.phone);
-      campaignIndex = 0;
-
-      if(campaignQueue.length === 0){
-        showMessage("clientsMsg","Nenhum cliente com WhatsApp encontrado.","err",6000);
-        return;
-      }
-
-      showCampaignProgress();
-      sendNextCampaignClient();
-    }
-
-    function showCampaignProgress(){
-      const box = $("campaignProgressBox");
-
-      if(!box) return;
-
-      if(campaignQueue.length === 0){
-        box.className = "message info";
-        return;
-      }
-
-      if(campaignIndex >= campaignQueue.length){
-        box.className = "message ok show";
-        box.innerHTML = `
-          ✅ Campanha finalizada.<br>
-          Clientes processados: <strong>${campaignQueue.length}</strong>.
-        `;
-        return;
-      }
-
-      const client = campaignQueue[campaignIndex];
-
-      box.className = "message info show";
-      box.innerHTML = `
-        Campanha em andamento.<br>
-        Cliente <strong>${campaignIndex + 1}</strong> de <strong>${campaignQueue.length}</strong>: ${client.name || "Cliente"}<br><br>
-        <button class="success" onclick="sendNextCampaignClient()">Abrir WhatsApp do próximo cliente</button>
-        <button class="danger" onclick="cancelClientCampaign()">Encerrar campanha</button>
-      `;
-    }
-
-    function sendNextCampaignClient(){
-      if(campaignIndex >= campaignQueue.length){
-        showCampaignProgress();
-        return;
-      }
-
-      const client = campaignQueue[campaignIndex];
-      openWhatsAppForClient(client);
-      campaignIndex++;
-      showCampaignProgress();
-    }
-
-    function cancelClientCampaign(){
-      campaignQueue = [];
-      campaignIndex = 0;
-      showMessage("campaignProgressBox","Campanha encerrada.","info",6000);
-    }
-
-    function startAudioContext(){
-      try{
-        const AudioContext = window.AudioContext || window.webkitAudioContext;
-        if(!AudioContext) return;
-
-        if(!globalAudioContext){
-          globalAudioContext = new AudioContext();
-        }
-
-        if(globalAudioContext.state === "suspended"){
-          globalAudioContext.resume();
-        }
-      }catch(error){
-        console.error(error);
-      }
-    }
-
-    function playSingleTone(duration = 520, frequency = 880){
-      try{
-        startAudioContext();
-
-        if(!globalAudioContext) return;
-
-        const ctx = globalAudioContext;
-        const oscillator = ctx.createOscillator();
-        const gain = ctx.createGain();
-
-        oscillator.type = "sine";
-        oscillator.frequency.value = frequency;
-
-        gain.gain.setValueAtTime(.0001, ctx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(.55, ctx.currentTime + .04);
-        gain.gain.exponentialRampToValueAtTime(.0001, ctx.currentTime + duration / 1000);
-
-        oscillator.connect(gain);
-        gain.connect(ctx.destination);
-
-        oscillator.start();
-        oscillator.stop(ctx.currentTime + duration / 1000 + .03);
-      }catch(error){
-        console.error(error);
-      }
-    }
-
-    function playBeepPattern(times = 1, longBeep = false){
-      startAudioContext();
-
-      const duration = longBeep ? 760 : 420;
-
-      for(let i = 0; i < times; i++){
-        setTimeout(()=>{
-          playSingleTone(duration, times === 2 ? 980 : 880);
-        }, i * 620);
-      }
-    }
-
-    function playOwnerNewAppointmentBeep(){playBeepPattern(1, false)}
-    function playOwnerCancellationBeep(){playBeepPattern(2, false)}
-    function playClientConfirmedBeep(){playBeepPattern(1, true)}
-    function playClientCanceledBeep(){playBeepPattern(2, false)}
-
-    function showOwnerAlert(text){
-      const el = $("newAppointmentAlert");
-      el.className = "message new show";
-      el.innerHTML = text;
-
-      setTimeout(()=>{
-        el.className = "message new";
-      }, 10000);
-    }
-
-    function sortAppointments(items){
-      return items.sort((a,b)=>`${a.date || ""} ${a.time || ""}`.localeCompare(`${b.date || ""} ${b.time || ""}`));
-    }
-
-    function sortClients(items){
-      return items.sort((a,b)=>String(a.name || "").localeCompare(String(b.name || "")));
-    }
-
-    function loadClientFromStorage(){
-      try{
-        const saved = localStorage.getItem("barbeariaClient");
-        if(!saved) return null;
-
-        const parsed = JSON.parse(saved);
-        if(!parsed || !parsed.name || !parsed.phone) return null;
-
-        return parsed;
-      }catch{
-        return null;
-      }
-    }
-
-    function saveClientToStorage(client){
-      localStorage.setItem("barbeariaClient", JSON.stringify(client));
-    }
-
-    function clearClientStorage(){
-      localStorage.removeItem("barbeariaClient");
-    }
-
-    function updateBrand(){
-      const name = settings.businessName || "Barbearia Rodrigues";
-      const address = settings.businessAddress || DEFAULT_SETTINGS.businessAddress;
-      const phone = formatPhoneBR(settings.ownerWhatsapp || DEFAULT_SETTINGS.ownerWhatsapp);
-
-      $("brandName").textContent = name;
-      $("footerBrand").textContent = name;
-      $("brandAddress").textContent = `📍 ${address}`;
-      $("brandWhatsapp").textContent = `📲 WhatsApp: ${phone}`;
-      document.title = name;
-    }
-
-    async function loadSettings(){
-      if(!firebaseReady){
-        settings = {...DEFAULT_SETTINGS};
-        applySettingsToForm();
-        return;
-      }
-
-      try{
-        const ref = doc(db,"barbeariaRodrigues","settings");
-        const snap = await getDoc(ref);
-
-        if(snap.exists()){
-          settings = {...DEFAULT_SETTINGS, ...snap.data()};
-        }else{
-          await setDoc(ref, DEFAULT_SETTINGS);
-          settings = {...DEFAULT_SETTINGS};
-        }
-
-        applySettingsToForm();
-      }catch(error){
-        console.error(error);
-      }
-    }
-
-    function applySettingsToForm(){
-      updateBrand();
-
-      document.querySelectorAll(".workday").forEach(check=>{
-        check.checked = settings.workdays.includes(Number(check.value));
-      });
-
-      $("businessName").value = settings.businessName || "";
-      $("ownerWhatsapp").value = settings.ownerWhatsapp || "";
-      $("businessAddress").value = settings.businessAddress || "";
-      $("businessMapLink").value = settings.businessMapLink || "";
-      $("confirmationMessage").value = settings.confirmationMessage || DEFAULT_CONFIRMATION_MESSAGE;
-      $("adminEmail").value = settings.adminEmail || "admin@barbearia.com";
-      $("adminPassword").value = settings.adminPassword || "1234";
-      $("startTime").value = settings.startTime || "08:00";
-      $("endTime").value = settings.endTime || "18:00";
-      $("slotDuration").value = String(settings.slotDuration || 30);
-
-      if($("clientCampaignMessage")){
-        $("clientCampaignMessage").value = String(settings.clientCampaignMessage || DEFAULT_CLIENT_CAMPAIGN_MESSAGE)
-          .replaceAll("\\n", "\n");
-      }
-
-      updateClientLink();
-      renderBlockedDates();
-      renderMonthOptions();
-      updateClientUi();
-    }
-
-    function updateClientUi(){
-      if(currentClient){
-        $("clientRegisterBox").classList.add("hidden");
-        $("scheduleBox").classList.remove("hidden");
-        $("clientWelcome").classList.remove("hidden");
-        $("clientWelcomeName").textContent = currentClient.name;
-        $("clientWelcomePhone").textContent = currentClient.phone;
-      }else{
-        $("clientRegisterBox").classList.remove("hidden");
-        $("scheduleBox").classList.add("hidden");
-        $("clientWelcome").classList.add("hidden");
-      }
-    }
-
-    async function saveOrUpdateClient(name,phone){
-      const phoneClean = cleanPhone(phone);
-      const clientId = phoneClean;
-      const clientRef = doc(db,"clientes",clientId);
-      const clientSnap = await getDoc(clientRef);
-
-      const data = {
-        id:clientId,
-        name,
-        phone:phoneClean,
-        updatedAt:serverTimestamp()
-      };
-
-      if(clientSnap.exists()){
-        await updateDoc(clientRef,data);
-      }else{
-        await setDoc(clientRef,{
-          ...data,
-          createdAt:serverTimestamp()
-        });
-      }
-
-      return {
-        id:clientId,
-        name,
-        phone:phoneClean
-      };
-    }
-
-    async function registerClient(){
-      startAudioContext();
-
-      const name = $("registerName").value.trim();
-      const phone = $("registerPhone").value.trim();
-
-      if(!name || name.length < 3){
-        showMessage("clientMsg","Digite seu nome corretamente.","err");
-        return;
-      }
-
-      if(cleanPhone(phone).length < 8){
-        showMessage("clientMsg","Digite seu WhatsApp corretamente.","err");
-        return;
-      }
-
-      try{
-        currentClient = await saveOrUpdateClient(name,phone);
-        saveClientToStorage(currentClient);
-
-        $("registerName").value = "";
-        $("registerPhone").value = "";
-
-        updateClientUi();
-        renderMonthOptions();
-        renderClientDates();
-
-        showMessage("clientMsg","Cadastro realizado. Agora escolha o mês, o dia e o horário.","ok",6000);
-      }catch(error){
-        console.error(error);
-        showMessage("clientMsg","Não foi possível cadastrar. Verifique as regras do Firestore.","err");
-      }
-    }
-
-    function changeClient(){
-      clearClientStorage();
-      currentClient = null;
-      selectedDate = "";
-      selectedSlot = "";
-      bookedSlots = [];
-      updateClientUi();
-      renderSlots();
-    }
-
-    function renderMonthOptions(){
-      const select = $("monthSelect");
-      if(!select) return;
-
-      select.innerHTML = "";
-
-      const today = new Date();
-
-      for(let i = 0; i < 6; i++){
-        const date = new Date(today.getFullYear(), today.getMonth() + i, 1);
-        const value = `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,"0")}`;
-        const option = document.createElement("option");
-        option.value = value;
-        option.textContent = `${getMonthName(date.getMonth())} de ${date.getFullYear()}`;
-        select.appendChild(option);
-      }
-
-      if(!selectedMonth) selectedMonth = select.value;
-      select.value = selectedMonth;
-    }
-
-    function renderClientDates(){
-      const container = $("dateList");
-      if(!container) return;
-
-      container.innerHTML = "";
-
-      const monthValue = $("monthSelect").value;
-      selectedMonth = monthValue;
-      selectedDate = "";
-      selectedSlot = "";
-      bookedSlots = [];
-      renderSlots();
-
-      const [year,month] = monthValue.split("-").map(Number);
-      const today = new Date();
-      today.setHours(0,0,0,0);
-      const lastDay = new Date(year, month, 0);
-      let count = 0;
-
-      for(let day = 1; day <= lastDay.getDate(); day++){
-        const date = new Date(year, month - 1, day);
-        date.setHours(0,0,0,0);
-
-        if(date < today) continue;
-
-        const dateValue = toDateInputValue(date);
-        const isWorkday = settings.workdays.includes(date.getDay());
-        const isBlocked = Array.isArray(settings.blockedDates) && settings.blockedDates.includes(dateValue);
-
-        if(!isWorkday || isBlocked) continue;
-
-        const btn = document.createElement("button");
-        btn.className = "date-btn";
-        btn.innerHTML = `
-          <strong>${String(day).padStart(2,"0")}/${String(month).padStart(2,"0")}</strong>
-          <span>${getDayName(date)}</span>
-        `;
-
-        btn.onclick = async()=>{
-          startAudioContext();
-
-          selectedDate = dateValue;
-          selectedSlot = "";
-
-          document.querySelectorAll(".date-btn").forEach(b=>b.classList.remove("active"));
-          btn.classList.add("active");
-
-          await loadBookedSlots();
-          renderSlots();
-        };
-
-        container.appendChild(btn);
-        count++;
-      }
-
-      if(count === 0){
-        container.innerHTML = `<div class="empty">Nenhum dia disponível neste mês.</div>`;
-      }
-    }
-
-    async function loadBookedSlotsForDate(dateStr){
-      const slots = [];
-
-      if(!dateStr || !firebaseReady) return slots;
-
-      const q = query(collection(db,"appointments"), where("date","==",dateStr));
-      const snap = await getDocs(q);
-
-      snap.forEach(docItem=>{
-        const data = docItem.data();
-        if(data && data.time && !isCanceledStatus(data.status)){
-          slots.push(data.time);
-        }
-      });
-
-      return slots;
-    }
-
-    async function loadBookedSlots(){
-      bookedSlots = await loadBookedSlotsForDate(selectedDate);
-    }
-
-    function renderSlots(){
-      const container = $("slotList");
-      if(!container) return;
-
-      container.innerHTML = "";
-
-      if(!selectedDate){
-        container.innerHTML = `<div class="empty">Primeiro escolha um dia.</div>`;
-        return;
-      }
-
-      const slots = generateSlots();
-      const freeSlots = slots.filter(slot=>!bookedSlots.includes(slot));
-
-      if(freeSlots.length === 0){
-        container.innerHTML = `<div class="empty">Não há horários vagos para este dia.</div>`;
-        return;
-      }
-
-      freeSlots.forEach(slot=>{
-        const btn = document.createElement("button");
-        btn.className = "slot";
-        btn.textContent = slot;
-
-        btn.onclick = ()=>{
-          startAudioContext();
-
-          selectedSlot = slot;
-          document.querySelectorAll(".slot").forEach(b=>b.classList.remove("active"));
-          btn.classList.add("active");
-        };
-
-        container.appendChild(btn);
-      });
-    }
-
-    async function bookAppointment(){
-      startAudioContext();
-
-      if(!currentClient){
-        showMessage("clientMsg","Faça seu cadastro primeiro.","err");
-        return;
-      }
-
-      if(!selectedDate){
-        showMessage("clientMsg","Escolha uma data.","err");
-        return;
-      }
-
-      if(!selectedSlot){
-        showMessage("clientMsg","Escolha um horário.","err");
-        return;
-      }
-
-      await createAppointment(currentClient,selectedDate,selectedSlot,"clientMsg");
-    }
-
-    async function createAppointment(client,date,time,messageBoxId){
-      try{
-        startAudioContext();
-
-        const confirmar = confirm(
-          `Você quer confirmar este horário?\n\nData: ${formatDateBR(date)}\nHorário: ${time}`
-        );
-
-        if(!confirmar){
-          showMessage(messageBoxId,"Agendamento cancelado. Escolha outro horário, se desejar.","info",5000);
-          return;
-        }
-
-        const takenSlots = await loadBookedSlotsForDate(date);
-
-        if(takenSlots.includes(time)){
-          showMessage(messageBoxId,"Esse horário acabou de ser preenchido. Escolha outro horário.","err");
-          return;
-        }
-
-        const appointmentRef = await addDoc(collection(db,"appointments"),{
-          clientId:client.id,
-          name:client.name,
-          phone:client.phone,
-          date,
-          time,
-          status:"pending",
-          createdAt:serverTimestamp(),
-          updatedAt:serverTimestamp()
-        });
-
-        activeClientAppointmentId = appointmentRef.id;
-        lastClientStatus = "pending";
-        watchClientAppointment(appointmentRef.id);
-
-        showClientLiveStatus({
-          id: appointmentRef.id,
-          name: client.name,
-          phone: client.phone,
-          date,
-          time,
-          status: "pending"
-        });
-
-        playBeepPattern(1, false);
-
-        showMessage(
-          messageBoxId,
-          `✅ Seu agendamento foi solicitado com sucesso!<br><br>
-          <strong>Data:</strong> ${formatDateBR(date)}<br>
-          <strong>Horário:</strong> ${time}<br><br>
-          Status: <strong>Aguardando confirmação da barbearia.</strong>`,
-          "ok",
-          0
-        );
-
-        selectedSlot = "";
-        quickSelected = null;
-
-        if(messageBoxId === "clientMsg"){
-          await loadBookedSlots();
-          renderSlots();
-        }
-
-        if(messageBoxId === "availableMsg"){
-          $("quickConfirmBox").classList.add("hidden");
-          await renderAvailableTimes();
-        }
-      }catch(error){
-        console.error(error);
-        showMessage(messageBoxId,"Não foi possível confirmar o agendamento.","err");
-      }
-    }
-
-    function showClientLiveStatus(item){
-      if(!item) return;
-
-      const status = item.status || "pending";
-      const card = $("clientLiveStatusCard");
-
-      $("clientLiveStatusView").classList.remove("hidden");
-
-      card.classList.remove("confirmed","canceled");
-
-      if(status === "confirmed"){
-        card.classList.add("confirmed");
-        $("clientLiveStatusTitle").innerHTML = "✅ Seu horário foi confirmado!";
-        $("clientLiveStatusText").innerHTML = "A barbearia confirmou seu agendamento com sucesso.";
-      }else if(status === "canceled_by_admin"){
-        card.classList.add("canceled");
-        $("clientLiveStatusTitle").innerHTML = "⚠️ Horário desmarcado pela barbearia";
-        $("clientLiveStatusText").innerHTML = "A barbearia desmarcou esse horário. Escolha outro horário disponível.";
-      }else if(status === "canceled_by_client"){
-        card.classList.add("canceled");
-        $("clientLiveStatusTitle").innerHTML = "⚠️ Agendamento desmarcado";
-        $("clientLiveStatusText").innerHTML = "Você desmarcou esse corte. O horário voltou para a agenda.";
-      }else{
-        $("clientLiveStatusTitle").innerHTML = "⏳ Aguardando confirmação";
-        $("clientLiveStatusText").innerHTML = "Seu agendamento foi solicitado. Aguarde a confirmação da barbearia.";
-      }
-
-      $("clientLiveStatusDetails").innerHTML = `
-        <strong>Data:</strong> ${formatDateBR(item.date)}<br>
-        <strong>Horário:</strong> ${item.time}
-      `;
-    }
-
-    function watchClientAppointment(appointmentId){
-      if(!appointmentId || !firebaseReady) return;
-
-      if(unsubscribeClientAppointment){
-        unsubscribeClientAppointment();
-        unsubscribeClientAppointment = null;
-      }
-
-      unsubscribeClientAppointment = onSnapshot(doc(db,"appointments",appointmentId),(snap)=>{
-        if(!snap.exists()) return;
-
-        const item = {
-          id: snap.id,
-          ...snap.data()
-        };
-
-        const currentStatus = item.status || "pending";
-
-        showClientLiveStatus(item);
-
-        if(lastClientStatus && lastClientStatus !== currentStatus){
-          if(currentStatus === "confirmed"){
-            playClientConfirmedBeep();
-
-            showMessage(
-              "clientMsg",
-              `✅ Seu horário foi confirmado com sucesso!<br><br>
-              <strong>Data:</strong> ${formatDateBR(item.date)}<br>
-              <strong>Horário:</strong> ${item.time}`,
-              "ok",
-              0
-            );
-
-            showMessage(
-              "availableMsg",
-              `✅ Seu horário foi confirmado com sucesso!<br><br>
-              <strong>Data:</strong> ${formatDateBR(item.date)}<br>
-              <strong>Horário:</strong> ${item.time}`,
-              "ok",
-              0
-            );
-          }
-
-          if(currentStatus === "canceled_by_admin"){
-            playClientCanceledBeep();
-
-            showMessage(
-              "clientMsg",
-              `⚠️ Seu horário foi desmarcado pela barbearia.<br><br>
-              <strong>Data:</strong> ${formatDateBR(item.date)}<br>
-              <strong>Horário:</strong> ${item.time}`,
-              "err",
-              0
-            );
-
-            showMessage(
-              "availableMsg",
-              `⚠️ Seu horário foi desmarcado pela barbearia.<br><br>
-              <strong>Data:</strong> ${formatDateBR(item.date)}<br>
-              <strong>Horário:</strong> ${item.time}`,
-              "err",
-              0
-            );
-          }
-        }
-
-        lastClientStatus = currentStatus;
-      });
-    }
-
-    async function renderAvailableTimes(){
-      const container = $("availableList");
-      container.innerHTML = `<div class="empty">Carregando horários...</div>`;
-
-      const today = new Date();
-      today.setHours(0,0,0,0);
-
-      const slots = generateSlots();
-      let daysShown = 0;
-      let html = "";
-
-      for(let i = 0; i < 21; i++){
-        const date = new Date(today);
-        date.setDate(today.getDate() + i);
-
-        const dateValue = toDateInputValue(date);
-        const isWorkday = settings.workdays.includes(date.getDay());
-        const isBlocked = Array.isArray(settings.blockedDates) && settings.blockedDates.includes(dateValue);
-
-        if(!isWorkday || isBlocked) continue;
-
-        const taken = await loadBookedSlotsForDate(dateValue);
-        const free = slots.filter(s=>!taken.includes(s));
-
-        if(free.length === 0) continue;
-
-        html += `
-          <div class="available-day">
-            <h3>${getDayName(date)} — ${formatDateBR(dateValue)}</h3>
-            <div class="available-slots">
-              ${free.map(time=>`
-                <button class="slot" onclick="selectQuickSlot('${dateValue}', '${time}')">${time}</button>
-              `).join("")}
-            </div>
-          </div>
-        `;
-
-        daysShown++;
-
-        if(daysShown >= 7) break;
-      }
-
-      if(!html){
-        html = `<div class="empty">Nenhum horário disponível nos próximos dias.</div>`;
-      }
-
-      container.innerHTML = html;
-    }
-
-    function selectQuickSlot(date,time){
-      startAudioContext();
-
-      quickSelected = {date,time};
-
-      $("quickConfirmBox").classList.remove("hidden");
-      $("quickConfirmText").innerHTML = `
-        Você quer agendar para este horário?<br><br>
-        Data: <strong>${formatDateBR(date)}</strong><br>
-        Horário: <strong>${time}</strong>
-      `;
-
-      if(currentClient){
-        $("quickClientBox").classList.add("hidden");
-      }else{
-        $("quickClientBox").classList.remove("hidden");
-      }
-
-      $("quickConfirmBox").scrollIntoView({behavior:"smooth",block:"center"});
-    }
-
-    async function confirmQuickBooking(){
-      startAudioContext();
-
-      if(!quickSelected){
-        showMessage("availableMsg","Escolha um horário primeiro.","err");
-        return;
-      }
-
-      let client = currentClient;
-
-      if(!client){
-        const name = $("quickName").value.trim();
-        const phone = $("quickPhone").value.trim();
-
-        if(!name || name.length < 3){
-          showMessage("availableMsg","Digite seu nome corretamente.","err");
-          return;
-        }
-
-        if(cleanPhone(phone).length < 8){
-          showMessage("availableMsg","Digite seu WhatsApp corretamente.","err");
-          return;
-        }
-
-        client = await saveOrUpdateClient(name,phone);
-        currentClient = client;
-        saveClientToStorage(client);
-        updateClientUi();
-      }
-
-      await createAppointment(client,quickSelected.date,quickSelected.time,"availableMsg");
-    }
-
-    async function openClientAppointments(){
-      startAudioContext();
-
-      showOnly("clientAppointmentsView");
-      $("clientLiveStatusView").classList.remove("hidden");
-      $("myAppointmentsList").innerHTML = "";
-
-      if(currentClient && currentClient.phone){
-        $("myAppointmentsPhone").value = currentClient.phone;
-        await loadMyAppointments();
-      }
-    }
-
-    async function loadMyAppointments(){
-      startAudioContext();
-
-      const phone = cleanPhone($("myAppointmentsPhone").value);
-
-      if(!phone || phone.length < 8){
-        showMessage("myAppointmentsMsg","Digite seu WhatsApp corretamente.","err");
-        return;
-      }
-
-      const container = $("myAppointmentsList");
-      container.innerHTML = `<div class="empty">Buscando seus agendamentos...</div>`;
-
-      try{
-        const q = query(collection(db,"appointments"), where("phone","==",phone));
-        const snap = await getDocs(q);
-        const items = [];
-
-        snap.forEach(docItem=>{
-          items.push({
-            id:docItem.id,
-            ...docItem.data()
-          });
-        });
-
-        const today = new Date();
-        today.setHours(0,0,0,0);
-
-        const activeItems = items
-          .filter(item=>{
-            if(!item.date) return true;
-            if(isCanceledStatus(item.status)) return false;
-
-            const [y,m,d] = item.date.split("-").map(Number);
-            const itemDate = new Date(y,m-1,d);
-            itemDate.setHours(0,0,0,0);
-
-            return itemDate >= today;
-          })
-          .sort((a,b)=>`${a.date || ""} ${a.time || ""}`.localeCompare(`${b.date || ""} ${b.time || ""}`));
-
-        if(activeItems.length === 0){
-          container.innerHTML = `<div class="empty">Nenhum agendamento futuro encontrado para este WhatsApp.</div>`;
-          return;
-        }
-
-        container.innerHTML = "";
-
-        activeItems.forEach(item=>{
-          const div = document.createElement("div");
-          div.className = "appointment";
-
-          const status = item.status === "confirmed" ? "Confirmado" : "Aguardando confirmação";
-          const statusClass = item.status === "confirmed" ? "confirmed" : "pending";
-
-          div.innerHTML = `
-            <div>
-              <strong>${item.name || "Cliente"}</strong>
-              <span>Data: ${formatDateBR(item.date)} às ${item.time}</span>
-              <span class="status ${statusClass}">${status}</span>
-            </div>
-
-            <div class="appointment-actions">
-              <button class="danger" onclick="cancelMyAppointment('${item.id}', '${item.date}', '${item.time}')">
-                Desmarcar corte
-              </button>
-            </div>
-          `;
-
-          container.appendChild(div);
-        });
-      }catch(error){
-        console.error(error);
-        container.innerHTML = `<div class="empty">Não foi possível buscar seus agendamentos.</div>`;
-      }
-    }
-
-    async function cancelMyAppointment(id,date,time){
-      startAudioContext();
-
-      const ok = confirm(
-        `Deseja desmarcar este corte?\n\nData: ${formatDateBR(date)}\nHorário: ${time}`
-      );
-
-      if(!ok) return;
-
-      try{
-        await updateDoc(doc(db,"appointments",id),{
-          status:"canceled_by_client",
-          canceledBy:"client",
-          canceledAt:serverTimestamp(),
-          updatedAt:serverTimestamp()
-        });
-
-        showMessage(
-          "myAppointmentsMsg",
-          "✅ Seu corte foi desmarcado com sucesso. A barbearia será avisada no painel.",
-          "ok",
-          8000
-        );
-
-        await loadMyAppointments();
-      }catch(error){
-        console.error(error);
-        showMessage("myAppointmentsMsg","Não foi possível desmarcar o corte.","err");
-      }
-    }
-
-    async function saveSettings(){
-      const workdays = Array.from(document.querySelectorAll(".workday"))
-        .filter(check=>check.checked)
-        .map(check=>Number(check.value));
-
-      if(workdays.length === 0){
-        showMessage("settingsMsg","Escolha pelo menos um dia de trabalho.","err");
-        return;
-      }
-
-      const startTime = $("startTime").value;
-      const endTime = $("endTime").value;
-
-      if(minutesFromTime(startTime) >= minutesFromTime(endTime)){
-        showMessage("settingsMsg","O horário inicial precisa ser menor que o horário final.","err");
-        return;
-      }
-
-      settings = {
-        ...settings,
-        businessName:$("businessName").value.trim() || "Barbearia Rodrigues",
-        businessAddress:$("businessAddress").value.trim() || DEFAULT_SETTINGS.businessAddress,
-        businessMapLink:$("businessMapLink").value.trim(),
-        ownerWhatsapp:cleanPhone($("ownerWhatsapp").value) || DEFAULT_SETTINGS.ownerWhatsapp,
-        confirmationMessage:$("confirmationMessage").value.trim() || DEFAULT_CONFIRMATION_MESSAGE,
-        clientCampaignMessage:$("clientCampaignMessage") ? $("clientCampaignMessage").value.trim().replaceAll("\\n", "\n") || DEFAULT_CLIENT_CAMPAIGN_MESSAGE : settings.clientCampaignMessage,
-        adminEmail:$("adminEmail").value.trim() || "admin@barbearia.com",
-        adminPassword:$("adminPassword").value.trim() || "1234",
-        workdays,
-        startTime,
-        endTime,
-        slotDuration:Number($("slotDuration").value),
-        blockedDates:settings.blockedDates || []
-      };
-
-      try{
-        await setDoc(doc(db,"barbeariaRodrigues","settings"),settings);
-        showMessage("settingsMsg","Configurações salvas com sucesso.","ok");
-        applySettingsToForm();
-      }catch(error){
-        console.error(error);
-        showMessage("settingsMsg","Erro ao salvar configurações.","err");
-      }
-    }
-
-    async function addBlockedDate(){
-      const date = $("blockDate").value;
-
-      if(!date){
-        showMessage("settingsMsg","Escolha uma data para bloquear.","err");
-        return;
-      }
-
-      if(!Array.isArray(settings.blockedDates)) settings.blockedDates = [];
-
-      if(!settings.blockedDates.includes(date)){
-        settings.blockedDates.push(date);
-      }
-
-      $("blockDate").value = "";
-      await saveSettings();
-    }
-
-    async function removeBlockedDate(date){
-      settings.blockedDates = (settings.blockedDates || []).filter(d=>d !== date);
-      await saveSettings();
-    }
-
-    function renderBlockedDates(){
-      const list = $("blockedDatesList");
-      if(!list) return;
-
-      list.innerHTML = "";
-
-      const dates = settings.blockedDates || [];
-
-      if(dates.length === 0){
-        list.innerHTML = `<span style="color:var(--muted);font-size:13px;">Nenhuma data bloqueada.</span>`;
-        return;
-      }
-
-      dates.sort().forEach(date=>{
-        const item = document.createElement("div");
-        item.className = "blocked-item";
-        item.innerHTML = `
-          ${formatDateBR(date)}
-          <button class="danger" type="button">x</button>
-        `;
-        item.querySelector("button").onclick = ()=>removeBlockedDate(date);
-        list.appendChild(item);
-      });
-    }
-
-    async function ownerLogin(){
-      await loadSettings();
-
-      const email = $("ownerEmail").value.trim().toLowerCase();
-      const password = $("ownerPassword").value.trim();
-
-      const savedEmail = String(settings.adminEmail || "admin@barbearia.com").trim().toLowerCase();
-      const savedPassword = String(settings.adminPassword || "1234").trim();
-
-      if(email === savedEmail && password === savedPassword){
-        startAudioContext();
-        showOnly("ownerView");
-        updateClientLink();
-        startRealtimeAppointments();
-        loadAppointments();
-        loadClients();
-      }else{
-        showMessage("loginMsg","E-mail ou senha incorretos.","err");
-      }
-    }
-
-    function adminLogout(){
-      const ok = confirm("Deseja sair do painel do administrador?");
-
-      if(!ok) return;
-
-      if(unsubscribeAppointments){
-        unsubscribeAppointments();
-        unsubscribeAppointments = null;
-      }
-
-      firstRealtimeLoad = true;
-      knownAppointmentIds = new Set();
-      lastStatusById = new Map();
-
-      $("ownerEmail").value = "";
-      $("ownerPassword").value = "";
-
-      showOnly("clientHomeView");
-    }
-
-    function startRealtimeAppointments(){
-      if(!firebaseReady) return;
-
-      if(unsubscribeAppointments){
-        unsubscribeAppointments();
-        unsubscribeAppointments = null;
-      }
-
-      firstRealtimeLoad = true;
-      knownAppointmentIds = new Set();
-      lastStatusById = new Map();
-
-      unsubscribeAppointments = onSnapshot(collection(db,"appointments"), snapshot=>{
-        let hasNewAppointment = false;
-        let hasClientCancellation = false;
-        let canceledClientName = "";
-        let canceledDate = "";
-        let canceledTime = "";
-
-        const items = [];
-
-        snapshot.docChanges().forEach(change=>{
-          const id = change.doc.id;
-          const data = change.doc.data();
-          const currentStatus = data.status || "pending";
-          const previousStatus = lastStatusById.get(id);
-
-          if(change.type === "added"){
-            if(!knownAppointmentIds.has(id) && !firstRealtimeLoad && !isCanceledStatus(currentStatus)){
-              hasNewAppointment = true;
-            }
-
-            knownAppointmentIds.add(id);
-          }
-
-          if(change.type === "modified"){
-            if(
-              !firstRealtimeLoad &&
-              previousStatus !== "canceled_by_client" &&
-              currentStatus === "canceled_by_client"
-            ){
-              hasClientCancellation = true;
-              canceledClientName = data.name || "Cliente";
-              canceledDate = data.date || "";
-              canceledTime = data.time || "";
-            }
-          }
-
-          if(change.type === "removed"){
-            knownAppointmentIds.delete(id);
-            lastStatusById.delete(id);
-          }
-
-          lastStatusById.set(id,currentStatus);
-        });
-
-        snapshot.forEach(docItem=>{
-          items.push({
-            id:docItem.id,
-            ...docItem.data()
-          });
-        });
-
-        appointmentsCache = sortAppointments(items);
-
-        if(!firstRealtimeLoad && hasNewAppointment){
-          playOwnerNewAppointmentBeep();
-          showOwnerAlert("🔔 Novo agendamento recebido! Confirme o horário no balão abaixo.");
-        }
-
-        if(!firstRealtimeLoad && hasClientCancellation){
-          playOwnerCancellationBeep();
-
-          showOwnerAlert(
-            `⚠️ Cliente desmarcou o corte.<br><br>
-            <strong>${canceledClientName}</strong><br>
-            Data: ${formatDateBR(canceledDate)} às ${canceledTime}`
-          );
-
-          if(!$("ownerAppointments").classList.contains("hidden")){
-            showMessage(
-              "appointmentsMsg",
-              `⚠️ Cliente desmarcou o corte: <strong>${canceledClientName}</strong>, ${formatDateBR(canceledDate)} às ${canceledTime}.`,
-              "info",
-              10000
-            );
-          }
-        }
-
-        firstRealtimeLoad = false;
-        renderOwnerPendingPopups();
-        renderAppointmentsList();
-      });
-    }
-
-    function renderOwnerPendingPopups(){
-      const container = $("ownerPopupContainer");
-      if(!container) return;
-
-      const pendingItems = appointmentsCache.filter(item => (item.status || "pending") === "pending");
-
-      if(pendingItems.length === 0){
-        container.innerHTML = "";
-        return;
-      }
-
-      container.innerHTML = "";
-
-      pendingItems.forEach(item=>{
-        const message = buildConfirmationMessage(item);
-        const whatsappUrl = makeWhatsAppUrl(item.phone,message);
-
-        const div = document.createElement("div");
-        div.className = "owner-popup";
-        div.innerHTML = `
-          <h3>🔔 Novo agendamento aguardando confirmação</h3>
-          <p><strong>Cliente:</strong> ${item.name || "Cliente"}</p>
-          <p><strong>Data:</strong> ${formatDateBR(item.date)}</p>
-          <p><strong>Horário:</strong> ${item.time}</p>
-          <p><strong>WhatsApp:</strong> ${item.phone || ""}</p>
-
-          <div class="owner-popup-actions">
-            <button class="success" type="button" data-action="confirm-whatsapp">
-              Confirmar pelo WhatsApp
-            </button>
-            <button class="blue" type="button" data-action="mark-confirmed">
-              Marcar confirmado
-            </button>
-          </div>
-        `;
-
-        div.querySelector('[data-action="confirm-whatsapp"]').onclick = () => confirmByWhatsapp(item.id,whatsappUrl);
-        div.querySelector('[data-action="mark-confirmed"]').onclick = () => markAppointmentConfirmed(item.id);
-
-        container.appendChild(div);
-      });
-    }
-
-    async function loadAppointments(){
-      const container = $("appointmentsList");
-      container.innerHTML = `<div class="empty">Carregando agendamentos...</div>`;
-
-      try{
-        const snap = await getDocs(collection(db,"appointments"));
-        const items = [];
-
-        snap.forEach(docItem=>items.push({id:docItem.id, ...docItem.data()}));
-
-        appointmentsCache = sortAppointments(items);
-        renderOwnerPendingPopups();
-        renderAppointmentsList();
-      }catch(error){
-        console.error(error);
-        container.innerHTML = `<div class="empty">Não foi possível carregar os agendamentos.</div>`;
-      }
-    }
-
-    function renderAppointmentsList(){
-      const container = $("appointmentsList");
-      if(!container) return;
-
-      const filterDate = $("filterDate") ? $("filterDate").value : "";
-      let items = [...appointmentsCache];
-
-      if(filterDate) items = items.filter(item=>item.date === filterDate);
-
-      items = sortAppointments(items);
-
-      if(items.length === 0){
-        container.innerHTML = `<div class="empty">Nenhum agendamento encontrado.</div>`;
-        return;
-      }
-
-      container.innerHTML = "";
-
-      items.forEach(item=>{
-        const status = item.status || "pending";
-        const statusInfo = getStatusInfo(status);
-
-        const message = buildConfirmationMessage(item);
-        const whatsappUrl = makeWhatsAppUrl(item.phone,message);
-
-        const div = document.createElement("div");
-        div.className = "appointment";
-        div.innerHTML = `
-          <div>
-            <strong>${item.name || "Cliente"}</strong>
-            <span>Data: ${formatDateBR(item.date)} às ${item.time}</span>
-            <span>WhatsApp: ${item.phone || ""}</span>
-            <span class="status ${statusInfo.className}">${statusInfo.text}</span>
-          </div>
-
-          <div class="appointment-actions">
-            ${isCanceledStatus(status) ? `
-              <button class="danger" type="button" data-action="delete-history">Excluir do histórico</button>
-            ` : `
-              <button class="success" type="button" data-action="confirm">Confirmar pelo WhatsApp</button>
-              <button class="blue" type="button" data-action="mark">Marcar confirmado</button>
-              <button class="danger" type="button" data-action="cancel">Cancelar corte</button>
-            `}
-          </div>
-        `;
-
-        const confirmBtn = div.querySelector('[data-action="confirm"]');
-        const markBtn = div.querySelector('[data-action="mark"]');
-        const cancelBtn = div.querySelector('[data-action="cancel"]');
-        const deleteHistoryBtn = div.querySelector('[data-action="delete-history"]');
-
-        if(confirmBtn) confirmBtn.onclick = ()=>confirmByWhatsapp(item.id,whatsappUrl);
-        if(markBtn) markBtn.onclick = ()=>markAppointmentConfirmed(item.id);
-        if(cancelBtn) cancelBtn.onclick = ()=>cancelAppointmentByAdmin(item.id);
-        if(deleteHistoryBtn) deleteHistoryBtn.onclick = ()=>deleteAppointmentHistory(item.id);
-
-        container.appendChild(div);
-      });
-    }
-
-    function getStatusInfo(status){
-      if(status === "confirmed"){
-        return {text:"Confirmado",className:"confirmed"};
-      }
-
-      if(status === "canceled_by_client"){
-        return {text:"Cancelado pelo cliente",className:"canceled"};
-      }
-
-      if(status === "canceled_by_admin"){
-        return {text:"Cancelado pelo administrador",className:"canceled"};
-      }
-
-      return {text:"Aguardando confirmação",className:"pending"};
-    }
-
-    function buildConfirmationMessage(item){
-      const template = settings.confirmationMessage || DEFAULT_CONFIRMATION_MESSAGE;
-
-      return template
-        .replaceAll("{nome}", item.name || "cliente")
-        .replaceAll("{barbearia}", settings.businessName || "Barbearia")
-        .replaceAll("{data}", formatDateBR(item.date))
-        .replaceAll("{hora}", item.time || "");
-    }
-
-    async function confirmByWhatsapp(id,whatsappUrl){
-      try{
-        await updateDoc(doc(db,"appointments",id),{
-          status:"confirmed",
-          confirmedAt:serverTimestamp(),
-          updatedAt:serverTimestamp()
-        });
-
-        window.open(whatsappUrl,"_blank");
-        showMessage("appointmentsMsg","Agendamento confirmado. WhatsApp aberto com mensagem pronta.","ok",7000);
-        await loadAppointments();
-      }catch(error){
-        console.error(error);
-        showMessage("appointmentsMsg","Não foi possível confirmar.","err");
-      }
-    }
-
-    async function markAppointmentConfirmed(id){
-      try{
-        await updateDoc(doc(db,"appointments",id),{
-          status:"confirmed",
-          confirmedAt:serverTimestamp(),
-          updatedAt:serverTimestamp()
-        });
-
-        showMessage("appointmentsMsg","Agendamento marcado como confirmado.","ok");
-        await loadAppointments();
-      }catch(error){
-        console.error(error);
-        showMessage("appointmentsMsg","Não foi possível marcar como confirmado.","err");
-      }
-    }
-
-    async function cancelAppointmentByAdmin(id){
-      const ok = confirm("Deseja cancelar/desmarcar este corte?");
-      if(!ok) return;
-
-      try{
-        await updateDoc(doc(db,"appointments",id),{
-          status:"canceled_by_admin",
-          canceledBy:"admin",
-          canceledAt:serverTimestamp(),
-          updatedAt:serverTimestamp()
-        });
-
-        showMessage("appointmentsMsg","Corte cancelado com sucesso. O horário voltou a ficar disponível.","ok");
-        await loadAppointments();
-
-        if(selectedDate){
-          await loadBookedSlots();
-          renderSlots();
-        }
-      }catch(error){
-        console.error(error);
-        alert("Erro ao cancelar agendamento.");
-      }
-    }
-
-    async function deleteAppointmentHistory(id){
-      const ok = confirm("Deseja excluir este registro do histórico?");
-      if(!ok) return;
-
-      try{
-        await deleteDoc(doc(db,"appointments",id));
-        showMessage("appointmentsMsg","Registro excluído do histórico.","ok",6000);
-        await loadAppointments();
-      }catch(error){
-        console.error(error);
-        showMessage("appointmentsMsg","Não foi possível excluir o histórico.","err");
-      }
-    }
-
-    function clearFilter(){
-      $("filterDate").value = "";
-      renderAppointmentsList();
-    }
-
-    async function loadClients(){
-      const container = $("clientsList");
-      if(!container) return;
-
-      container.innerHTML = `<div class="empty">Carregando clientes...</div>`;
-
-      try{
-        const snap = await getDocs(collection(db,"clientes"));
-        const items = [];
-
-        snap.forEach(docItem=>items.push({id:docItem.id, ...docItem.data()}));
-
-        clientsCache = sortClients(items);
-        renderClientsList();
-      }catch(error){
-        console.error(error);
-        container.innerHTML = `<div class="empty">Não foi possível carregar os clientes.</div>`;
-      }
-    }
-
-    function renderClientsList(){
-      const container = $("clientsList");
-      if(!container) return;
-
-      const search = String($("clientSearch") ? $("clientSearch").value : "").toLowerCase().trim();
-      let items = [...clientsCache];
-
-      if(search){
-        items = items.filter(item=>{
-          const name = String(item.name || "").toLowerCase();
-          const phone = String(item.phone || "").toLowerCase();
-          return name.includes(search) || phone.includes(search);
-        });
-      }
-
-      items = sortClients(items);
-
-      if(items.length === 0){
-        container.innerHTML = `<div class="empty">Nenhum cliente encontrado.</div>`;
-        return;
-      }
-
-      container.innerHTML = "";
-
-      items.forEach(item=>{
-        const promoMessage =
-          `Olá, ${item.name || "cliente"}! Aqui é da ${settings.businessName || "barbearia"}. ` +
-          `Passando para avisar que temos horários disponíveis para corte.`;
-
-        const whatsappUrl = makeWhatsAppUrl(item.phone,promoMessage);
-
-        const div = document.createElement("div");
-        div.className = "client-item";
-        div.innerHTML = `
-          <div>
-            <strong>${item.name || "Cliente"}</strong>
-            <span>WhatsApp: ${item.phone || ""}</span>
-          </div>
-
-          <div class="appointment-actions">
-            <button class="success" type="button" data-action="campaign-single">Enviar mensagem</button>
-            <a class="btn blue" href="${whatsappUrl}" target="_blank">Chamar no WhatsApp</a>
-            <button class="danger" type="button" onclick="deleteClient('${item.id}')">Excluir cliente</button>
-          </div>
-        `;
-
-        div.querySelector('[data-action="campaign-single"]').onclick = ()=>openWhatsAppForClient(item);
-
-        container.appendChild(div);
-      });
-    }
-
-    async function deleteClient(id){
-      const ok = confirm(
-        "Deseja excluir este cliente da lista?\n\nIsso não cancela automaticamente cortes já agendados."
-      );
-
-      if(!ok) return;
-
-      try{
-        await deleteDoc(doc(db,"clientes",id));
-        showMessage("clientsMsg","Cliente excluído com sucesso.","ok",6000);
-        await loadClients();
-      }catch(error){
-        console.error(error);
-        showMessage("clientsMsg","Não foi possível excluir o cliente.","err");
-      }
-    }
-
-    function updateClientLink(){
-      $("clientLink").value = getClientPublicLink();
-    }
-
-    async function copyClientLink(){
-      const link = $("clientLink").value;
-
-      try{
-        await navigator.clipboard.writeText(link);
-        alert("Link copiado com sucesso.");
-      }catch{
-        $("clientLink").select();
-        document.execCommand("copy");
-        alert("Link copiado.");
-      }
-    }
-
-    function openOwnerTab(tab){
-      $("tabSchedule").classList.remove("active");
-      $("tabAppointments").classList.remove("active");
-      $("tabClients").classList.remove("active");
-
-      $("ownerSchedule").classList.add("hidden");
-      $("ownerAppointments").classList.add("hidden");
-      $("ownerClients").classList.add("hidden");
-
-      if(tab === "schedule"){
-        $("tabSchedule").classList.add("active");
-        $("ownerSchedule").classList.remove("hidden");
-      }
-
-      if(tab === "appointments"){
-        $("tabAppointments").classList.add("active");
-        $("ownerAppointments").classList.remove("hidden");
-        renderAppointmentsList();
-      }
-
-      if(tab === "clients"){
-        $("tabClients").classList.add("active");
-        $("ownerClients").classList.remove("hidden");
-        if($("clientCampaignMessage")){
-          $("clientCampaignMessage").value = String(settings.clientCampaignMessage || DEFAULT_CLIENT_CAMPAIGN_MESSAGE)
-            .replaceAll("\\n", "\n");
-        }
-        loadClients();
-      }
-    }
-
-    function showClientHome(){
-      if(unsubscribeAppointments && !$("ownerView").classList.contains("hidden")){
-        unsubscribeAppointments();
-        unsubscribeAppointments = null;
-      }
-
-      showOnly("clientHomeView");
-
-      if(activeClientAppointmentId){
-        $("clientLiveStatusView").classList.remove("hidden");
-      }
-    }
-
-    function openGuidedBooking(){
-      startAudioContext();
-
-      showOnly("guidedView");
-
-      if(activeClientAppointmentId){
-        $("clientLiveStatusView").classList.remove("hidden");
-      }
-
-      updateClientUi();
-      renderMonthOptions();
-      renderClientDates();
-    }
-
-    async function openAvailableTimes(){
-      startAudioContext();
-
-      showOnly("availableView");
-
-      if(activeClientAppointmentId){
-        $("clientLiveStatusView").classList.remove("hidden");
-      }
-
-      $("quickConfirmBox").classList.add("hidden");
-      await renderAvailableTimes();
-    }
-
-    function showOwnerLogin(){
-      startAudioContext();
-      showOnly("ownerLoginView");
-    }
-
-    window.showClientHome = showClientHome;
-    window.openGuidedBooking = openGuidedBooking;
-    window.openAvailableTimes = openAvailableTimes;
-    window.showOwnerLogin = showOwnerLogin;
-    window.ownerLogin = ownerLogin;
-    window.adminLogout = adminLogout;
-    window.saveSettings = saveSettings;
-    window.addBlockedDate = addBlockedDate;
-    window.removeBlockedDate = removeBlockedDate;
-    window.bookAppointment = bookAppointment;
-    window.copyClientLink = copyClientLink;
-    window.openOwnerTab = openOwnerTab;
-    window.loadAppointments = loadAppointments;
-    window.clearFilter = clearFilter;
-    window.registerClient = registerClient;
-    window.changeClient = changeClient;
-    window.loadClients = loadClients;
-    window.renderClientsList = renderClientsList;
-    window.renderAppointmentsList = renderAppointmentsList;
-    window.renderClientDates = renderClientDates;
-    window.selectQuickSlot = selectQuickSlot;
-    window.confirmQuickBooking = confirmQuickBooking;
-    window.openClientAppointments = openClientAppointments;
-    window.loadMyAppointments = loadMyAppointments;
-    window.cancelMyAppointment = cancelMyAppointment;
-    window.deleteClient = deleteClient;
-    window.deleteAppointmentHistory = deleteAppointmentHistory;
-    window.saveClientCampaignMessage = saveClientCampaignMessage;
-    window.startClientCampaign = startClientCampaign;
-    window.sendNextCampaignClient = sendNextCampaignClient;
-    window.cancelClientCampaign = cancelClientCampaign;
-    window.openBusinessMap = openBusinessMap;
-    window.openBusinessWhatsApp = openBusinessWhatsApp;
-
-    currentClient = loadClientFromStorage();
-
-    await loadSettings();
-
-    showClientHome();
-  </script>
-</body>
-</html>
+          <details class="admin-section" open>
+            <summary>🔒 Identidade da barbearia</summary>
