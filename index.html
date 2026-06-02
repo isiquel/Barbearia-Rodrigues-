@@ -46,6 +46,10 @@
     .brand h1{margin:0;font-size:29px;letter-spacing:-.5px}
     .brand p{margin:5px 0 0;color:var(--muted);font-size:14px}
 
+    .brand-contact{
+      position:relative;z-index:2;margin-top:16px;display:grid;gap:6px;color:#f2d795;font-size:14px;
+    }
+
     .card{
       background:rgba(24,24,24,.92);border:1px solid var(--border);border-radius:var(--radius);
       padding:18px;box-shadow:var(--shadow);backdrop-filter:blur(10px);
@@ -92,6 +96,13 @@
     }
 
     .big-action small{display:block;font-size:12px;font-weight:600;opacity:.75;margin-top:4px}
+
+    .contact-actions{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:10px;
+      margin-top:14px;
+    }
 
     .admin-mini{display:flex;justify-content:center;margin-top:16px}
     .admin-mini button{font-size:12px;padding:10px 13px;opacity:.85}
@@ -281,7 +292,7 @@
       .tab{min-width:100%}.appointment,.client-item{grid-template-columns:1fr}
       .admin-topbar{align-items:stretch}
       .admin-topbar-actions{width:100%}
-      .owner-popup-actions,.campaign-actions{width:100%}
+      .owner-popup-actions,.campaign-actions,.contact-actions{grid-template-columns:1fr;width:100%}
     }
   </style>
 </head>
@@ -295,6 +306,11 @@
           <h1 id="brandName">Barbearia Rodrigues</h1>
           <p id="brandSubtitle">Agendamento moderno de cortes, direto pelo celular.</p>
         </div>
+      </div>
+
+      <div class="brand-contact">
+        <div id="brandAddress">📍 Av. Tupassi, 4985 - Jardim Progresso</div>
+        <div id="brandWhatsapp">📲 WhatsApp: (44) 99925-8615</div>
       </div>
     </section>
 
@@ -328,6 +344,11 @@
             📅 Meus agendamentos
             <small>Veja ou desmarque seu corte agendado.</small>
           </button>
+        </div>
+
+        <div class="contact-actions">
+          <button class="success" onclick="openBusinessWhatsApp()">📲 Falar no WhatsApp</button>
+          <button class="blue" onclick="openBusinessMap()">📍 Ver localização</button>
         </div>
 
         <div class="admin-mini">
@@ -539,8 +560,18 @@
 
             <div>
               <label>WhatsApp do dono</label>
-              <input id="ownerWhatsapp" type="tel" placeholder="Ex: 11999999999" />
+              <input id="ownerWhatsapp" type="tel" placeholder="Ex: 44999258615" />
             </div>
+          </div>
+
+          <div class="single">
+            <label>Endereço da barbearia</label>
+            <input id="businessAddress" type="text" placeholder="Av. Tupassi, 4985 - Jardim Progresso" />
+          </div>
+
+          <div class="single">
+            <label>Link do Google Maps</label>
+            <input id="businessMapLink" type="text" placeholder="Cole o link do Google Maps ou deixe automático" />
           </div>
 
           <div class="single">
@@ -626,11 +657,17 @@
 
           <button class="success" onclick="copyClientLink()">Copiar link</button>
 
+          <h3>Contato rápido</h3>
+          <div class="contact-actions">
+            <button class="success" onclick="openBusinessWhatsApp()">Falar no WhatsApp</button>
+            <button class="blue" onclick="openBusinessMap()">Ver localização</button>
+          </div>
+
           <h3>Como usar para outro cliente</h3>
           <div class="empty" style="text-align:left;">
             <p><strong>1.</strong> Troque o nome da barbearia.</p>
             <p><strong>2.</strong> Coloque o WhatsApp do dono.</p>
-            <p><strong>3.</strong> Troque e-mail e senha do administrador.</p>
+            <p><strong>3.</strong> Coloque o endereço.</p>
             <p><strong>4.</strong> Compartilhe o link com os clientes.</p>
           </div>
         </div>
@@ -675,7 +712,7 @@
         <div class="campaign-box">
           <h3 style="margin-top:0;">Mensagem para clientes</h3>
           <p style="margin-top:0;color:#ffe2a1;">
-            Use <strong>{nome}</strong>, <strong>{barbearia}</strong> e <strong>{link}</strong> na mensagem.
+            Use <strong>{nome}</strong>, <strong>{barbearia}</strong>, <strong>{link}</strong>, <strong>{endereco}</strong> e <strong>{whatsapp}</strong>.
           </p>
 
           <div class="single">
@@ -753,6 +790,8 @@
       $("firebaseWarning").innerHTML = "Erro ao conectar com o Firebase.";
     }
 
+    const CLIENT_PUBLIC_LINK = "https://agenda-rodrigues.vercel.app";
+
     const DEFAULT_CONFIRMATION_MESSAGE =
       "Olá, {nome}! Seu horário na {barbearia} foi confirmado para {data} às {hora}. Qualquer dúvida, pode responder por aqui. Deus abençoe!";
 
@@ -763,11 +802,19 @@ Passando para lembrar que agora você pode agendar seu corte pelo nosso sistema 
 Acesse o link:
 {link}
 
+📍 Endereço:
+{endereco}
+
+📲 WhatsApp:
+{whatsapp}
+
 Escolha o melhor dia e horário disponível. Esperamos você!`;
 
     const DEFAULT_SETTINGS = {
       businessName:"Barbearia Rodrigues",
-      ownerWhatsapp:"",
+      businessAddress:"Av. Tupassi, 4985 - Jardim Progresso",
+      businessMapLink:"",
+      ownerWhatsapp:"44999258615",
       confirmationMessage:DEFAULT_CONFIRMATION_MESSAGE,
       clientCampaignMessage:DEFAULT_CLIENT_CAMPAIGN_MESSAGE,
       workdays:[1,2,3,4,5,6],
@@ -876,6 +923,17 @@ Escolha o melhor dia e horário disponível. Esperamos você!`;
       return String(phone || "").replace(/\D/g,"");
     }
 
+    function formatPhoneBR(phone){
+      const p = cleanPhone(phone);
+      if(p.length === 11){
+        return `(${p.slice(0,2)}) ${p.slice(2,7)}-${p.slice(7)}`;
+      }
+      if(p.length === 10){
+        return `(${p.slice(0,2)}) ${p.slice(2,6)}-${p.slice(6)}`;
+      }
+      return phone || "";
+    }
+
     function isCanceledStatus(status){
       return status === "canceled_by_client" || status === "canceled_by_admin";
     }
@@ -895,7 +953,24 @@ Escolha o melhor dia e horário disponível. Esperamos você!`;
     }
 
     function getClientPublicLink(){
-      return "https://agenda-rodrigues.vercel.app";
+      return CLIENT_PUBLIC_LINK;
+    }
+
+    function getBusinessMapLink(){
+      const saved = String(settings.businessMapLink || "").trim();
+      if(saved) return saved;
+
+      const address = settings.businessAddress || DEFAULT_SETTINGS.businessAddress;
+      return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`;
+    }
+
+    function openBusinessMap(){
+      window.open(getBusinessMapLink(), "_blank");
+    }
+
+    function openBusinessWhatsApp(){
+      const message = `Olá! Vim pelo agendamento online da ${settings.businessName || "barbearia"}.`;
+      window.open(makeWhatsAppUrl(settings.ownerWhatsapp,message), "_blank");
     }
 
     function buildClientCampaignMessage(client){
@@ -906,12 +981,12 @@ Escolha o melhor dia e horário disponível. Esperamos você!`;
       const template = String(rawTemplate || DEFAULT_CLIENT_CAMPAIGN_MESSAGE)
         .replaceAll("\\n", "\n");
 
-      const link = getClientPublicLink();
-
       return template
         .replaceAll("{nome}", client.name || "cliente")
         .replaceAll("{barbearia}", settings.businessName || "Barbearia")
-        .replaceAll("{link}", link);
+        .replaceAll("{link}", getClientPublicLink())
+        .replaceAll("{endereco}", settings.businessAddress || DEFAULT_SETTINGS.businessAddress)
+        .replaceAll("{whatsapp}", formatPhoneBR(settings.ownerWhatsapp || DEFAULT_SETTINGS.ownerWhatsapp));
     }
 
     function openWhatsAppForClient(client){
@@ -1114,8 +1189,13 @@ Escolha o melhor dia e horário disponível. Esperamos você!`;
 
     function updateBrand(){
       const name = settings.businessName || "Barbearia Rodrigues";
+      const address = settings.businessAddress || DEFAULT_SETTINGS.businessAddress;
+      const phone = formatPhoneBR(settings.ownerWhatsapp || DEFAULT_SETTINGS.ownerWhatsapp);
+
       $("brandName").textContent = name;
       $("footerBrand").textContent = name;
+      $("brandAddress").textContent = `📍 ${address}`;
+      $("brandWhatsapp").textContent = `📲 WhatsApp: ${phone}`;
       document.title = name;
     }
 
@@ -1152,6 +1232,8 @@ Escolha o melhor dia e horário disponível. Esperamos você!`;
 
       $("businessName").value = settings.businessName || "";
       $("ownerWhatsapp").value = settings.ownerWhatsapp || "";
+      $("businessAddress").value = settings.businessAddress || "";
+      $("businessMapLink").value = settings.businessMapLink || "";
       $("confirmationMessage").value = settings.confirmationMessage || DEFAULT_CONFIRMATION_MESSAGE;
       $("adminEmail").value = settings.adminEmail || "admin@barbearia.com";
       $("adminPassword").value = settings.adminPassword || "1234";
@@ -1839,7 +1921,9 @@ Escolha o melhor dia e horário disponível. Esperamos você!`;
       settings = {
         ...settings,
         businessName:$("businessName").value.trim() || "Barbearia Rodrigues",
-        ownerWhatsapp:cleanPhone($("ownerWhatsapp").value),
+        businessAddress:$("businessAddress").value.trim() || DEFAULT_SETTINGS.businessAddress,
+        businessMapLink:$("businessMapLink").value.trim(),
+        ownerWhatsapp:cleanPhone($("ownerWhatsapp").value) || DEFAULT_SETTINGS.ownerWhatsapp,
         confirmationMessage:$("confirmationMessage").value.trim() || DEFAULT_CONFIRMATION_MESSAGE,
         clientCampaignMessage:$("clientCampaignMessage") ? $("clientCampaignMessage").value.trim().replaceAll("\\n", "\n") || DEFAULT_CLIENT_CAMPAIGN_MESSAGE : settings.clientCampaignMessage,
         adminEmail:$("adminEmail").value.trim() || "admin@barbearia.com",
@@ -2483,6 +2567,8 @@ Escolha o melhor dia e horário disponível. Esperamos você!`;
     window.startClientCampaign = startClientCampaign;
     window.sendNextCampaignClient = sendNextCampaignClient;
     window.cancelClientCampaign = cancelClientCampaign;
+    window.openBusinessMap = openBusinessMap;
+    window.openBusinessWhatsApp = openBusinessWhatsApp;
 
     currentClient = loadClientFromStorage();
 
