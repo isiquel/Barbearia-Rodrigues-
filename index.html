@@ -40,6 +40,35 @@
 <style id="payment-method-upgrade">
 .payment-overlay{position:fixed;inset:0;background:rgba(0,0,0,.68);backdrop-filter:blur(5px);z-index:10000;display:none;align-items:center;justify-content:center;padding:16px}.payment-overlay.show{display:flex}.payment-box{width:min(94vw,460px);background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.02)),#0b0b0b;border:1px solid rgba(244,208,111,.28);border-radius:28px;box-shadow:0 28px 80px rgba(0,0,0,.65);padding:22px}.payment-box h2{margin:0 0 8px;color:#fff}.payment-box p{margin:6px 0;color:var(--muted)}.payment-price{margin:14px 0;padding:14px;border-radius:18px;background:rgba(244,208,111,.10);border:1px solid rgba(244,208,111,.20);color:var(--gold2);font-weight:900;font-size:20px}.payment-options{display:grid;grid-template-columns:1fr;gap:10px;margin-top:14px}.payment-option{width:100%;justify-content:flex-start;min-height:58px;font-size:16px;border-radius:18px}.payment-cancel{margin-top:12px;width:100%}.finance-breakdown{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:0 0 18px}.finance-card{background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.025));border:1px solid rgba(244,208,111,.18);border-radius:18px;padding:14px;box-shadow:0 12px 28px rgba(0,0,0,.25)}.finance-card strong{display:block;color:var(--gold2);font-size:20px;margin-bottom:5px}.finance-card span{color:var(--muted);font-size:12px;font-weight:800}.payment-badge{display:inline-flex;align-items:center;gap:6px;margin-top:8px;padding:7px 10px;border-radius:999px;background:rgba(77,163,255,.12);border:1px solid rgba(77,163,255,.22);color:#cfe8ff;font-size:12px;font-weight:900}@media(max-width:850px){.finance-breakdown{grid-template-columns:repeat(2,1fr)}}
 </style>
+
+<style id="finance-report-upgrade">
+  .finance-report-head{
+    display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:flex-start;margin-bottom:16px;
+  }
+  .finance-filter{
+    display:grid;grid-template-columns:1fr 1fr auto;gap:10px;align-items:end;margin:12px 0 18px;
+    background:rgba(255,255,255,.035);border:1px solid rgba(244,208,111,.18);border-radius:18px;padding:14px;
+  }
+  .finance-total-box{
+    background:linear-gradient(135deg,rgba(244,208,111,.18),rgba(255,255,255,.035));
+    border:1px solid rgba(244,208,111,.28);border-radius:22px;padding:18px;margin-bottom:14px;
+  }
+  .finance-total-box strong{display:block;font-size:34px;color:var(--gold2);margin-top:6px}
+  .finance-table{display:grid;gap:10px;margin-top:12px}
+  .finance-entry{
+    display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;
+    background:rgba(255,255,255,.035);border:1px solid rgba(244,208,111,.15);border-radius:18px;padding:14px;
+  }
+  .finance-entry strong{display:block;margin-bottom:4px}
+  .finance-entry span{display:block;color:var(--muted);font-size:13px;margin-top:3px}
+  .finance-entry-value{text-align:right;font-weight:900;color:var(--gold2);font-size:18px}
+  .finance-entry-value small{display:block;color:var(--muted);font-size:12px;margin-top:4px}
+  @media(max-width:850px){
+    .finance-filter{grid-template-columns:1fr}
+    .finance-entry{grid-template-columns:1fr}
+    .finance-entry-value{text-align:left}
+  }
+</style>
 </head>
 <body>
 <div class="app">
@@ -59,7 +88,7 @@
 
 <section id="ownerLoginView" class="card client-shell hidden"><h2>Administrador</h2><p style="color:var(--muted)">Entre com o e-mail e a senha do dono.</p><div id="loginMsg" class="message"></div><div class="form-row"><div><label>E-mail do administrador</label><input id="ownerEmail" type="email" placeholder="admin@barbearia.com"></div><div><label>Senha</label><input id="ownerPassword" type="password" placeholder="Digite a senha"></div></div><button class="primary" onclick="ownerLogin()">Entrar no painel</button><div class="admin-mini"><button class="secondary" onclick="showClientHome()">Voltar</button></div></section>
 
-<section id="ownerView" class="hidden"><div class="admin-topbar"><div><strong>Painel do administrador</strong><span>Você está logado como dono da barbearia.</span></div><div class="admin-topbar-actions"><button class="danger" onclick="adminLogout()">Sair do administrador</button></div></div><div id="newAppointmentAlert" class="message new">🔔 Novo movimento na agenda! Veja a lista abaixo.</div><div id="ownerPopupContainer" class="owner-popup-wrap"></div><div id="dashboardSummary" class="summary-grid"></div><div class="admin-menu"><button id="tabSchedule" class="admin-card-btn config active" onclick="openOwnerTab('schedule')"><span class="admin-icon">⚙️</span><span><strong>Configurações</strong><small>Logo, serviços, dias, horários e bloqueios</small></span></button><button id="tabAppointments" class="admin-card-btn agenda" onclick="openOwnerTab('appointments')"><span class="admin-icon">📅</span><span><strong>Agendamentos</strong><small>Confirmar, cancelar e acompanhar cortes</small></span></button><button id="tabClients" class="admin-card-btn clients" onclick="openOwnerTab('clients')"><span class="admin-icon">👥</span><span><strong>Clientes</strong><small>Lista, WhatsApp e mensagens para todos</small></span></button></div>
+<section id="ownerView" class="hidden"><div class="admin-topbar"><div><strong>Painel do administrador</strong><span>Você está logado como dono da barbearia.</span></div><div class="admin-topbar-actions"><button class="danger" onclick="adminLogout()">Sair do administrador</button></div></div><div id="newAppointmentAlert" class="message new">🔔 Novo movimento na agenda! Veja a lista abaixo.</div><div id="ownerPopupContainer" class="owner-popup-wrap"></div><div id="dashboardSummary" class="summary-grid"></div><div class="admin-menu"><button id="tabSchedule" class="admin-card-btn config active" onclick="openOwnerTab('schedule')"><span class="admin-icon">⚙️</span><span><strong>Configurações</strong><small>Logo, serviços, dias, horários e bloqueios</small></span></button><button id="tabAppointments" class="admin-card-btn agenda" onclick="openOwnerTab('appointments')"><span class="admin-icon">📅</span><span><strong>Agendamentos</strong><small>Confirmar, cancelar e acompanhar cortes</small></span></button><button id="tabFinance" class="admin-card-btn agenda" onclick="openOwnerTab('finance')"><span class="admin-icon">💰</span><span><strong>Financeiro</strong><small>Relatório de entradas por Pix, dinheiro e cartão</small></span></button><button id="tabClients" class="admin-card-btn clients" onclick="openOwnerTab('clients')"><span class="admin-icon">👥</span><span><strong>Clientes</strong><small>Lista, WhatsApp e mensagens para todos</small></span></button></div>
 
 <div id="ownerSchedule" class="grid"><div class="card"><h2>Configurar aplicativo</h2><div class="sound-box">🔔 O painel do dono avisa em tempo real quando chegar novo agendamento ou quando cliente desmarcar.</div><div id="settingsMsg" class="message"></div>
 <details class="admin-section" open><summary>🔒 Identidade da barbearia</summary><div class="admin-section-body"><div class="locked-box">O nome da barbearia fica travado como <strong>Barbearia Rodrigues</strong>. O dono pode trocar a imagem/logo, mas não consegue transformar esse sistema em outra barbearia.</div><div class="single"><label>Nome da barbearia</label><input id="businessName" type="text" value="Barbearia Rodrigues" readonly></div><div class="logo-preview-wrap"><div class="logo-preview" id="logoPreview">✂️</div><div style="flex:1;min-width:200px"><label>Imagem / logo da barbearia</label><input id="logoFile" type="file" accept="image/*" onchange="handleLogoFile(event)"></div></div><div class="form-row"><button class="primary" onclick="saveLogoImage()">Salvar imagem</button><button class="danger" onclick="removeLogoImage()">Remover imagem</button></div></div></details>
@@ -72,6 +101,43 @@
 <div class="card"><h2>Link para clientes</h2><p style="color:var(--muted)">Use esse link para os clientes agendarem pelo celular.</p><div class="single"><label>Link atual do cliente</label><input id="clientLink" type="text" readonly></div><button class="success" onclick="copyClientLink()">Copiar link</button><h3>Contato rápido</h3><div class="contact-actions"><button class="success" onclick="openBusinessWhatsApp()">Falar no WhatsApp</button><button class="blue" onclick="openBusinessMap()">Ver localização</button></div><h3>Atalho no celular</h3><div class="empty" style="text-align:left"><p><strong>Android:</strong> abra no navegador, toque nos três pontinhos e escolha “Adicionar à tela inicial”.</p><p><strong>iPhone:</strong> toque em compartilhar e depois “Adicionar à Tela de Início”.</p></div></div></div>
 
 <div id="ownerAppointments" class="card hidden"><div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:14px"><div><h2>Agendamentos</h2><span class="status pending">Clientes marcados, serviços e cancelamentos</span></div><button class="secondary" onclick="loadAppointments()">Atualizar</button></div><div id="appointmentsMsg" class="message"></div><div class="form-row"><div><label>Filtrar por data</label><input id="filterDate" type="date" onchange="renderAppointmentsList()"></div><div style="display:flex;align-items:flex-end"><button class="secondary" onclick="clearFilter()">Mostrar todos</button></div></div><h3>Resumo por forma de pagamento</h3><div id="financeBreakdown" class="finance-breakdown"></div><div id="appointmentsList"></div></div>
+
+<div id="ownerFinance" class="card hidden">
+  <div class="finance-report-head">
+    <div>
+      <h2>Relatório financeiro</h2>
+      <span class="status confirmed">Entradas separadas por Pix, dinheiro e cartão</span>
+    </div>
+    <button class="secondary" onclick="renderFinanceReport()">Atualizar relatório</button>
+  </div>
+
+  <div class="finance-filter">
+    <div>
+      <label>Data inicial</label>
+      <input id="financeStartDate" type="date" onchange="renderFinanceReport()">
+    </div>
+    <div>
+      <label>Data final</label>
+      <input id="financeEndDate" type="date" onchange="renderFinanceReport()">
+    </div>
+    <button class="primary" onclick="setFinanceToday()">Ver hoje</button>
+  </div>
+
+  <div class="back-row">
+    <button class="secondary" onclick="setFinanceMonth()">Este mês</button>
+    <button class="secondary" onclick="setFinanceAll()">Todos</button>
+  </div>
+
+  <div class="finance-total-box">
+    <span>Total de entradas no período</span>
+    <strong id="financeTotalPeriod">R$ 0,00</strong>
+  </div>
+
+  <div id="financeReportCards" class="finance-breakdown"></div>
+
+  <h3>Entradas registradas</h3>
+  <div id="financeEntriesList" class="finance-table"></div>
+</div>
 <div id="ownerClients" class="card hidden"><div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:14px"><div><h2>Clientes cadastrados</h2><span class="status confirmed">Lista da barbearia</span></div><button class="secondary" onclick="loadClients()">Atualizar</button></div><div id="clientsMsg" class="message"></div><div class="campaign-box"><h3 style="margin-top:0">Mensagem para clientes</h3><p style="margin-top:0;color:#ffe2a1">Use <strong>{nome}</strong>, <strong>{barbearia}</strong>, <strong>{link}</strong>, <strong>{endereco}</strong> e <strong>{whatsapp}</strong>.</p><div class="single"><label>Mensagem padrão de divulgação</label><textarea id="clientCampaignMessage"></textarea></div><div class="campaign-actions"><button class="primary" onclick="saveClientCampaignMessage()">Salvar mensagem</button><button class="success" onclick="startClientCampaign()">Enviar para todos</button></div><div id="campaignProgressBox" class="message info">Campanha iniciada.</div></div><div class="single"><label>Pesquisar cliente</label><input id="clientSearch" type="text" placeholder="Digite nome ou WhatsApp" oninput="renderClientsList()"></div><div id="clientsList"></div></div>
 </section>
 <p class="footer-note"><span id="footerBrand">Barbearia Rodrigues</span> © Sistema de agendamento online.</p></div>
@@ -148,6 +214,76 @@ function normalizePaymentMethod(method){if(method==="pix")return"Pix";if(method=
 function paymentIcon(method){if(method==="pix")return"💠";if(method==="dinheiro")return"💵";if(method==="cartao")return"💳";return"💰"}
 function financeStats(){const today=todayYMD(),month=monthKeyNow(),finished=appointmentsCache.filter(a=>a.status==="finished"),finishedMonth=finished.filter(a=>String(a.date||"").startsWith(month)),sum=arr=>arr.reduce((s,a)=>s+appointmentValue(a),0),stats={today:sum(finished.filter(a=>a.date===today)),month:sum(finishedMonth),finishedMonth:finishedMonth.length,pix:0,dinheiro:0,cartao:0,nao:0};finishedMonth.forEach(a=>{const m=a.paymentMethod||"nao",v=appointmentValue(a);if(stats[m]!==undefined)stats[m]+=v;else stats.nao+=v});stats.average=stats.finishedMonth?stats.month/stats.finishedMonth:0;return stats}
 function renderFinanceBreakdown(){const el=$("financeBreakdown");if(!el)return;const s=financeStats();el.innerHTML=`<div class="finance-card"><strong>${formatCurrency(s.pix)}</strong><span>Pix no mês</span></div><div class="finance-card"><strong>${formatCurrency(s.dinheiro)}</strong><span>Dinheiro no mês</span></div><div class="finance-card"><strong>${formatCurrency(s.cartao)}</strong><span>Cartão no mês</span></div><div class="finance-card"><strong>${formatCurrency(s.nao)}</strong><span>Sem forma informada</span></div>`}
+function getFinishedAppointmentsInPeriod(){
+  const startEl=$("financeStartDate"),endEl=$("financeEndDate");
+  const start=startEl?startEl.value:"",end=endEl?endEl.value:"";
+  return appointmentsCache
+    .filter(a=>a.status==="finished")
+    .filter(a=>!start || String(a.date||"")>=start)
+    .filter(a=>!end || String(a.date||"")<=end)
+    .sort((a,b)=>`${b.date||""} ${b.time||""}`.localeCompare(`${a.date||""} ${a.time||""}`));
+}
+function renderFinanceReport(){
+  const totalEl=$("financeTotalPeriod"),cards=$("financeReportCards"),list=$("financeEntriesList");
+  if(!totalEl||!cards||!list)return;
+  const items=getFinishedAppointmentsInPeriod();
+  const totals={pix:0,dinheiro:0,cartao:0,nao:0,total:0};
+  items.forEach(item=>{
+    const value=appointmentValue(item);
+    const method=item.paymentMethod||"nao";
+    totals.total+=value;
+    if(totals[method]!==undefined)totals[method]+=value;else totals.nao+=value;
+  });
+  totalEl.textContent=formatCurrency(totals.total);
+  cards.innerHTML=`
+    <div class="finance-card"><strong>${formatCurrency(totals.pix)}</strong><span>Pix no período</span></div>
+    <div class="finance-card"><strong>${formatCurrency(totals.dinheiro)}</strong><span>Dinheiro no período</span></div>
+    <div class="finance-card"><strong>${formatCurrency(totals.cartao)}</strong><span>Cartão no período</span></div>
+    <div class="finance-card"><strong>${formatCurrency(totals.nao)}</strong><span>Sem forma informada</span></div>
+  `;
+  if(items.length===0){
+    list.innerHTML=`<div class="empty">Nenhuma entrada financeira encontrada nesse período.</div>`;
+    return;
+  }
+  list.innerHTML="";
+  items.forEach(item=>{
+    const div=document.createElement("div");
+    div.className="finance-entry";
+    div.innerHTML=`
+      <div>
+        <strong>${item.name||"Cliente"}</strong>
+        <span>Serviço: ${item.serviceName||"Serviço"}</span>
+        <span>Data: ${formatDateBR(item.date)} às ${item.time||""}</span>
+        <span>${paymentIcon(item.paymentMethod)} Pagamento: ${normalizePaymentMethod(item.paymentMethod)}</span>
+      </div>
+      <div class="finance-entry-value">
+        ${formatCurrency(appointmentValue(item))}
+        <small>${normalizePaymentMethod(item.paymentMethod)}</small>
+      </div>
+    `;
+    list.appendChild(div);
+  });
+}
+function setFinanceToday(){
+  const t=todayYMD();
+  if($("financeStartDate"))$("financeStartDate").value=t;
+  if($("financeEndDate"))$("financeEndDate").value=t;
+  renderFinanceReport();
+}
+function setFinanceMonth(){
+  const now=new Date();
+  const first=new Date(now.getFullYear(),now.getMonth(),1);
+  const last=new Date(now.getFullYear(),now.getMonth()+1,0);
+  if($("financeStartDate"))$("financeStartDate").value=toDateInputValue(first);
+  if($("financeEndDate"))$("financeEndDate").value=toDateInputValue(last);
+  renderFinanceReport();
+}
+function setFinanceAll(){
+  if($("financeStartDate"))$("financeStartDate").value="";
+  if($("financeEndDate"))$("financeEndDate").value="";
+  renderFinanceReport();
+}
+
 function loadClientFromStorage(){try{const saved=localStorage.getItem("barbeariaClient");if(!saved)return null;const parsed=JSON.parse(saved);if(!parsed||!parsed.name||!parsed.phone)return null;return parsed}catch{return null}}function saveClientToStorage(client){localStorage.setItem("barbeariaClient",JSON.stringify(client))}function clearClientStorage(){localStorage.removeItem("barbeariaClient")}
 function renderLogo(targetId){const el=$(targetId);if(!el)return;const logo=settings.logoDataUrl||"";el.innerHTML=logo?`<img src="${logo}" alt="Logo da barbearia">`:"✂️"}
 function updateBrand(){settings.businessName=FIXED_BUSINESS_NAME;const name=FIXED_BUSINESS_NAME,address=settings.businessAddress||DEFAULT_SETTINGS.businessAddress,phone=formatPhoneBR(settings.ownerWhatsapp||DEFAULT_SETTINGS.ownerWhatsapp);$("brandName").textContent=name;$("footerBrand").textContent=name;$("brandAddress").textContent=`📍 ${address}`;$("brandWhatsapp").textContent=`📲 WhatsApp: ${phone}`;document.title=name;renderLogo("mainLogo");renderLogo("logoPreview");updateManifest()}
@@ -189,10 +325,10 @@ async function removeBlockedSlot(date,time){const ok=await askConfirm({title:"Li
 function renderBlockedSlotsList(){const list=$("blockedSlotsList");if(!list)return;const blocked=settings.blockedSlots||{},rows=[];Object.keys(blocked).sort().forEach(date=>(Array.isArray(blocked[date])?blocked[date]:[]).sort().forEach(time=>rows.push({date,time})));if(rows.length===0){list.innerHTML=`<div class="empty">Nenhum horário específico bloqueado.</div>`;return}list.innerHTML="";rows.forEach(r=>{const item=document.createElement("div");item.className="blocked-item";item.innerHTML=`<span>🚫 ${formatDateBR(r.date)} às ${r.time}</span><button class="danger" type="button">Liberar</button>`;item.querySelector("button").onclick=()=>removeBlockedSlot(r.date,r.time);list.appendChild(item)})}
 async function ownerLogin(){await loadSettings();const email=$("ownerEmail").value.trim().toLowerCase(),password=$("ownerPassword").value.trim(),savedEmail=String(settings.adminEmail||"admin@barbearia.com").trim().toLowerCase(),savedPassword=String(settings.adminPassword||"1234").trim();if(email===savedEmail&&password===savedPassword){startAudioContext();showOnly("ownerView");updateClientLink();startRealtimeAppointments();loadAppointments();loadClients();showToast("Administrador conectado.","ok")}else showMessage("loginMsg","E-mail ou senha incorretos.","err")}
 async function adminLogout(){const ok=await askConfirm({title:"Sair do administrador?",text:"Você voltará para a tela principal do aplicativo.",confirmText:"Sair",cancelText:"Cancelar",type:"danger",icon:"↩️"});if(!ok)return;if(unsubscribeAppointments){unsubscribeAppointments();unsubscribeAppointments=null}firstRealtimeLoad=true;knownAppointmentIds=new Set();lastStatusById=new Map();$("ownerEmail").value="";$("ownerPassword").value="";showOnly("clientHomeView");showToast("Você saiu do painel administrativo.","info")}
-function startRealtimeAppointments(){if(!firebaseReady)return;if(unsubscribeAppointments){unsubscribeAppointments();unsubscribeAppointments=null}firstRealtimeLoad=true;knownAppointmentIds=new Set();lastStatusById=new Map();unsubscribeAppointments=onSnapshot(collection(db,"appointments"),snap=>{let hasNew=false,hasCancel=false,cName="",cDate="",cTime="",items=[];snap.docChanges().forEach(change=>{const id=change.doc.id,data=change.doc.data(),current=data.status||"pending",prev=lastStatusById.get(id);if(change.type==="added"){if(!knownAppointmentIds.has(id)&&!firstRealtimeLoad&&!isCanceledStatus(current))hasNew=true;knownAppointmentIds.add(id)}if(change.type==="modified"){if(!firstRealtimeLoad&&prev!=="canceled_by_client"&&current==="canceled_by_client"){hasCancel=true;cName=data.name||"Cliente";cDate=data.date||"";cTime=data.time||""}}if(change.type==="removed"){knownAppointmentIds.delete(id);lastStatusById.delete(id)}lastStatusById.set(id,current)});snap.forEach(d=>items.push({id:d.id,...d.data()}));appointmentsCache=sortAppointments(items);if(!firstRealtimeLoad&&hasNew){playOwnerNewAppointmentBeep();showOwnerAlert("🔔 Novo agendamento recebido! Confirme o horário no balão abaixo.")}if(!firstRealtimeLoad&&hasCancel){playOwnerCancellationBeep();showOwnerAlert(`⚠️ Cliente desmarcou o corte.<br><br><strong>${cName}</strong><br>Data: ${formatDateBR(cDate)} às ${cTime}`);if(!$("ownerAppointments").classList.contains("hidden"))showMessage("appointmentsMsg",`⚠️ Cliente desmarcou o corte: <strong>${cName}</strong>, ${formatDateBR(cDate)} às ${cTime}.`,"info",10000)}firstRealtimeLoad=false;renderDashboardSummary();renderFinanceBreakdown();renderOwnerPendingPopups();renderAppointmentsList()})}
+function startRealtimeAppointments(){if(!firebaseReady)return;if(unsubscribeAppointments){unsubscribeAppointments();unsubscribeAppointments=null}firstRealtimeLoad=true;knownAppointmentIds=new Set();lastStatusById=new Map();unsubscribeAppointments=onSnapshot(collection(db,"appointments"),snap=>{let hasNew=false,hasCancel=false,cName="",cDate="",cTime="",items=[];snap.docChanges().forEach(change=>{const id=change.doc.id,data=change.doc.data(),current=data.status||"pending",prev=lastStatusById.get(id);if(change.type==="added"){if(!knownAppointmentIds.has(id)&&!firstRealtimeLoad&&!isCanceledStatus(current))hasNew=true;knownAppointmentIds.add(id)}if(change.type==="modified"){if(!firstRealtimeLoad&&prev!=="canceled_by_client"&&current==="canceled_by_client"){hasCancel=true;cName=data.name||"Cliente";cDate=data.date||"";cTime=data.time||""}}if(change.type==="removed"){knownAppointmentIds.delete(id);lastStatusById.delete(id)}lastStatusById.set(id,current)});snap.forEach(d=>items.push({id:d.id,...d.data()}));appointmentsCache=sortAppointments(items);if(!firstRealtimeLoad&&hasNew){playOwnerNewAppointmentBeep();showOwnerAlert("🔔 Novo agendamento recebido! Confirme o horário no balão abaixo.")}if(!firstRealtimeLoad&&hasCancel){playOwnerCancellationBeep();showOwnerAlert(`⚠️ Cliente desmarcou o corte.<br><br><strong>${cName}</strong><br>Data: ${formatDateBR(cDate)} às ${cTime}`);if(!$("ownerAppointments").classList.contains("hidden"))showMessage("appointmentsMsg",`⚠️ Cliente desmarcou o corte: <strong>${cName}</strong>, ${formatDateBR(cDate)} às ${cTime}.`,"info",10000)}firstRealtimeLoad=false;renderDashboardSummary();renderFinanceBreakdown();renderFinanceReport();renderOwnerPendingPopups();renderAppointmentsList()})}
 function renderDashboardSummary(){const el=$("dashboardSummary");if(!el)return;const total=appointmentsCache.length,pending=appointmentsCache.filter(a=>(a.status||"pending")==="pending").length,confirmed=appointmentsCache.filter(a=>a.status==="confirmed").length,canceled=appointmentsCache.filter(a=>isCanceledStatus(a.status)).length,finished=appointmentsCache.filter(a=>a.status==="finished"),clients=clientsCache.length,today=todayYMD(),month=monthKeyNow(),revenueToday=finished.filter(a=>a.date===today).reduce((sum,a)=>sum+appointmentValue(a),0),revenueMonth=finished.filter(a=>String(a.date||"").startsWith(month)).reduce((sum,a)=>sum+appointmentValue(a),0),ticket=finished.length?revenueMonth/finished.filter(a=>String(a.date||"").startsWith(month)).length:0;el.innerHTML=`<div class="summary-card"><strong>${total}</strong><span>Agendamentos</span></div><div class="summary-card"><strong>${pending}</strong><span>Pendentes</span></div><div class="summary-card"><strong>${confirmed}</strong><span>Confirmados</span></div><div class="summary-card"><strong>${finished.length}</strong><span>Finalizados</span></div><div class="summary-card"><strong>${clients}</strong><span>Clientes</span></div><div class="summary-card"><strong>${formatCurrency(revenueToday)}</strong><span>Faturado hoje</span></div><div class="summary-card"><strong>${formatCurrency(revenueMonth)}</strong><span>Faturado no mês</span></div><div class="summary-card"><strong>${formatCurrency(ticket)}</strong><span>Ticket médio</span></div>`}
 function renderOwnerPendingPopups(){const c=$("ownerPopupContainer");if(!c)return;const pending=appointmentsCache.filter(item=>(item.status||"pending")==="pending");if(pending.length===0){c.innerHTML="";return}c.innerHTML="";pending.forEach(item=>{const msg=buildConfirmationMessage(item),url=makeWhatsAppUrl(item.phone,msg),div=document.createElement("div");div.className="owner-popup";div.innerHTML=`<h3>🔔 Novo agendamento aguardando confirmação</h3><p><strong>Cliente:</strong> ${item.name||"Cliente"}</p><p><strong>Serviço:</strong> ${item.serviceName||"Corte"}</p><p><strong>Data:</strong> ${formatDateBR(item.date)}</p><p><strong>Horário:</strong> ${item.time}</p><p><strong>WhatsApp:</strong> ${item.phone||""}</p><div class="owner-popup-actions"><button class="success" type="button" data-action="confirm-whatsapp">Confirmar pelo WhatsApp</button><button class="blue" type="button" data-action="mark-confirmed">Marcar confirmado</button></div>`;div.querySelector('[data-action="confirm-whatsapp"]').onclick=()=>confirmByWhatsapp(item.id,url);div.querySelector('[data-action="mark-confirmed"]').onclick=()=>markAppointmentConfirmed(item.id);c.appendChild(div)})}
-async function loadAppointments(){const c=$("appointmentsList");c.innerHTML=`<div class="empty">Carregando agendamentos...</div>`;try{const snap=await getDocs(collection(db,"appointments")),items=[];snap.forEach(d=>items.push({id:d.id,...d.data()}));appointmentsCache=sortAppointments(items);renderDashboardSummary();renderFinanceBreakdown();renderOwnerPendingPopups();renderAppointmentsList()}catch(e){console.error(e);c.innerHTML=`<div class="empty">Não foi possível carregar os agendamentos.</div>`}}
+async function loadAppointments(){const c=$("appointmentsList");c.innerHTML=`<div class="empty">Carregando agendamentos...</div>`;try{const snap=await getDocs(collection(db,"appointments")),items=[];snap.forEach(d=>items.push({id:d.id,...d.data()}));appointmentsCache=sortAppointments(items);renderDashboardSummary();renderFinanceBreakdown();renderFinanceReport();renderOwnerPendingPopups();renderAppointmentsList()}catch(e){console.error(e);c.innerHTML=`<div class="empty">Não foi possível carregar os agendamentos.</div>`}}
 function renderAppointmentsList(){const c=$("appointmentsList");if(!c)return;const filterDate=$("filterDate")?$("filterDate").value:"";let items=[...appointmentsCache];if(filterDate)items=items.filter(i=>i.date===filterDate);items=sortAppointments(items);if(items.length===0){c.innerHTML=`<div class="empty">Nenhum agendamento encontrado.</div>`;return}c.innerHTML="";items.forEach(item=>{const status=item.status||"pending",info=getStatusInfo(status),msg=buildConfirmationMessage(item),url=makeWhatsAppUrl(item.phone,msg),div=document.createElement("div");div.className="appointment";const finalOrCanceled=isCanceledStatus(status)||status==="finished";div.innerHTML=`<div><strong>${item.name||"Cliente"}</strong><span>Serviço: ${item.serviceName||"Corte"}</span><span>Valor: ${formatCurrency(appointmentValue(item))}</span><span>Data: ${formatDateBR(item.date)} às ${item.time}</span><span>WhatsApp: ${item.phone||""}</span><span class="status ${info.className}">${info.text}</span>${item.status==="finished"?`<span class="payment-badge">${paymentIcon(item.paymentMethod)} Pagamento: ${normalizePaymentMethod(item.paymentMethod)}</span>`:""}</div><div class="appointment-actions">${finalOrCanceled?`<button class="danger" type="button" data-action="delete-history">Excluir do histórico</button>`:`<button class="success" type="button" data-action="finish">Serviço finalizado</button><button class="success" type="button" data-action="confirm">Confirmar pelo WhatsApp</button><button class="blue" type="button" data-action="mark">Marcar confirmado</button><button class="danger" type="button" data-action="cancel">Cancelar corte</button>`}</div>`;const finishBtn=div.querySelector('[data-action="finish"]'),confirmBtn=div.querySelector('[data-action="confirm"]'),markBtn=div.querySelector('[data-action="mark"]'),cancelBtn=div.querySelector('[data-action="cancel"]'),delBtn=div.querySelector('[data-action="delete-history"]');if(finishBtn)finishBtn.onclick=()=>openFinishPaymentModal(item.id);if(confirmBtn)confirmBtn.onclick=()=>confirmByWhatsapp(item.id,url);if(markBtn)markBtn.onclick=()=>markAppointmentConfirmed(item.id);if(cancelBtn)cancelBtn.onclick=()=>cancelAppointmentByAdmin(item.id);if(delBtn)delBtn.onclick=()=>deleteAppointmentHistory(item.id);c.appendChild(div)})}
 function getStatusInfo(status){if(status==="finished")return{text:"Serviço finalizado",className:"finished"};if(status==="confirmed")return{text:"Confirmado",className:"confirmed"};if(status==="canceled_by_client")return{text:"Cancelado pelo cliente",className:"canceled"};if(status==="canceled_by_admin")return{text:"Cancelado pelo administrador",className:"canceled"};return{text:"Aguardando confirmação",className:"pending"}}
 function buildConfirmationMessage(item){const template=settings.confirmationMessage||DEFAULT_CONFIRMATION_MESSAGE;return template.replaceAll("{nome}",item.name||"cliente").replaceAll("{barbearia}",settings.businessName||FIXED_BUSINESS_NAME).replaceAll("{servico}",item.serviceName||"Corte").replaceAll("{valor}",formatCurrency(appointmentValue(item))).replaceAll("{data}",formatDateBR(item.date)).replaceAll("{hora}",item.time||"")}
@@ -247,12 +383,12 @@ async function loadClients(){const c=$("clientsList");if(!c)return;c.innerHTML=`
 function renderClientsList(){const c=$("clientsList");if(!c)return;const search=String($("clientSearch")?$("clientSearch").value:"").toLowerCase().trim();let items=[...clientsCache];if(search)items=items.filter(i=>String(i.name||"").toLowerCase().includes(search)||String(i.phone||"").toLowerCase().includes(search));items=sortClients(items);if(items.length===0){c.innerHTML=`<div class="empty">Nenhum cliente encontrado.</div>`;return}c.innerHTML="";items.forEach(item=>{const promo=`Olá, ${item.name||"cliente"}! Aqui é da ${settings.businessName||FIXED_BUSINESS_NAME}. Passando para avisar que temos horários disponíveis para corte.`,url=makeWhatsAppUrl(item.phone,promo),div=document.createElement("div");div.className="client-item";div.innerHTML=`<div><strong>${item.name||"Cliente"}</strong><span>WhatsApp: ${item.phone||""}</span></div><div class="appointment-actions"><button class="success" type="button" data-action="campaign-single">Enviar mensagem</button><a class="btn blue" href="${url}" target="_blank">Chamar no WhatsApp</a><button class="danger" type="button" onclick="deleteClient('${item.id}')">Excluir cliente</button></div>`;div.querySelector('[data-action="campaign-single"]').onclick=()=>openWhatsAppForClient(item);c.appendChild(div)})}
 async function deleteClient(id){const ok=await askConfirm({title:"Excluir cliente?",text:"Isso remove o cliente da lista, mas não cancela automaticamente cortes já agendados.",confirmText:"Excluir",cancelText:"Cancelar",type:"danger",icon:"🗑️"});if(!ok)return;try{await deleteDoc(doc(db,"clientes",id));showToast("Cliente excluído com sucesso.","ok");await loadClients()}catch(e){console.error(e);showToast("Não foi possível excluir o cliente.","err")}}
 function updateClientLink(){$("clientLink").value=getClientPublicLink()}async function copyClientLink(){const link=$("clientLink").value;try{await navigator.clipboard.writeText(link);showToast("Link copiado com sucesso.","ok")}catch{$("clientLink").select();document.execCommand("copy");showToast("Link copiado.","ok")}}
-function openOwnerTab(tab){$("tabSchedule").classList.remove("active");$("tabAppointments").classList.remove("active");$("tabClients").classList.remove("active");$("ownerSchedule").classList.add("hidden");$("ownerAppointments").classList.add("hidden");$("ownerClients").classList.add("hidden");if(tab==="schedule"){$("tabSchedule").classList.add("active");$("ownerSchedule").classList.remove("hidden")}if(tab==="appointments"){$("tabAppointments").classList.add("active");$("ownerAppointments").classList.remove("hidden");renderAppointmentsList()}if(tab==="clients"){$("tabClients").classList.add("active");$("ownerClients").classList.remove("hidden");if($("clientCampaignMessage"))$("clientCampaignMessage").value=String(settings.clientCampaignMessage||DEFAULT_CLIENT_CAMPAIGN_MESSAGE).replaceAll("\\n","\n");loadClients()}}
+function openOwnerTab(tab){$("tabSchedule").classList.remove("active");$("tabAppointments").classList.remove("active");if($("tabFinance"))$("tabFinance").classList.remove("active");$("tabClients").classList.remove("active");$("ownerSchedule").classList.add("hidden");$("ownerAppointments").classList.add("hidden");if($("ownerFinance"))$("ownerFinance").classList.add("hidden");$("ownerClients").classList.add("hidden");if(tab==="schedule"){$("tabSchedule").classList.add("active");$("ownerSchedule").classList.remove("hidden")}if(tab==="appointments"){$("tabAppointments").classList.add("active");$("ownerAppointments").classList.remove("hidden");renderAppointmentsList();renderFinanceBreakdown()}if(tab==="finance"){if($("tabFinance"))$("tabFinance").classList.add("active");if($("ownerFinance"))$("ownerFinance").classList.remove("hidden");if(!$("financeStartDate").value&&!$("financeEndDate").value)setFinanceMonth();else renderFinanceReport()}if(tab==="clients"){$("tabClients").classList.add("active");$("ownerClients").classList.remove("hidden");if($("clientCampaignMessage"))$("clientCampaignMessage").value=String(settings.clientCampaignMessage||DEFAULT_CLIENT_CAMPAIGN_MESSAGE).replaceAll("\\n","\n");loadClients()}}
 function showClientHome(){if(unsubscribeAppointments&&!$("ownerView").classList.contains("hidden")){unsubscribeAppointments();unsubscribeAppointments=null}showOnly("clientHomeView");if(activeClientAppointmentId)$("clientLiveStatusView").classList.remove("hidden")}
 function openGuidedBooking(){startAudioContext();showOnly("guidedView");if(activeClientAppointmentId)$("clientLiveStatusView").classList.remove("hidden");updateClientUi();renderServiceChoices("serviceList",selectedServiceId,async id=>{selectedServiceId=id;selectedDate="";selectedSlot="";bookedAppointments=[];renderClientDates()});renderMonthOptions();renderClientDates()}
 async function openAvailableTimes(){startAudioContext();showOnly("availableView");if(activeClientAppointmentId)$("clientLiveStatusView").classList.remove("hidden");renderServiceChoices("quickServiceList",quickServiceId,async id=>{quickServiceId=id;quickSelected=null;$("quickConfirmBox").classList.add("hidden");await renderAvailableTimes()});$("quickConfirmBox").classList.add("hidden");await renderAvailableTimes()}
 function showOwnerLogin(){startAudioContext();showOnly("ownerLoginView")}
-Object.assign(window,{showClientHome,openGuidedBooking,openAvailableTimes,showOwnerLogin,ownerLogin,adminLogout,saveSettings,addBlockedDate,removeBlockedDate,bookAppointment,copyClientLink,openOwnerTab,loadAppointments,clearFilter,registerClient,changeClient,loadClients,renderClientsList,renderAppointmentsList,renderClientDates,selectQuickSlot,confirmQuickBooking,openClientAppointments,loadMyAppointments,cancelMyAppointment,deleteClient,deleteAppointmentHistory,saveClientCampaignMessage,startClientCampaign,sendNextCampaignClient,cancelClientCampaign,openBusinessMap,openBusinessWhatsApp,handleLogoFile,saveLogoImage,removeLogoImage,renderBlockedSlotSelect,addBlockedSlot,removeBlockedSlot,addLunchBreak,removeLunchBreak,finishAppointment,openFinishPaymentModal,closePaymentModal,completeServiceWithPayment});
+Object.assign(window,{showClientHome,openGuidedBooking,openAvailableTimes,showOwnerLogin,ownerLogin,adminLogout,saveSettings,addBlockedDate,removeBlockedDate,bookAppointment,copyClientLink,openOwnerTab,loadAppointments,clearFilter,registerClient,changeClient,loadClients,renderClientsList,renderAppointmentsList,renderClientDates,selectQuickSlot,confirmQuickBooking,openClientAppointments,loadMyAppointments,cancelMyAppointment,deleteClient,deleteAppointmentHistory,saveClientCampaignMessage,startClientCampaign,sendNextCampaignClient,cancelClientCampaign,openBusinessMap,openBusinessWhatsApp,handleLogoFile,saveLogoImage,removeLogoImage,renderBlockedSlotSelect,addBlockedSlot,removeBlockedSlot,addLunchBreak,removeLunchBreak,finishAppointment,openFinishPaymentModal,closePaymentModal,completeServiceWithPayment,renderFinanceReport,setFinanceToday,setFinanceMonth,setFinanceAll});
 currentClient=loadClientFromStorage();await loadSettings();showClientHome();
 </script>
 </body>
