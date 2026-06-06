@@ -108,6 +108,69 @@
   }
 </style>
 
+
+<style id="booking-success-upgrade">
+  .booking-success-overlay{
+    position:fixed;
+    inset:0;
+    z-index:10001;
+    display:none;
+    align-items:center;
+    justify-content:center;
+    padding:16px;
+    background:rgba(0,0,0,.72);
+    backdrop-filter:blur(5px);
+  }
+  .booking-success-overlay.show{display:flex}
+  .booking-success-box{
+    width:min(94vw,460px);
+    border-radius:28px;
+    padding:24px;
+    background:
+      linear-gradient(180deg,rgba(48,209,88,.12),rgba(255,255,255,.025)),
+      #0b0b0b;
+    border:1px solid rgba(48,209,88,.38);
+    box-shadow:0 28px 80px rgba(0,0,0,.68);
+    text-align:center;
+  }
+  .booking-success-icon{
+    width:76px;
+    height:76px;
+    border-radius:50%;
+    margin:0 auto 14px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:42px;
+    background:rgba(48,209,88,.14);
+    border:1px solid rgba(48,209,88,.35);
+    color:#baffc9;
+  }
+  .booking-success-box h2{
+    margin:0 0 10px;
+    color:#fff;
+    font-size:25px;
+  }
+  .booking-success-box p{
+    color:var(--muted);
+    margin:8px 0;
+  }
+  .booking-success-details{
+    margin:16px 0;
+    padding:14px;
+    border-radius:18px;
+    background:rgba(255,255,255,.045);
+    border:1px solid rgba(244,208,111,.18);
+    color:#ffe2a1;
+    text-align:left;
+    line-height:1.55;
+  }
+  .booking-success-box button{
+    width:100%;
+    margin-top:10px;
+  }
+</style>
+
 </head>
 <body>
 <div class="app">
@@ -121,7 +184,7 @@
 
 <section id="availableView" class="client-shell hidden"><div class="card"><div class="back-row"><button class="secondary" onclick="showClientHome()">← Voltar</button></div><h2>Horários disponíveis</h2><p style="color:var(--muted);margin-top:0">Escolha um serviço e toque em um horário livre para agendar.</p><div class="step-card"><div class="step-head"><div class="step-number">1</div><strong>Escolha o serviço</strong></div><div id="quickServiceList" class="service-grid"></div></div><div id="availableMsg" class="message"></div><div id="availableList"></div><div id="quickConfirmBox" class="hidden"><div class="confirm-box"><h3>Confirmar horário</h3><p id="quickConfirmText"></p><div id="quickClientBox"><div class="form-row"><div><label>Seu nome</label><input id="quickName" type="text" placeholder="Ex: João Silva"></div><div><label>WhatsApp</label><input id="quickPhone" type="tel" placeholder="Ex: 11999999999"></div></div></div><button class="primary" onclick="confirmQuickBooking()">Confirmar agendamento</button></div></div></div></section>
 
-<section id="guidedView" class="client-shell hidden"><div class="card"><div class="back-row"><button class="secondary" onclick="showClientHome()">← Voltar</button></div><h2>Agende seu horário</h2><p style="color:var(--muted);margin-top:0">Siga os passos abaixo.</p><div id="clientMsg" class="message"></div><div id="clientWelcome" class="client-welcome hidden"><div><strong id="clientWelcomeName">Cliente</strong><span id="clientWelcomePhone"></span></div><button class="secondary" onclick="changeClient()">Trocar cliente</button></div><div id="clientRegisterBox" class="step-card"><div class="step-head"><div class="step-number">1</div><strong>Seu cadastro</strong></div><div class="form-row"><div><label>Nome completo</label><input id="registerName" type="text" placeholder="Ex: João Silva"></div><div><label>WhatsApp</label><input id="registerPhone" type="tel" placeholder="Ex: 11999999999"></div></div><button class="primary" onclick="registerClient()">Entrar / Cadastrar</button></div><div id="scheduleBox" class="hidden"><div class="step-card"><div class="step-head"><div class="step-number">2</div><strong>Escolha o serviço</strong></div><div id="serviceList" class="service-grid"></div></div><div class="step-card"><div class="step-head"><div class="step-number">3</div><strong>Escolha o mês</strong></div><label>Mês do agendamento</label><select id="monthSelect" onchange="renderClientDates()"></select></div><div class="step-card"><div class="step-head"><div class="step-number">4</div><strong>Escolha o dia</strong></div><div id="dateList" class="date-list"></div></div><div class="step-card"><div class="step-head"><div class="step-number">5</div><strong>Escolha o horário</strong></div><div id="slotList" class="slots"></div></div><button class="primary" onclick="bookAppointment()">Confirmar agendamento</button></div></div></section>
+<section id="guidedView" class="client-shell hidden"><div class="card"><div class="back-row"><button class="secondary" onclick="showClientHome()">← Voltar</button></div><h2>Agende seu horário</h2><p style="color:var(--muted);margin-top:0">Siga os passos abaixo.</p><div id="clientMsg" class="message"></div><div id="clientWelcome" class="client-welcome hidden"><div><strong id="clientWelcomeName">Cliente</strong><span id="clientWelcomePhone"></span></div><button class="secondary" onclick="changeClient()">Trocar cliente</button></div><div id="clientRegisterBox" class="step-card"><div class="step-head"><div class="step-number">1</div><strong>Seu cadastro</strong></div><div class="form-row"><div><label>Nome completo</label><input id="registerName" type="text" placeholder="Ex: João Silva"></div><div><label>WhatsApp</label><input id="registerPhone" type="tel" placeholder="Ex: 11999999999"></div></div><button class="primary" onclick="registerClient()">Entrar / Cadastrar</button></div><div id="scheduleBox" class="hidden"><div class="step-card"><div class="step-head"><div class="step-number">2</div><strong>Escolha o serviço</strong></div><div id="serviceList" class="service-grid"></div></div><div class="step-card"><div class="step-head"><div class="step-number">3</div><strong>Escolha o mês</strong></div><label>Mês do agendamento</label><select id="monthSelect" onchange="renderClientDates()"></select></div><div class="step-card"><div class="step-head"><div class="step-number">4</div><strong>Escolha o dia</strong></div><div id="dateList" class="date-list"></div></div><div class="step-card"><div class="step-head"><div class="step-number">5</div><strong>Escolha o horário</strong></div><div id="slotList" class="slots"></div></div><button id="confirmBookingBtn" class="primary" onclick="bookAppointment()">Confirmar agendamento</button></div></div></section>
 
 <section id="clientAppointmentsView" class="client-shell hidden"><div class="card"><div class="back-row"><button class="secondary" onclick="showClientHome()">← Voltar</button></div><h2>Meus agendamentos</h2><p style="color:var(--muted);margin-top:0">Consulte ou desmarque um corte agendado.</p><div id="myAppointmentsMsg" class="message"></div><div id="myAppointmentsLookup" class="step-card"><label>Digite seu WhatsApp</label><input id="myAppointmentsPhone" type="tel" placeholder="Ex: 11999999999"><br><br><button class="primary" onclick="loadMyAppointments()">Buscar meus agendamentos</button></div><div id="myAppointmentsList"></div></div></section>
 
@@ -217,6 +280,18 @@
     <button class="secondary payment-cancel" onclick="closePaymentModal()">Cancelar</button>
   </div>
 </div>
+
+<div id="bookingSuccessOverlay" class="booking-success-overlay">
+  <div class="booking-success-box">
+    <div class="booking-success-icon">✅</div>
+    <h2>Agendamento solicitado!</h2>
+    <p>Seu horário foi marcado no sistema.</p>
+    <div id="bookingSuccessDetails" class="booking-success-details"></div>
+    <p><strong>Fique atento:</strong> aguarde a confirmação da barbearia e não esqueça do seu horário.</p>
+    <button class="primary" onclick="closeBookingSuccessPopup()">Entendi</button>
+  </div>
+</div>
+
 <div id="toastHost" class="toast-host"></div>
 <dialog id="appModal" class="app-modal"><form method="dialog" class="app-modal-card"><div class="app-modal-icon" id="appModalIcon">⚠️</div><h3 id="appModalTitle">Confirmar ação</h3><p id="appModalText">Deseja continuar?</p><div class="app-modal-actions"><button value="cancel" type="submit" class="secondary" id="appModalCancelBtn">Cancelar</button><button value="confirm" type="submit" class="danger" id="appModalConfirmBtn">Confirmar</button></div></form></dialog>
 
@@ -364,7 +439,7 @@ function renderMonthOptions(){const select=$("monthSelect");if(!select)return;se
 function renderClientDates(){const c=$("dateList");if(!c)return;c.innerHTML="";const monthValue=$("monthSelect").value;selectedMonth=monthValue;selectedDate="";selectedSlot="";bookedAppointments=[];renderSlots();const[year,month]=monthValue.split("-").map(Number),today=new Date();today.setHours(0,0,0,0);const lastDay=new Date(year,month,0);let count=0;for(let day=1;day<=lastDay.getDate();day++){const date=new Date(year,month-1,day);date.setHours(0,0,0,0);if(date<today)continue;const dateValue=toDateInputValue(date),isWorkday=settings.workdays.includes(date.getDay()),isBlocked=Array.isArray(settings.blockedDates)&&settings.blockedDates.includes(dateValue);if(!isWorkday||isBlocked)continue;const btn=document.createElement("button");btn.className="date-btn";btn.innerHTML=`<strong>${String(day).padStart(2,"0")}/${String(month).padStart(2,"0")}</strong><span>${getDayName(date)}</span>`;btn.onclick=async()=>{startAudioContext();selectedDate=dateValue;selectedSlot="";document.querySelectorAll(".date-btn").forEach(b=>b.classList.remove("active"));btn.classList.add("active");await loadBookingsForDate(selectedDate);renderSlots();scrollToArea("slotList",300)};c.appendChild(btn);count++}if(count===0)c.innerHTML=`<div class="empty">Nenhum dia disponível neste mês.</div>`}
 async function loadAppointmentsForDate(dateStr){const items=[];if(!dateStr||!firebaseReady)return items;const q=query(collection(db,"appointments"),where("date","==",dateStr)),snap=await getDocs(q);snap.forEach(docItem=>{const data=docItem.data();if(data&&data.time&&!isCanceledStatus(data.status))items.push({id:docItem.id,...data})});return items}
 async function loadBookingsForDate(dateStr){bookedAppointments=await loadAppointmentsForDate(dateStr)}
-function renderSlots(){const c=$("slotList");if(!c)return;c.innerHTML="";if(!selectedServiceId){c.innerHTML=`<div class="empty">Primeiro escolha um serviço.</div>`;return}if(!selectedDate){c.innerHTML=`<div class="empty">Primeiro escolha um dia.</div>`;return}const service=getServiceById(selectedServiceId),slots=generateSlots(),free=slots.filter(slot=>!isSlotUnavailable(selectedDate,slot,service.duration));if(free.length===0){c.innerHTML=`<div class="empty">Não há horários vagos para este dia e serviço.</div>`;return}free.forEach(slot=>{const btn=document.createElement("button");btn.className="slot";btn.textContent=slot;btn.onclick=()=>{startAudioContext();selectedSlot=slot;document.querySelectorAll(".slot").forEach(b=>b.classList.remove("active"));btn.classList.add("active");scrollToArea("scheduleBox",250)};c.appendChild(btn)})}
+function renderSlots(){const c=$("slotList");if(!c)return;c.innerHTML="";if(!selectedServiceId){c.innerHTML=`<div class="empty">Primeiro escolha um serviço.</div>`;return}if(!selectedDate){c.innerHTML=`<div class="empty">Primeiro escolha um dia.</div>`;return}const service=getServiceById(selectedServiceId),slots=generateSlots(),free=slots.filter(slot=>!isSlotUnavailable(selectedDate,slot,service.duration));if(free.length===0){c.innerHTML=`<div class="empty">Não há horários vagos para este dia e serviço.</div>`;return}free.forEach(slot=>{const btn=document.createElement("button");btn.className="slot";btn.textContent=slot;btn.onclick=()=>{startAudioContext();selectedSlot=slot;document.querySelectorAll(".slot").forEach(b=>b.classList.remove("active"));btn.classList.add("active");scrollToConfirmBooking(250)};c.appendChild(btn)})}
 async function bookAppointment(){startAudioContext();if(!currentClient){showMessage("clientMsg","Faça seu cadastro primeiro.","err");return}if(!selectedServiceId){showMessage("clientMsg","Escolha um serviço.","err");return}if(!selectedDate){showMessage("clientMsg","Escolha uma data.","err");return}if(!selectedSlot){showMessage("clientMsg","Escolha um horário.","err");return}await createAppointment(currentClient,selectedDate,selectedSlot,getServiceById(selectedServiceId),"clientMsg")}
 async function createAppointment(client,date,time,service,messageBoxId){try{startAudioContext();const price=Number(service.price||0);const confirmar=await askConfirm({title:"Confirmar horário?",text:`Serviço: ${service.name}\nValor: ${formatCurrency(price)}\nData: ${formatDateBR(date)} — Horário: ${time}`,confirmText:"Confirmar",cancelText:"Cancelar",type:"primary",icon:"✅"});if(!confirmar){showMessage(messageBoxId,"Agendamento cancelado. Escolha outro horário, se desejar.","info",5000);return}await loadBookingsForDate(date);if(isSlotUnavailable(date,time,service.duration)){showMessage(messageBoxId,"Esse horário não está mais disponível. Escolha outro horário.","err");return}const appointmentRef=await addDoc(collection(db,"appointments"),{clientId:client.id,name:client.name,phone:client.phone,serviceId:service.id,serviceName:service.name,duration:Number(service.duration||settings.slotDuration||30),price:price,date,time,status:"pending",createdAt:serverTimestamp(),updatedAt:serverTimestamp()});activeClientAppointmentId=appointmentRef.id;lastClientStatus="pending";watchClientAppointment(appointmentRef.id);showClientLiveStatus({id:appointmentRef.id,name:client.name,phone:client.phone,serviceName:service.name,price:price,date,time,status:"pending"});playBeepPattern(1,false);showMessage(messageBoxId,`✅ Seu agendamento foi solicitado com sucesso!<br><br><strong>Serviço:</strong> ${service.name}<br><strong>Valor:</strong> ${formatCurrency(price)}<br><strong>Data:</strong> ${formatDateBR(date)}<br><strong>Horário:</strong> ${time}<br><br>Status: <strong>Aguardando confirmação da barbearia.</strong>`,"ok",0);selectedSlot="";quickSelected=null;if(messageBoxId==="clientMsg"){await loadBookingsForDate(date);renderSlots()}if(messageBoxId==="availableMsg"){$("quickConfirmBox").classList.add("hidden");await renderAvailableTimes()}}catch(e){console.error(e);showMessage(messageBoxId,"Não foi possível confirmar o agendamento.","err")}}
 function showClientLiveStatus(item){if(!item)return;const status=item.status||"pending",card=$("clientLiveStatusCard");$("clientLiveStatusView").classList.remove("hidden");card.classList.remove("confirmed","canceled");if(status==="finished"){card.classList.add("confirmed");$("clientLiveStatusTitle").innerHTML="✅ Serviço finalizado!";$("clientLiveStatusText").innerHTML="Atendimento concluído pela barbearia."}else if(status==="confirmed"){card.classList.add("confirmed");$("clientLiveStatusTitle").innerHTML="✅ Seu horário foi confirmado!";$("clientLiveStatusText").innerHTML="A barbearia confirmou seu agendamento com sucesso."}else if(status==="canceled_by_admin"){card.classList.add("canceled");$("clientLiveStatusTitle").innerHTML="⚠️ Horário desmarcado pela barbearia";$("clientLiveStatusText").innerHTML="A barbearia desmarcou esse horário. Escolha outro horário disponível."}else if(status==="canceled_by_client"){card.classList.add("canceled");$("clientLiveStatusTitle").innerHTML="⚠️ Agendamento desmarcado";$("clientLiveStatusText").innerHTML="Você desmarcou esse corte. O horário voltou para a agenda."}else{$("clientLiveStatusTitle").innerHTML="⏳ Aguardando confirmação";$("clientLiveStatusText").innerHTML="Seu agendamento foi solicitado. Aguarde a confirmação da barbearia."}$("clientLiveStatusDetails").innerHTML=`<strong>Serviço:</strong> ${item.serviceName||"Corte"}<br><strong>Valor:</strong> ${formatCurrency(appointmentValue(item))}<br><strong>Data:</strong> ${formatDateBR(item.date)}<br><strong>Horário:</strong> ${item.time}`}
@@ -456,6 +531,36 @@ function scrollToArea(id, delay = 250){
       el.scrollIntoView({behavior:"smooth", block:"start"});
     }
   }, delay);
+}
+
+
+function scrollToConfirmBooking(delay = 250){
+  setTimeout(()=>{
+    const btn = $("confirmBookingBtn");
+    if(btn){
+      btn.scrollIntoView({behavior:"smooth", block:"center"});
+    }
+  }, delay);
+}
+
+function showBookingSuccessPopup(item){
+  const overlay = $("bookingSuccessOverlay");
+  const details = $("bookingSuccessDetails");
+  if(!overlay || !details) return;
+
+  details.innerHTML = `
+    <strong>Serviço:</strong> ${item.serviceName || "Serviço"}<br>
+    <strong>Data:</strong> ${formatDateBR(item.date)}<br>
+    <strong>Horário:</strong> ${item.time}<br>
+    <strong>Status:</strong> aguardando confirmação da barbearia
+  `;
+
+  overlay.classList.add("show");
+}
+
+function closeBookingSuccessPopup(){
+  const overlay = $("bookingSuccessOverlay");
+  if(overlay) overlay.classList.remove("show");
 }
 
 function showOwnerLogin(){startAudioContext();showOnly("ownerLoginView");updateSavedLoginBox()}
