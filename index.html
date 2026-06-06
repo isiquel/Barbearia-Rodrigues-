@@ -69,6 +69,45 @@
     .finance-entry-value{text-align:left}
   }
 </style>
+
+<style id="remember-login-upgrade">
+  .remember-login-box{
+    margin:12px 0 16px;
+    padding:12px;
+    border-radius:16px;
+    background:rgba(244,208,111,.08);
+    border:1px solid rgba(244,208,111,.20);
+    color:#ffe2a1;
+    font-size:13px;
+    line-height:1.45;
+  }
+  .remember-check{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    cursor:pointer;
+    color:#ffe2a1;
+    font-size:14px;
+    font-weight:800;
+    margin:0;
+  }
+  .remember-check input{
+    width:18px;
+    height:18px;
+    accent-color:var(--gold);
+    flex:none;
+  }
+  .saved-login-actions{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+    margin-top:10px;
+  }
+  @media(max-width:850px){
+    .saved-login-actions{grid-template-columns:1fr}
+  }
+</style>
+
 </head>
 <body>
 <div class="app">
@@ -90,7 +129,18 @@
 <div class="locked-box">
   Acesso do dono: usa o login e senha da barbearia.<br>
   Acesso do suporte: usado somente para manutenção, testes e orientação técnica.
-</div><div id="loginMsg" class="message"></div><div class="form-row"><div><label>E-mail do administrador</label><input id="ownerEmail" type="email" placeholder="admin@barbearia.com"></div><div><label>Senha</label><input id="ownerPassword" type="password" placeholder="Digite a senha"></div></div><button class="primary" onclick="ownerLogin()">Entrar no painel</button><div class="admin-mini"><button class="secondary" onclick="showClientHome()">Voltar</button></div></section>
+</div><div id="loginMsg" class="message"></div><div class="form-row"><div><label>E-mail do administrador</label><input id="ownerEmail" type="email" placeholder="admin@barbearia.com"></div><div><label>Senha</label><input id="ownerPassword" type="password" placeholder="Digite a senha"></div></div>
+      <div class="remember-login-box">
+        <label class="remember-check">
+          <input id="rememberAdminLogin" type="checkbox">
+          Salvar login e senha neste aparelho
+        </label>
+        <div id="savedLoginActions" class="saved-login-actions hidden">
+          <button class="success" onclick="loginWithSavedCredentials()">Entrar com login salvo</button>
+          <button class="danger" onclick="clearSavedAdminLogin()">Apagar login salvo</button>
+        </div>
+      </div>
+      <button class="primary" onclick="ownerLogin()">Entrar no painel</button><div class="admin-mini"><button class="secondary" onclick="showClientHome()">Voltar</button></div></section>
 
 <section id="ownerView" class="hidden"><div class="admin-topbar"><div><strong>Painel do administrador</strong><span>Você está logado como dono da barbearia.</span></div><div class="admin-topbar-actions"><button class="danger" onclick="adminLogout()">Sair do administrador</button></div></div><div id="newAppointmentAlert" class="message new">🔔 Novo movimento na agenda! Veja a lista abaixo.</div><div id="ownerPopupContainer" class="owner-popup-wrap"></div><div id="dashboardSummary" class="summary-grid"></div><div class="admin-menu"><button id="tabSchedule" class="admin-card-btn config active" onclick="openOwnerTab('schedule')"><span class="admin-icon">⚙️</span><span><strong>Configurações</strong><small>Logo, serviços, dias, horários e bloqueios</small></span></button><button id="tabAppointments" class="admin-card-btn agenda" onclick="openOwnerTab('appointments')"><span class="admin-icon">📅</span><span><strong>Agendamentos</strong><small>Confirmar, cancelar e acompanhar cortes</small></span></button><button id="tabFinance" class="admin-card-btn agenda" onclick="openOwnerTab('finance')"><span class="admin-icon">💰</span><span><strong>Financeiro</strong><small>Relatório de entradas por Pix, dinheiro e cartão</small></span></button><button id="tabClients" class="admin-card-btn clients" onclick="openOwnerTab('clients')"><span class="admin-icon">👥</span><span><strong>Clientes</strong><small>Lista, WhatsApp e mensagens para todos</small></span></button></div>
 
@@ -398,7 +448,7 @@ function openOwnerTab(tab){$("tabSchedule").classList.remove("active");$("tabApp
 function showClientHome(){if(unsubscribeAppointments&&!$("ownerView").classList.contains("hidden")){unsubscribeAppointments();unsubscribeAppointments=null}showOnly("clientHomeView");if(activeClientAppointmentId)$("clientLiveStatusView").classList.remove("hidden")}
 function openGuidedBooking(){startAudioContext();showOnly("guidedView");if(activeClientAppointmentId)$("clientLiveStatusView").classList.remove("hidden");updateClientUi();renderServiceChoices("serviceList",selectedServiceId,async id=>{selectedServiceId=id;selectedDate="";selectedSlot="";bookedAppointments=[];renderClientDates()});renderMonthOptions();renderClientDates()}
 async function openAvailableTimes(){startAudioContext();showOnly("availableView");if(activeClientAppointmentId)$("clientLiveStatusView").classList.remove("hidden");renderServiceChoices("quickServiceList",quickServiceId,async id=>{quickServiceId=id;quickSelected=null;$("quickConfirmBox").classList.add("hidden");await renderAvailableTimes()});$("quickConfirmBox").classList.add("hidden");await renderAvailableTimes()}
-function showOwnerLogin(){startAudioContext();showOnly("ownerLoginView")}
+function showOwnerLogin(){startAudioContext();showOnly("ownerLoginView");updateSavedLoginBox()}
 
 function updateAdminAccessLabel(){
   const top = document.querySelector(".admin-topbar span");
@@ -410,8 +460,85 @@ function updateAdminAccessLabel(){
   }
 }
 
+
+const ADMIN_LOGIN_STORAGE_KEY = "barbeariaSavedAdminLogin";
+
+function getSavedAdminLogin(){
+  try{
+    const raw = localStorage.getItem(ADMIN_LOGIN_STORAGE_KEY);
+    if(!raw) return null;
+    const parsed = JSON.parse(raw);
+    if(!parsed || !parsed.email || !parsed.password) return null;
+    return parsed;
+  }catch{
+    return null;
+  }
+}
+
+function updateSavedLoginBox(){
+  const saved = getSavedAdminLogin();
+  const actions = $("savedLoginActions");
+  const remember = $("rememberAdminLogin");
+  if(!actions || !remember) return;
+
+  if(saved){
+    actions.classList.remove("hidden");
+    $("ownerEmail").value = saved.email || "";
+    $("ownerPassword").value = saved.password || "";
+    remember.checked = true;
+  }else{
+    actions.classList.add("hidden");
+    remember.checked = false;
+  }
+}
+
+function saveAdminLoginIfRequested(email,password){
+  const remember = $("rememberAdminLogin");
+  if(!remember || !remember.checked) return;
+
+  localStorage.setItem(ADMIN_LOGIN_STORAGE_KEY, JSON.stringify({
+    email,
+    password,
+    savedAt: new Date().toISOString()
+  }));
+
+  updateSavedLoginBox();
+}
+
+function loginWithSavedCredentials(){
+  const saved = getSavedAdminLogin();
+  if(!saved){
+    showToast("Nenhum login salvo neste aparelho.","err");
+    return;
+  }
+
+  $("ownerEmail").value = saved.email;
+  $("ownerPassword").value = saved.password;
+  $("rememberAdminLogin").checked = true;
+  ownerLogin();
+}
+
+async function clearSavedAdminLogin(){
+  const ok = await askConfirm({
+    title:"Apagar login salvo?",
+    text:"O login e a senha salvos neste aparelho serão removidos.",
+    confirmText:"Apagar",
+    cancelText:"Cancelar",
+    type:"danger",
+    icon:"🗑️"
+  });
+
+  if(!ok) return;
+
+  localStorage.removeItem(ADMIN_LOGIN_STORAGE_KEY);
+  if($("ownerEmail")) $("ownerEmail").value = "";
+  if($("ownerPassword")) $("ownerPassword").value = "";
+  updateSavedLoginBox();
+  showToast("Login salvo apagado deste aparelho.","ok");
+}
+
 Object.assign(window,{showClientHome,openGuidedBooking,openAvailableTimes,showOwnerLogin,ownerLogin,adminLogout,saveSettings,addBlockedDate,removeBlockedDate,bookAppointment,copyClientLink,openOwnerTab,loadAppointments,clearFilter,registerClient,changeClient,loadClients,renderClientsList,renderAppointmentsList,renderClientDates,selectQuickSlot,confirmQuickBooking,openClientAppointments,loadMyAppointments,cancelMyAppointment,deleteClient,deleteAppointmentHistory,saveClientCampaignMessage,startClientCampaign,sendNextCampaignClient,cancelClientCampaign,openBusinessMap,openBusinessWhatsApp,handleLogoFile,saveLogoImage,removeLogoImage,renderBlockedSlotSelect,addBlockedSlot,removeBlockedSlot,addLunchBreak,removeLunchBreak,finishAppointment,openFinishPaymentModal,closePaymentModal,completeServiceWithPayment,renderFinanceReport,setFinanceToday,setFinanceMonth,setFinanceAll});
-currentClient=loadClientFromStorage();await loadSettings();showClientHome();
+currentClient=loadClientFromStorage();await loadSettings();updateSavedLoginBox();showClientHome();
 </script>
 </body>
 </html>
