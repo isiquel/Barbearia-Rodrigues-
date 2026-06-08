@@ -180,7 +180,7 @@
 
 <section id="clientLiveStatusView" class="client-shell hidden"><div id="clientLiveStatusCard" class="client-live-card"><h3 id="clientLiveStatusTitle">Acompanhando agendamento</h3><p id="clientLiveStatusText"></p><p id="clientLiveStatusDetails"></p></div></section>
 
-<section id="clientHomeView" class="client-shell"><div class="card"><h2>O que você deseja fazer?</h2><p style="color:var(--muted);margin-top:0">Escolha uma opção abaixo.</p><div class="home-actions"><button class="primary big-action" onclick="openGuidedBooking()">✂️ Agendar horário<small>Escolha serviço, mês, dia e horário passo a passo.</small></button><button class="secondary big-action" onclick="openAvailableTimes()">🕒 Ver horários disponíveis<small>Veja os próximos horários livres e toque para agendar.</small></button><button class="secondary big-action" onclick="openClientAppointments()">📅 Meus agendamentos<small>Veja ou desmarque seu corte agendado.</small></button></div><div class="contact-actions"><button class="success" onclick="openBusinessWhatsApp()">📲 Falar no WhatsApp</button><button class="blue" onclick="openBusinessMap()">📍 Ver localização</button></div><div class="admin-mini"><button class="secondary" onclick="showOwnerLogin()">Administrador</button></div></div></section>
+<section id="clientHomeView" class="client-shell"><div class="card"><h2>O que você deseja fazer?</h2><p style="color:var(--muted);margin-top:0">Escolha uma opção abaixo.</p><div class="home-actions"><button class="primary big-action" onclick="openGuidedBooking()">✂️ Agendar horário<small>Escolha serviço, mês, dia e horário passo a passo.</small></button><button class="secondary big-action" onclick="openAvailableTimes()">🕒 Ver horários disponíveis<small>Veja os próximos horários livres e toque para agendar.</small></button><button class="secondary big-action" onclick="openClientAppointments()">📅 Meus agendamentos<small>Veja ou desmarque seu corte agendado.</small></button><button class="secondary big-action installAppButton" onclick="installBarbeariaApp()">📲 Baixar aplicativo no celular<small>Instale a Barbearia Rodrigues na tela inicial do seu celular.</small></button></div><div class="contact-actions"><button class="success" onclick="openBusinessWhatsApp()">📲 Falar no WhatsApp</button><button class="blue" onclick="openBusinessMap()">📍 Ver localização</button></div><div class="admin-mini"><button class="secondary" onclick="showOwnerLogin()">Administrador</button></div></div></section>
 
 <section id="availableView" class="client-shell hidden"><div class="card"><div class="back-row"><button class="secondary" onclick="showClientHome()">← Voltar</button></div><h2>Horários disponíveis</h2><p style="color:var(--muted);margin-top:0">Escolha um serviço e toque em um horário livre para agendar.</p><div class="step-card"><div class="step-head"><div class="step-number">1</div><strong>Escolha o serviço</strong></div><div id="quickServiceList" class="service-grid"></div></div><div id="availableMsg" class="message"></div><div id="availableList"></div><div id="quickConfirmBox" class="hidden"><div class="confirm-box"><h3>Confirmar horário</h3><p id="quickConfirmText"></p><div id="quickClientBox"><div class="form-row"><div><label>Seu nome</label><input id="quickName" type="text" placeholder="Ex: João Silva"></div><div><label>WhatsApp</label><input id="quickPhone" type="tel" placeholder="Ex: 11999999999"></div></div></div><button class="primary" onclick="confirmQuickBooking()">Confirmar agendamento</button></div></div></div></section>
 
@@ -663,7 +663,42 @@ async function clearSavedAdminLogin(){
   showToast("Login salvo apagado deste aparelho.","ok");
 }
 
-Object.assign(window,{showClientHome,openGuidedBooking,openAvailableTimes,showOwnerLogin,ownerLogin,adminLogout,saveSettings,addBlockedDate,removeBlockedDate,bookAppointment,copyClientLink,openOwnerTab,loadAppointments,clearFilter,registerClient,changeClient,loadClients,renderClientsList,renderAppointmentsList,renderClientDates,selectQuickSlot,confirmQuickBooking,openClientAppointments,loadMyAppointments,cancelMyAppointment,deleteClient,deleteAppointmentHistory,saveClientCampaignMessage,startClientCampaign,sendNextCampaignClient,cancelClientCampaign,openBusinessMap,openBusinessWhatsApp,handleLogoFile,saveLogoImage,removeLogoImage,renderBlockedSlotSelect,addBlockedSlot,removeBlockedSlot,addLunchBreak,removeLunchBreak,finishAppointment,openFinishPaymentModal,closePaymentModal,completeServiceWithPayment,renderFinanceReport,setFinanceToday,setFinanceMonth,setFinanceAll});
+
+let deferredInstallPrompt = null;
+
+window.addEventListener("beforeinstallprompt", function(event){
+  event.preventDefault();
+  deferredInstallPrompt = event;
+
+  document.querySelectorAll(".installAppButton").forEach(function(button){
+    button.style.display = "flex";
+  });
+});
+
+async function installBarbeariaApp(){
+  if(deferredInstallPrompt){
+    deferredInstallPrompt.prompt();
+    await deferredInstallPrompt.userChoice;
+    deferredInstallPrompt = null;
+    return;
+  }
+
+  alert(
+    "Para instalar no celular:\n\n" +
+    "Android: toque nos três pontinhos do navegador e escolha 'Adicionar à tela inicial' ou 'Instalar app'.\n\n" +
+    "iPhone: abra no Safari, toque no botão de compartilhar e escolha 'Adicionar à Tela de Início'."
+  );
+}
+
+if("serviceWorker" in navigator){
+  window.addEventListener("load", function(){
+    navigator.serviceWorker.register("/service-worker.js").catch(function(error){
+      console.log("Service Worker não registrado:", error);
+    });
+  });
+}
+
+Object.assign(window,{showClientHome,openGuidedBooking,openAvailableTimes,showOwnerLogin,ownerLogin,adminLogout,saveSettings,addBlockedDate,removeBlockedDate,bookAppointment,copyClientLink,openOwnerTab,loadAppointments,clearFilter,registerClient,changeClient,loadClients,renderClientsList,renderAppointmentsList,renderClientDates,selectQuickSlot,confirmQuickBooking,openClientAppointments,loadMyAppointments,cancelMyAppointment,deleteClient,deleteAppointmentHistory,saveClientCampaignMessage,startClientCampaign,sendNextCampaignClient,cancelClientCampaign,openBusinessMap,openBusinessWhatsApp,handleLogoFile,saveLogoImage,removeLogoImage,renderBlockedSlotSelect,addBlockedSlot,removeBlockedSlot,addLunchBreak,removeLunchBreak,finishAppointment,openFinishPaymentModal,closePaymentModal,completeServiceWithPayment,renderFinanceReport,setFinanceToday,setFinanceMonth,setFinanceAll,installBarbeariaApp});
 currentClient=loadClientFromStorage();await loadSettings();updateSavedLoginBox();showClientHome();
 </script>
 </body>
