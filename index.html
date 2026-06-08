@@ -4,15 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <meta name="theme-color" content="#080808">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-capable" content="yes">
 <title>Barbearia Rodrigues</title>
-<link rel="manifest" href="/manifest.json">
-<link rel="apple-touch-icon" href="/icon-192.png">
-<meta name="theme-color" content="#080808">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="Barbearia Rodrigues">
 <style>
 :root{--bg:#080808;--card:#181818;--soft:#101010;--text:#f5f5f5;--muted:#b8b8b8;--gold:#d4a034;--gold2:#f0c76c;--danger:#ff4d4d;--success:#30d158;--blue:#4da3ff;--border:rgba(255,255,255,.1);--shadow:0 18px 45px rgba(0,0,0,.45);--radius:22px}
 *{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;color:var(--text);min-height:100vh;background:radial-gradient(circle at top left,rgba(212,160,52,.16),transparent 35%),radial-gradient(circle at bottom right,rgba(77,163,255,.10),transparent 35%),var(--bg)}.app{max-width:1120px;margin:0 auto;padding:16px}.hero{background:linear-gradient(135deg,rgba(212,160,52,.18),rgba(255,255,255,.03)),linear-gradient(180deg,#161616,#0f0f0f);border:1px solid var(--border);border-radius:30px;padding:22px;box-shadow:var(--shadow);margin-bottom:18px;position:relative;overflow:hidden}.hero:after{content:"";position:absolute;width:220px;height:220px;border-radius:50%;background:rgba(212,160,52,.18);right:-80px;top:-80px}.brand{display:flex;align-items:center;gap:14px;position:relative;z-index:2}.logo{width:62px;height:62px;border-radius:20px;background:linear-gradient(135deg,var(--gold),#7a510f);display:flex;align-items:center;justify-content:center;font-size:31px;box-shadow:0 14px 30px rgba(212,160,52,.25);overflow:hidden;flex:none}.logo img{width:100%;height:100%;object-fit:cover}.brand h1{margin:0;font-size:29px}.brand p{margin:5px 0 0;color:var(--muted);font-size:14px}.brand-contact{position:relative;z-index:2;margin-top:16px;display:grid;gap:6px;color:#f2d795;font-size:14px}.card{background:rgba(24,24,24,.92);border:1px solid var(--border);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow)}.client-shell{max-width:760px;margin:0 auto}h2{margin:0 0 8px;font-size:24px}h3{color:var(--gold2);margin:18px 0 10px;font-size:16px}p{line-height:1.5}label{display:block;margin-bottom:7px;color:var(--muted);font-weight:700;font-size:13px}input,select,textarea{width:100%;border:1px solid var(--border);background:var(--soft);color:var(--text);border-radius:14px;padding:13px;font-size:15px;outline:none}textarea{min-height:100px;resize:vertical}input[readonly]{opacity:.85;cursor:not-allowed}button,.btn{border:none;outline:none;padding:13px 16px;border-radius:15px;cursor:pointer;font-weight:800;font-size:14px;transition:.2s;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:8px}button:hover,.btn:hover{transform:translateY(-1px);opacity:.94}.primary{background:linear-gradient(135deg,var(--gold2),var(--gold));color:#15100a}.secondary{background:rgba(255,255,255,.08);color:var(--text);border:1px solid var(--border)}.danger{background:rgba(255,77,77,.13);color:#ffb0b0;border:1px solid rgba(255,77,77,.25)}.success{background:rgba(48,209,88,.12);color:#aef5c0;border:1px solid rgba(48,209,88,.25)}.blue{background:rgba(77,163,255,.13);color:#b9dcff;border:1px solid rgba(77,163,255,.25)}.hidden{display:none!important}.home-actions{display:grid;gap:12px;margin-top:18px}.big-action{min-height:82px;font-size:18px;border-radius:20px;justify-content:flex-start;padding:18px;text-align:left}.big-action small{display:block;font-size:12px;font-weight:600;opacity:.75;margin-top:4px}.contact-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}.admin-mini{display:flex;justify-content:center;margin-top:16px}.admin-mini button{font-size:12px;padding:10px 13px;opacity:.85}.message{padding:13px;border-radius:16px;margin:12px 0;font-size:14px;line-height:1.4;display:none}.message.show{display:block}.message.ok{background:rgba(48,209,88,.12);color:#b7f8c8;border:1px solid rgba(48,209,88,.25)}.message.err{background:rgba(255,77,77,.12);color:#ffc0c0;border:1px solid rgba(255,77,77,.25)}.message.info{background:rgba(212,160,52,.12);color:#ffe2a1;border:1px solid rgba(212,160,52,.23)}.message.new{background:rgba(48,209,88,.14);color:#bcffcb;border:1px solid rgba(48,209,88,.35);animation:pulseNotice 1s ease-in-out infinite alternate}@keyframes pulseNotice{from{box-shadow:0 0 0 rgba(48,209,88,0)}to{box-shadow:0 0 22px rgba(48,209,88,.25)}}.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}.single{margin-bottom:12px}.back-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}.step-card,.available-day,.confirm-box{background:rgba(255,255,255,.035);border:1px solid var(--border);border-radius:18px;padding:15px;margin-bottom:14px}.confirm-box{background:rgba(212,160,52,.10);border-color:rgba(212,160,52,.24)}.step-head{display:flex;align-items:center;gap:9px;margin-bottom:12px}.step-number{width:29px;height:29px;border-radius:999px;background:linear-gradient(135deg,var(--gold2),var(--gold));color:#15100a;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:13px}.service-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:10px 0 4px}.service-card{min-height:88px;border-radius:18px;border:1px solid var(--border);background:var(--soft);color:var(--text);padding:14px;text-align:left;display:block;cursor:pointer}.service-card strong{display:block;font-size:15px;margin-bottom:5px}.service-card span{display:block;color:var(--muted);font-size:12px}.service-card.active{border-color:var(--gold);background:linear-gradient(135deg,var(--gold2),var(--gold));color:#15100a}.service-card.active span{color:rgba(21,16,10,.75)}.date-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(125px,1fr));gap:10px;margin:10px 0 4px}.slots,.available-slots{display:grid;grid-template-columns:repeat(auto-fit,minmax(86px,1fr));gap:10px;margin:10px 0 4px}.date-btn,.slot{background:var(--soft);color:var(--text);border:1px solid var(--border);border-radius:16px;padding:14px;cursor:pointer;min-height:48px}.date-btn{text-align:left;min-height:72px}.date-btn strong{display:block;font-size:15px;margin-bottom:4px}.date-btn span{color:var(--muted);font-size:12px}.date-btn.active,.slot.active{border-color:var(--gold);background:linear-gradient(135deg,var(--gold2),var(--gold));color:#15100a}.slot{font-weight:900}.grid{display:grid;grid-template-columns:1.05fr 1.35fr;gap:18px}.days{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:14px}.day-check{background:var(--soft);border:1px solid var(--border);border-radius:15px;padding:12px;display:flex;align-items:center;gap:9px;cursor:pointer;color:var(--text);font-weight:700;font-size:14px}.day-check input{width:auto;accent-color:var(--gold)}.admin-topbar{background:rgba(255,255,255,.045);border:1px solid var(--border);border-radius:20px;padding:12px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;box-shadow:var(--shadow)}.admin-topbar strong{display:block;font-size:15px}.admin-topbar span{color:var(--muted);font-size:12px}.admin-topbar-actions{display:flex;gap:8px;flex-wrap:wrap}.admin-menu{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:20px}.admin-card-btn{position:relative;width:100%;min-height:112px;border-radius:24px;padding:16px;justify-content:flex-start;align-items:flex-start;text-align:left;overflow:hidden;background:linear-gradient(135deg,rgba(255,255,255,.08),rgba(255,255,255,.025));border:1px solid rgba(255,255,255,.11);box-shadow:0 14px 32px rgba(0,0,0,.28);color:var(--text)}.admin-card-btn:after{content:"";position:absolute;width:115px;height:115px;border-radius:50%;right:-42px;top:-42px;opacity:.23;background:var(--gold)}.admin-card-btn .admin-icon{width:46px;height:46px;border-radius:17px;display:flex;align-items:center;justify-content:center;font-size:24px;margin-bottom:10px;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.12);position:relative;z-index:2}.admin-card-btn strong{display:block;font-size:17px;margin-bottom:5px;position:relative;z-index:2}.admin-card-btn small{display:block;color:rgba(255,255,255,.72);font-size:12px;line-height:1.35;font-weight:600;position:relative;z-index:2}.admin-card-btn.active{transform:translateY(-2px);border-color:rgba(255,255,255,.20);box-shadow:0 20px 42px rgba(0,0,0,.38)}.admin-card-btn.config.active{background:linear-gradient(135deg,rgba(240,199,108,.95),rgba(212,160,52,.88));color:#15100a}.admin-card-btn.config.active small{color:rgba(21,16,10,.78)}.admin-card-btn.agenda.active{background:linear-gradient(135deg,rgba(130,199,255,.96),rgba(77,163,255,.86));color:#06101b}.admin-card-btn.agenda.active small{color:rgba(6,16,27,.78)}.admin-card-btn.clients.active{background:linear-gradient(135deg,rgba(130,238,159,.96),rgba(48,209,88,.82));color:#061408}.admin-card-btn.clients.active small{color:rgba(6,20,8,.78)}.summary-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin:0 0 18px}.summary-card{background:linear-gradient(135deg,rgba(255,255,255,.07),rgba(255,255,255,.025));border:1px solid var(--border);border-radius:18px;padding:14px;box-shadow:0 10px 24px rgba(0,0,0,.22)}.summary-card strong{display:block;font-size:24px;color:var(--gold2);margin-bottom:4px}.summary-card span{display:block;font-size:12px;color:var(--muted);font-weight:700}.appointment,.client-item{background:var(--soft);border:1px solid var(--border);border-radius:18px;padding:14px;margin-bottom:10px;display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center}.appointment strong,.client-item strong{display:block;font-size:15px;margin-bottom:4px}.appointment span,.client-item span{display:block;color:var(--muted);font-size:13px;margin-top:3px}.appointment-actions{display:flex;flex-direction:column;gap:8px}.status{display:inline-flex;align-items:center;justify-content:center;padding:7px 10px;border-radius:99px;font-size:12px;font-weight:900;border:1px solid transparent;margin-top:8px}.status.pending{background:rgba(212,160,52,.14);color:var(--gold2);border-color:rgba(212,160,52,.28)}.status.confirmed{background:rgba(48,209,88,.12);color:#aef5c0;border-color:rgba(48,209,88,.25)}.status.canceled{background:rgba(255,77,77,.12);color:#ffc0c0;border-color:rgba(255,77,77,.28)}.empty{text-align:center;color:var(--muted);padding:28px 10px;border:1px dashed var(--border);border-radius:18px;background:rgba(255,255,255,.03)}.footer-note{margin-top:18px;color:var(--muted);font-size:12px;text-align:center;line-height:1.5}.client-welcome{background:rgba(48,209,88,.10);border:1px solid rgba(48,209,88,.22);border-radius:18px;padding:13px;margin-bottom:14px;color:#c9ffd5;display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap}.blocked-list{display:grid;gap:8px;margin-top:8px}.lunch-note{background:rgba(212,160,52,.10);border:1px solid rgba(212,160,52,.25);color:#ffe2a1;padding:12px;border-radius:16px;font-size:13px;line-height:1.45;margin:10px 0}.blocked-item{padding:10px;background:rgba(255,255,255,.06);border:1px solid var(--border);border-radius:14px;display:flex;gap:8px;align-items:center;justify-content:space-between;font-size:13px;color:var(--muted)}.sound-box,.campaign-box,.locked-box{background:rgba(77,163,255,.10);border:1px solid rgba(77,163,255,.20);color:#cfe8ff;padding:12px;border-radius:16px;font-size:13px;line-height:1.5;margin-bottom:12px}.locked-box,.campaign-box{background:rgba(212,160,52,.10);border-color:rgba(212,160,52,.25);color:#ffe2a1}.campaign-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}.client-live-card{margin-bottom:18px;border-radius:22px;border:1px solid rgba(212,160,52,.32);background:linear-gradient(135deg,rgba(212,160,52,.14),rgba(255,255,255,.04));box-shadow:var(--shadow);padding:16px}.client-live-card.confirmed{border-color:rgba(48,209,88,.35);background:linear-gradient(135deg,rgba(48,209,88,.16),rgba(255,255,255,.04))}.client-live-card.canceled{border-color:rgba(255,77,77,.35);background:linear-gradient(135deg,rgba(255,77,77,.14),rgba(255,255,255,.04))}.client-live-card h3{margin:0 0 8px;color:var(--text)}.client-live-card p{margin:6px 0;color:var(--muted);font-size:14px}.owner-popup-wrap{display:grid;gap:12px;margin-bottom:16px}.owner-popup{background:linear-gradient(135deg,rgba(212,160,52,.18),rgba(255,255,255,.05));border:1px solid rgba(212,160,52,.35);border-radius:22px;padding:16px;box-shadow:var(--shadow);animation:pulseNotice 1s ease-in-out infinite alternate}.owner-popup h3{color:var(--text);margin:0 0 8px;font-size:18px}.owner-popup p{margin:5px 0;color:var(--muted);font-size:14px}.owner-popup-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}details.admin-section{border:1px solid var(--border);border-radius:18px;margin-bottom:12px;background:rgba(255,255,255,.03);overflow:hidden}details.admin-section summary{list-style:none;cursor:pointer;padding:15px;font-weight:900;color:#ffe2a1;display:flex;justify-content:space-between;align-items:center}details.admin-section summary::-webkit-details-marker{display:none}details.admin-section summary:after{content:"＋";font-size:18px;color:var(--gold2)}details.admin-section[open] summary:after{content:"−"}.admin-section-body{padding:0 15px 15px}.logo-preview-wrap{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:12px}.logo-preview{width:86px;height:86px;border-radius:24px;overflow:hidden;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--gold),#7a510f);border:1px solid rgba(255,255,255,.14);font-size:38px}.logo-preview img{width:100%;height:100%;object-fit:cover}.service-admin-row{display:grid;grid-template-columns:1fr 110px 90px;gap:10px;align-items:end;margin-bottom:10px;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:16px;padding:12px}.toast-host{position:fixed;left:14px;right:14px;bottom:14px;z-index:9999;display:grid;gap:10px;pointer-events:none}.toast{pointer-events:auto;display:flex;align-items:center;justify-content:space-between;gap:12px;border-radius:18px;padding:14px 16px;box-shadow:0 20px 45px rgba(0,0,0,.42);border:1px solid rgba(255,255,255,.12);animation:toastIn .18s ease;font-size:14px;line-height:1.4}.toast button{width:auto;min-height:auto;padding:8px 10px;border-radius:12px}.toast.ok{background:rgba(48,209,88,.13);color:#c8ffd5;border-color:rgba(48,209,88,.28)}.toast.err{background:rgba(255,90,95,.14);color:#ffd0d2;border-color:rgba(255,90,95,.28)}.toast.info{background:rgba(77,163,255,.14);color:#d8ebff;border-color:rgba(77,163,255,.28)}@keyframes toastIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}.app-modal{width:min(92vw,420px);border:none;padding:0;background:transparent}.app-modal::backdrop{background:rgba(0,0,0,.58);backdrop-filter:blur(3px)}.app-modal-card{background:#111;border:1px solid rgba(255,255,255,.10);border-radius:24px;padding:20px;box-shadow:0 24px 56px rgba(0,0,0,.46)}.app-modal-icon{width:52px;height:52px;border-radius:18px;display:flex;align-items:center;justify-content:center;font-size:24px;background:rgba(255,255,255,.06);margin-bottom:10px}.app-modal-card h3{margin:0 0 8px;font-size:22px;color:var(--text)}.app-modal-card p{margin:0;color:var(--muted)}.app-modal-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:18px}
@@ -177,58 +169,6 @@
   }
 </style>
 
-
-<style id="pwa-install-fix-style">
-  .installAppButton{
-    display:flex;
-  }
-  .pwa-install-overlay{
-    position:fixed;
-    inset:0;
-    z-index:10050;
-    display:none;
-    align-items:center;
-    justify-content:center;
-    padding:16px;
-    background:rgba(0,0,0,.76);
-    backdrop-filter:blur(5px);
-  }
-  .pwa-install-overlay.show{display:flex}
-  .pwa-install-box{
-    width:min(94vw,470px);
-    border-radius:28px;
-    padding:24px;
-    background:linear-gradient(180deg,rgba(244,208,111,.11),rgba(255,255,255,.025)),#0b0b0b;
-    border:1px solid rgba(244,208,111,.34);
-    box-shadow:0 28px 80px rgba(0,0,0,.72);
-    color:#fff;
-  }
-  .pwa-install-box h2{
-    margin:0 0 10px;
-    color:#ffe2a1;
-    font-size:24px;
-  }
-  .pwa-install-box p{
-    color:var(--muted);
-    line-height:1.45;
-  }
-  .pwa-install-actions{
-    display:grid;
-    gap:10px;
-    margin-top:16px;
-  }
-  .pwa-small-note{
-    margin-top:12px;
-    padding:12px;
-    border-radius:16px;
-    background:rgba(255,255,255,.045);
-    border:1px solid rgba(255,255,255,.08);
-    font-size:13px;
-    color:var(--muted);
-    line-height:1.45;
-  }
-</style>
-
 </head>
 <body>
 <div class="app">
@@ -238,7 +178,7 @@
 
 <section id="clientLiveStatusView" class="client-shell hidden"><div id="clientLiveStatusCard" class="client-live-card"><h3 id="clientLiveStatusTitle">Acompanhando agendamento</h3><p id="clientLiveStatusText"></p><p id="clientLiveStatusDetails"></p></div></section>
 
-<section id="clientHomeView" class="client-shell"><div class="card"><h2>O que você deseja fazer?</h2><p style="color:var(--muted);margin-top:0">Escolha uma opção abaixo.</p><div class="home-actions"><button class="primary big-action" onclick="openGuidedBooking()">✂️ Agendar horário<small>Escolha serviço, mês, dia e horário passo a passo.</small></button><button class="secondary big-action" onclick="openAvailableTimes()">🕒 Ver horários disponíveis<small>Veja os próximos horários livres e toque para agendar.</small></button><button class="secondary big-action" onclick="openClientAppointments()">📅 Meus agendamentos<small>Veja ou desmarque seu corte agendado.</small></button><button class="secondary big-action installAppButton" onclick="installBarbeariaApp()">📲 Baixar aplicativo no celular<small>Instale a Barbearia Rodrigues na tela inicial do seu celular.</small></button></div><div class="contact-actions"><button class="success" onclick="openBusinessWhatsApp()">📲 Falar no WhatsApp</button><button class="blue" onclick="openBusinessMap()">📍 Ver localização</button></div><div class="admin-mini"><button class="secondary" onclick="showOwnerLogin()">Administrador</button></div></div></section>
+<section id="clientHomeView" class="client-shell"><div class="card"><h2>O que você deseja fazer?</h2><p style="color:var(--muted);margin-top:0">Escolha uma opção abaixo.</p><div class="home-actions"><button class="primary big-action" onclick="openGuidedBooking()">✂️ Agendar horário<small>Escolha serviço, mês, dia e horário passo a passo.</small></button><button class="secondary big-action" onclick="openAvailableTimes()">🕒 Ver horários disponíveis<small>Veja os próximos horários livres e toque para agendar.</small></button><button class="secondary big-action" onclick="openClientAppointments()">📅 Meus agendamentos<small>Veja ou desmarque seu corte agendado.</small></button></div><div class="contact-actions"><button class="success" onclick="openBusinessWhatsApp()">📲 Falar no WhatsApp</button><button class="blue" onclick="openBusinessMap()">📍 Ver localização</button></div><div class="admin-mini"><button class="secondary" onclick="showOwnerLogin()">Administrador</button></div></div></section>
 
 <section id="availableView" class="client-shell hidden"><div class="card"><div class="back-row"><button class="secondary" onclick="showClientHome()">← Voltar</button></div><h2>Horários disponíveis</h2><p style="color:var(--muted);margin-top:0">Escolha um serviço e toque em um horário livre para agendar.</p><div class="step-card"><div class="step-head"><div class="step-number">1</div><strong>Escolha o serviço</strong></div><div id="quickServiceList" class="service-grid"></div></div><div id="availableMsg" class="message"></div><div id="availableList"></div><div id="quickConfirmBox" class="hidden"><div class="confirm-box"><h3>Confirmar horário</h3><p id="quickConfirmText"></p><div id="quickClientBox"><div class="form-row"><div><label>Seu nome</label><input id="quickName" type="text" placeholder="Ex: João Silva"></div><div><label>WhatsApp</label><input id="quickPhone" type="tel" placeholder="Ex: 11999999999"></div></div></div><button class="primary" onclick="confirmQuickBooking()">Confirmar agendamento</button></div></div></div></section>
 
@@ -347,22 +287,6 @@
     <div id="bookingSuccessDetails" class="booking-success-details"></div>
     <p><strong>Fique atento:</strong> aguarde a confirmação da barbearia e não esqueça do seu horário.</p>
     <button class="primary" onclick="closeBookingSuccessPopup()">Entendi</button>
-  </div>
-</div>
-
-
-<div id="pwaInstallOverlay" class="pwa-install-overlay">
-  <div class="pwa-install-box">
-    <h2>📲 Instalar Barbearia Rodrigues</h2>
-    <p id="pwaInstallText">O aplicativo ainda está sendo preparado pelo navegador.</p>
-    <div class="pwa-install-actions">
-      <button class="primary" onclick="installBarbeariaApp()">Tentar instalar agora</button>
-      <button class="secondary" onclick="closePwaInstallHelp()">Fechar</button>
-    </div>
-    <div class="pwa-small-note">
-      No Android, quando o Chrome reconhecer o app, vai aparecer a janela “Instalar app”.
-      No iPhone, a instalação é feita pelo Safari em “Compartilhar” → “Adicionar à Tela de Início”.
-    </div>
   </div>
 </div>
 
@@ -508,7 +432,7 @@ function setFinanceAll(){
 function loadClientFromStorage(){try{const saved=localStorage.getItem("barbeariaClient");if(!saved)return null;const parsed=JSON.parse(saved);if(!parsed||!parsed.name||!parsed.phone)return null;return parsed}catch{return null}}function saveClientToStorage(client){localStorage.setItem("barbeariaClient",JSON.stringify(client))}function clearClientStorage(){localStorage.removeItem("barbeariaClient")}
 function renderLogo(targetId){const el=$(targetId);if(!el)return;const logo=settings.logoDataUrl||"";el.innerHTML=logo?`<img src="${logo}" alt="Logo da barbearia">`:"✂️"}
 function updateBrand(){settings.businessName=FIXED_BUSINESS_NAME;const name=FIXED_BUSINESS_NAME,address=settings.businessAddress||DEFAULT_SETTINGS.businessAddress,phone=formatPhoneBR(settings.ownerWhatsapp||DEFAULT_SETTINGS.ownerWhatsapp);$("brandName").textContent=name;$("footerBrand").textContent=name;$("brandAddress").textContent=`📍 ${address}`;$("brandWhatsapp").textContent=`📲 WhatsApp: ${phone}`;document.title=name;renderLogo("mainLogo");renderLogo("logoPreview");updateManifest()}
-function updateManifest(){try{let link=document.querySelector(\'link[rel="manifest"]\');if(!link){link=document.createElement("link");link.rel="manifest";document.head.appendChild(link)}link.href="/manifest.json"}catch(e){console.error(e)}}
+function updateManifest(){try{const manifest={name:FIXED_BUSINESS_NAME,short_name:"Agenda",start_url:".",display:"standalone",background_color:"#080808",theme_color:"#080808",description:"Sistema de agendamento online para barbearia"};const blob=new Blob([JSON.stringify(manifest)],{type:"application/json"});const url=URL.createObjectURL(blob);let link=document.querySelector('link[rel="manifest"]');if(!link){link=document.createElement("link");link.rel="manifest";document.head.appendChild(link)}link.href=url}catch(e){console.error(e)}}
 async function loadSettings(){if(!firebaseReady){settings={...DEFAULT_SETTINGS};applySettingsToForm();return}try{const ref=doc(db,"barbeariaRodrigues","settings"),snap=await getDoc(ref);if(snap.exists()){settings={...DEFAULT_SETTINGS,...snap.data()};settings.businessName=FIXED_BUSINESS_NAME;settings.services=normalizeServices(settings.services);if(!settings.blockedSlots||typeof settings.blockedSlots!=="object")settings.blockedSlots={};settings.lunchBreaks=normalizeLunchBreaks(settings.lunchBreaks)}else{await setDoc(ref,DEFAULT_SETTINGS);settings={...DEFAULT_SETTINGS};settings.lunchBreaks=normalizeLunchBreaks(settings.lunchBreaks)}if(!selectedServiceId)selectedServiceId=activeServices()[0]?.id||"corte";if(!quickServiceId)quickServiceId=selectedServiceId;applySettingsToForm()}catch(e){console.error(e)}}
 function applySettingsToForm(){settings.businessName=FIXED_BUSINESS_NAME;settings.services=normalizeServices(settings.services);updateBrand();document.querySelectorAll(".workday").forEach(check=>{check.checked=settings.workdays.includes(Number(check.value))});$("businessName").value=FIXED_BUSINESS_NAME;$("ownerWhatsapp").value=settings.ownerWhatsapp||"";$("businessAddress").value=settings.businessAddress||"";$("businessMapLink").value=settings.businessMapLink||"";$("confirmationMessage").value=settings.confirmationMessage||DEFAULT_CONFIRMATION_MESSAGE;$("adminEmail").value=settings.adminEmail||"admin@barbearia.com";$("adminPassword").value=settings.adminPassword||"1234";$("startTime").value=settings.startTime||"08:00";$("endTime").value=settings.endTime||"18:00";$("slotDuration").value=String(settings.slotDuration||30);if($("clientCampaignMessage"))$("clientCampaignMessage").value=String(settings.clientCampaignMessage||DEFAULT_CLIENT_CAMPAIGN_MESSAGE).replaceAll("\\n","\n");renderServicesAdminList();renderServiceChoices("serviceList",selectedServiceId,async id=>{selectedServiceId=id;selectedDate="";selectedSlot="";bookedAppointments=[];renderClientDates();scrollToArea("dateList",260)});renderServiceChoices("quickServiceList",quickServiceId,async id=>{quickServiceId=id;quickSelected=null;$("quickConfirmBox").classList.add("hidden");await renderAvailableTimes();scrollToArea("availableList",260)});updateClientLink();renderBlockedDates();renderLunchBreaksList();renderBlockedSlotSelect();renderBlockedSlotsList();renderMonthOptions();updateClientUi();renderDashboardSummary()}
 function updateClientUi(){if(currentClient){$("clientRegisterBox").classList.add("hidden");$("scheduleBox").classList.remove("hidden");$("clientWelcome").classList.remove("hidden");$("clientWelcomeName").textContent=currentClient.name;$("clientWelcomePhone").textContent=currentClient.phone}else{$("clientRegisterBox").classList.remove("hidden");$("scheduleBox").classList.add("hidden");$("clientWelcome").classList.add("hidden")}}
@@ -737,87 +661,33 @@ async function clearSavedAdminLogin(){
   showToast("Login salvo apagado deste aparelho.","ok");
 }
 
-
-
-let deferredInstallPrompt = null;
-let pwaReadyToInstall = false;
-
-function updateInstallButtons(){
-  document.querySelectorAll(".installAppButton").forEach(function(button){
-    button.style.display = "flex";
-    if(pwaReadyToInstall){
-      button.classList.add("primary");
-      button.classList.remove("secondary");
-      const small = button.querySelector("small");
-      if(small) small.textContent = "Toque aqui para instalar direto na tela inicial.";
-    }
-  });
-}
-
-window.addEventListener("beforeinstallprompt", function(event){
-  event.preventDefault();
-  deferredInstallPrompt = event;
-  pwaReadyToInstall = true;
-  updateInstallButtons();
-});
-
-window.addEventListener("appinstalled", function(){
-  deferredInstallPrompt = null;
-  pwaReadyToInstall = false;
-  showToast("Aplicativo instalado com sucesso.","ok");
-});
-
-function openPwaInstallHelp(message){
-  const overlay = $("pwaInstallOverlay");
-  const text = $("pwaInstallText");
-  if(text){
-    text.innerHTML = message || "O navegador ainda não liberou a instalação automática. Confira se os arquivos manifest.json, service-worker.js, icon-192.png e icon-512.png já foram enviados para o GitHub e publicados pela Vercel.";
-  }
-  if(overlay) overlay.classList.add("show");
-}
-
-function closePwaInstallHelp(){
-  const overlay = $("pwaInstallOverlay");
-  if(overlay) overlay.classList.remove("show");
-}
-
-async function installBarbeariaApp(){
-  if(deferredInstallPrompt){
-    deferredInstallPrompt.prompt();
-    await deferredInstallPrompt.userChoice;
-    deferredInstallPrompt = null;
-    pwaReadyToInstall = false;
-    updateInstallButtons();
-    return;
-  }
-
-  openPwaInstallHelp(
-    "Ainda não apareceu a janela de instalação automática porque o Chrome não liberou o botão de instalação neste momento.<br><br>" +
-    "<strong>Confira no GitHub se estes arquivos estão na raiz:</strong><br>" +
-    "index.html<br>manifest.json<br>service-worker.js<br>icon-192.png<br>icon-512.png<br><br>" +
-    "Depois que a Vercel atualizar, feche o Chrome, abra de novo e teste novamente."
-  );
-}
-
-if("serviceWorker" in navigator){
-  window.addEventListener("load", function(){
-    navigator.serviceWorker.register("/service-worker.js").then(function(reg){
-      if(reg && reg.update) reg.update();
-      updateInstallButtons();
-    }).catch(function(error){
-      console.log("Service Worker não registrado:", error);
-      updateInstallButtons();
-    });
-  });
-}else{
-  updateInstallButtons();
-}
-);
-  });
-}
-
-Object.assign(window,{showClientHome,openGuidedBooking,openAvailableTimes,showOwnerLogin,ownerLogin,adminLogout,saveSettings,addBlockedDate,removeBlockedDate,bookAppointment,copyClientLink,openOwnerTab,loadAppointments,clearFilter,registerClient,changeClient,loadClients,renderClientsList,renderAppointmentsList,renderClientDates,selectQuickSlot,confirmQuickBooking,openClientAppointments,loadMyAppointments,cancelMyAppointment,deleteClient,deleteAppointmentHistory,saveClientCampaignMessage,startClientCampaign,sendNextCampaignClient,cancelClientCampaign,openBusinessMap,openBusinessWhatsApp,handleLogoFile,saveLogoImage,removeLogoImage,renderBlockedSlotSelect,addBlockedSlot,removeBlockedSlot,addLunchBreak,removeLunchBreak,finishAppointment,openFinishPaymentModal,closePaymentModal,completeServiceWithPayment,renderFinanceReport,setFinanceToday,setFinanceMonth,setFinanceAll,installBarbeariaApp,closePwaInstallHelp});
+Object.assign(window,{showClientHome,openGuidedBooking,openAvailableTimes,showOwnerLogin,ownerLogin,adminLogout,saveSettings,addBlockedDate,removeBlockedDate,bookAppointment,copyClientLink,openOwnerTab,loadAppointments,clearFilter,registerClient,changeClient,loadClients,renderClientsList,renderAppointmentsList,renderClientDates,selectQuickSlot,confirmQuickBooking,openClientAppointments,loadMyAppointments,cancelMyAppointment,deleteClient,deleteAppointmentHistory,saveClientCampaignMessage,startClientCampaign,sendNextCampaignClient,cancelClientCampaign,openBusinessMap,openBusinessWhatsApp,handleLogoFile,saveLogoImage,removeLogoImage,renderBlockedSlotSelect,addBlockedSlot,removeBlockedSlot,addLunchBreak,removeLunchBreak,finishAppointment,openFinishPaymentModal,closePaymentModal,completeServiceWithPayment,renderFinanceReport,setFinanceToday,setFinanceMonth,setFinanceAll});
 currentClient=loadClientFromStorage();await loadSettings();updateSavedLoginBox();showClientHome();
 </script>
+
+<script id="emergency-cache-cleanup">
+(function(){
+  try{
+    if("serviceWorker" in navigator){
+      navigator.serviceWorker.getRegistrations().then(function(registrations){
+        registrations.forEach(function(registration){
+          registration.unregister();
+        });
+      }).catch(function(){});
+    }
+
+    if(window.caches && caches.keys){
+      caches.keys().then(function(keys){
+        keys.forEach(function(key){
+          caches.delete(key);
+        });
+      }).catch(function(){});
+    }
+  }catch(e){
+    console.log("Limpeza de cache ignorada:", e);
+  }
+})();
+</script>
+
 </body>
 </html>
