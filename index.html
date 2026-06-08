@@ -169,6 +169,27 @@
   }
 </style>
 
+
+<style id="finance-cleanup-upgrade">
+  .finance-cleanup-box{
+    background:rgba(255,255,255,.035);
+    border:1px solid rgba(244,208,111,.18);
+    border-radius:18px;
+    padding:14px;
+    margin:0 0 16px;
+  }
+  .finance-cleanup-box h3{margin-top:0}
+  .finance-cleanup-actions{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+    margin-top:10px;
+  }
+  @media(max-width:850px){
+    .finance-cleanup-actions{grid-template-columns:1fr}
+  }
+</style>
+
 </head>
 <body>
 <div class="app">
@@ -250,6 +271,31 @@
     <button class="secondary" onclick="setFinanceAll()">Todos</button>
   </div>
 
+  <div class="finance-cleanup-box">
+    <h3>Limpeza dos registros financeiros</h3>
+    <p style="color:var(--muted);margin-top:0">
+      Escolha se o sistema deve apagar automaticamente os registros financeiros finalizados com mais de 30 dias.
+      Isso não apaga clientes cadastrados.
+    </p>
+    <div class="form-row">
+      <div>
+        <label>Apagar registros financeiros após 30 dias?</label>
+        <select id="autoCleanFinance30Days" onchange="saveFinanceCleanupPreference()">
+          <option value="false">Não, manter o histórico</option>
+          <option value="true">Sim, apagar após 30 dias</option>
+        </select>
+      </div>
+      <div>
+        <label>Status</label>
+        <input id="financeCleanupStatus" type="text" readonly value="Limpeza desativada">
+      </div>
+    </div>
+    <div class="finance-cleanup-actions">
+      <button class="danger" onclick="cleanOldFinanceRecords(true)">Apagar agora registros com mais de 30 dias</button>
+      <button class="secondary" onclick="renderFinanceReport()">Atualizar relatório</button>
+    </div>
+  </div>
+
   <div class="finance-total-box">
     <span>Total de entradas no período</span>
     <strong id="financeTotalPeriod">R$ 0,00</strong>
@@ -314,7 +360,7 @@ Acesse o link:
 
 Escolha o melhor dia e horário disponível. Esperamos você!`;
 const DEFAULT_SERVICES=[{id:"corte",name:"Cabelo",duration:30,price:30,active:true},{id:"barba",name:"Barba",duration:30,price:30,active:true},{id:"corte_barba",name:"Barba + Cabelo",duration:60,price:50,active:true},{id:"pe_cabelo",name:"Pé de cabelo",duration:15,price:15,active:true},{id:"sobrancelha",name:"Sobrancelha",duration:15,price:5,active:true},{id:"pigmentacao",name:"Pigmentação",duration:30,price:25,active:true},{id:"depilacao_nasal",name:"Depilação nasal",duration:15,price:10,active:true},{id:"luzes",name:"Luzes",duration:120,price:100,active:true},{id:"nevou",name:"Nevou",duration:180,price:120,active:true},{id:"outro",name:"Outro serviço",duration:30,price:0,active:false}];
-const DEFAULT_SETTINGS={businessName:FIXED_BUSINESS_NAME,logoDataUrl:"",businessAddress:"Av. Tupassi, 4985 - Jardim Progresso, Assis Chateaubriand - PR",businessMapLink:"",ownerWhatsapp:"44999258615",confirmationMessage:DEFAULT_CONFIRMATION_MESSAGE,clientCampaignMessage:DEFAULT_CLIENT_CAMPAIGN_MESSAGE,services:DEFAULT_SERVICES,workdays:[1,2,3,4,5,6],startTime:"08:00",endTime:"18:00",slotDuration:30,adminEmail:"admin@barbearia.com",adminPassword:"1234",blockedDates:[],blockedSlots:{},lunchBreaks:[]};
+const DEFAULT_SETTINGS={businessName:FIXED_BUSINESS_NAME,logoDataUrl:"",businessAddress:"Av. Tupassi, 4985 - Jardim Progresso, Assis Chateaubriand - PR",businessMapLink:"",ownerWhatsapp:"44999258615",confirmationMessage:DEFAULT_CONFIRMATION_MESSAGE,clientCampaignMessage:DEFAULT_CLIENT_CAMPAIGN_MESSAGE,services:DEFAULT_SERVICES,workdays:[1,2,3,4,5,6],startTime:"08:00",endTime:"18:00",slotDuration:30,adminEmail:"admin@barbearia.com",adminPassword:"1234",blockedDates:[],blockedSlots:{},lunchBreaks:[],autoCleanFinance30Days:false,lastFinanceCleanupAt:""};
 let settings={...DEFAULT_SETTINGS},selectedDate="",selectedSlot="",selectedMonth="",selectedServiceId="",quickSelected=null,quickServiceId="",bookedAppointments=[],appointmentsCache=[],clientsCache=[],currentClient=null,unsubscribeAppointments=null,unsubscribeClientAppointment=null,activeClientAppointmentId="",firstRealtimeLoad=true,knownAppointmentIds=new Set(),lastStatusById=new Map(),lastClientStatus="",globalAudioContext=null,campaignQueue=[],campaignIndex=0,pendingLogoDataUrl="";
 function normalizeLunchBreaks(list){return Array.isArray(list)?list.filter(b=>b&&b.start&&b.end&&minutesFromTime(b.start)<minutesFromTime(b.end)).map((b,i)=>({id:b.id||("pause_"+Date.now()+"_"+i),label:String(b.label||"Almoço"),start:b.start,end:b.end,active:typeof b.active==="boolean"?b.active:true})):[]}function getActiveLunchBreaks(){settings.lunchBreaks=normalizeLunchBreaks(settings.lunchBreaks);return settings.lunchBreaks.filter(b=>b.active)}
 function normalizeServices(services){const incoming=Array.isArray(services)?services:[],map=new Map(incoming.map(s=>[s.id,s]));return DEFAULT_SERVICES.map(def=>{const saved=map.get(def.id)||{};return{id:def.id,name:String(saved.name||def.name),duration:Number(saved.duration||def.duration),price:Number(saved.price ?? def.price ?? 0),active:typeof saved.active==="boolean"?saved.active:def.active}})}
@@ -368,7 +414,73 @@ function getFinishedAppointmentsInPeriod(){
     .filter(a=>!end || String(a.date||"")<=end)
     .sort((a,b)=>`${b.date||""} ${b.time||""}`.localeCompare(`${a.date||""} ${a.time||""}`));
 }
+
+function getCutoffDateForFinanceCleanup(){
+  const cutoff=new Date();
+  cutoff.setDate(cutoff.getDate()-30);
+  return toDateInputValue(cutoff);
+}
+function isOldFinanceRecord(item){
+  if(!item||item.status!=="finished")return false;
+  if(!item.date)return false;
+  return item.date < getCutoffDateForFinanceCleanup();
+}
+function updateFinanceCleanupUi(){
+  if($("autoCleanFinance30Days"))$("autoCleanFinance30Days").value=String(Boolean(settings.autoCleanFinance30Days));
+  if($("financeCleanupStatus")){
+    $("financeCleanupStatus").value=settings.autoCleanFinance30Days
+      ?"Ativo: apaga após 30 dias"
+      :"Desativado: mantém histórico";
+  }
+}
+async function saveFinanceCleanupPreference(){
+  if(!$("autoCleanFinance30Days"))return;
+  const enabled=$("autoCleanFinance30Days").value==="true";
+  settings.autoCleanFinance30Days=enabled;
+  try{
+    await setDoc(doc(db,"barbeariaRodrigues","settings"),settings);
+    updateFinanceCleanupUi();
+    showToast(enabled?"Limpeza automática ativada.":"Limpeza automática desativada.","ok");
+    if(enabled) await cleanOldFinanceRecords(false);
+  }catch(e){
+    console.error(e);
+    showToast("Não foi possível salvar a preferência de limpeza.","err");
+  }
+}
+async function cleanOldFinanceRecords(manual=false){
+  const oldItems=(appointmentsCache||[]).filter(isOldFinanceRecord);
+  if(oldItems.length===0){
+    if(manual)showToast("Não há registros financeiros com mais de 30 dias para apagar.","info",5000);
+    updateFinanceCleanupUi();
+    return;
+  }
+  if(manual){
+    const ok=await askConfirm({
+      title:"Apagar registros financeiros antigos?",
+      text:`Serão apagados ${oldItems.length} registro(s) financeiro(s) finalizado(s) com mais de 30 dias. Clientes cadastrados não serão apagados.`,
+      confirmText:"Apagar registros",
+      cancelText:"Cancelar",
+      type:"danger",
+      icon:"🗑️"
+    });
+    if(!ok)return;
+  }
+  try{
+    for(const item of oldItems){
+      await deleteDoc(doc(db,"appointments",item.id));
+    }
+    settings.lastFinanceCleanupAt=new Date().toISOString();
+    try{await setDoc(doc(db,"barbeariaRodrigues","settings"),settings)}catch(e){}
+    showToast(`${oldItems.length} registro(s) financeiro(s) antigo(s) apagado(s).`,"ok",6500);
+    await loadAppointments();
+  }catch(e){
+    console.error(e);
+    showToast("Não foi possível apagar os registros financeiros antigos.","err");
+  }
+}
+
 function renderFinanceReport(){
+  updateFinanceCleanupUi();
   const totalEl=$("financeTotalPeriod"),cards=$("financeReportCards"),list=$("financeEntriesList");
   if(!totalEl||!cards||!list)return;
   const items=getFinishedAppointmentsInPeriod();
@@ -434,7 +546,10 @@ function renderLogo(targetId){const el=$(targetId);if(!el)return;const logo=sett
 function updateBrand(){settings.businessName=FIXED_BUSINESS_NAME;const name=FIXED_BUSINESS_NAME,address=settings.businessAddress||DEFAULT_SETTINGS.businessAddress,phone=formatPhoneBR(settings.ownerWhatsapp||DEFAULT_SETTINGS.ownerWhatsapp);$("brandName").textContent=name;$("footerBrand").textContent=name;$("brandAddress").textContent=`📍 ${address}`;$("brandWhatsapp").textContent=`📲 WhatsApp: ${phone}`;document.title=name;renderLogo("mainLogo");renderLogo("logoPreview");updateManifest()}
 function updateManifest(){try{const manifest={name:FIXED_BUSINESS_NAME,short_name:"Agenda",start_url:".",display:"standalone",background_color:"#080808",theme_color:"#080808",description:"Sistema de agendamento online para barbearia"};const blob=new Blob([JSON.stringify(manifest)],{type:"application/json"});const url=URL.createObjectURL(blob);let link=document.querySelector('link[rel="manifest"]');if(!link){link=document.createElement("link");link.rel="manifest";document.head.appendChild(link)}link.href=url}catch(e){console.error(e)}}
 async function loadSettings(){if(!firebaseReady){settings={...DEFAULT_SETTINGS};applySettingsToForm();return}try{const ref=doc(db,"barbeariaRodrigues","settings"),snap=await getDoc(ref);if(snap.exists()){settings={...DEFAULT_SETTINGS,...snap.data()};settings.businessName=FIXED_BUSINESS_NAME;settings.services=normalizeServices(settings.services);if(!settings.blockedSlots||typeof settings.blockedSlots!=="object")settings.blockedSlots={};settings.lunchBreaks=normalizeLunchBreaks(settings.lunchBreaks)}else{await setDoc(ref,DEFAULT_SETTINGS);settings={...DEFAULT_SETTINGS};settings.lunchBreaks=normalizeLunchBreaks(settings.lunchBreaks)}if(!selectedServiceId)selectedServiceId=activeServices()[0]?.id||"corte";if(!quickServiceId)quickServiceId=selectedServiceId;applySettingsToForm()}catch(e){console.error(e)}}
-function applySettingsToForm(){settings.businessName=FIXED_BUSINESS_NAME;settings.services=normalizeServices(settings.services);updateBrand();document.querySelectorAll(".workday").forEach(check=>{check.checked=settings.workdays.includes(Number(check.value))});$("businessName").value=FIXED_BUSINESS_NAME;$("ownerWhatsapp").value=settings.ownerWhatsapp||"";$("businessAddress").value=settings.businessAddress||"";$("businessMapLink").value=settings.businessMapLink||"";$("confirmationMessage").value=settings.confirmationMessage||DEFAULT_CONFIRMATION_MESSAGE;$("adminEmail").value=settings.adminEmail||"admin@barbearia.com";$("adminPassword").value=settings.adminPassword||"1234";$("startTime").value=settings.startTime||"08:00";$("endTime").value=settings.endTime||"18:00";$("slotDuration").value=String(settings.slotDuration||30);if($("clientCampaignMessage"))$("clientCampaignMessage").value=String(settings.clientCampaignMessage||DEFAULT_CLIENT_CAMPAIGN_MESSAGE).replaceAll("\\n","\n");renderServicesAdminList();renderServiceChoices("serviceList",selectedServiceId,async id=>{selectedServiceId=id;selectedDate="";selectedSlot="";bookedAppointments=[];renderClientDates();scrollToArea("dateList",260)});renderServiceChoices("quickServiceList",quickServiceId,async id=>{quickServiceId=id;quickSelected=null;$("quickConfirmBox").classList.add("hidden");await renderAvailableTimes();scrollToArea("availableList",260)});updateClientLink();renderBlockedDates();renderLunchBreaksList();renderBlockedSlotSelect();renderBlockedSlotsList();renderMonthOptions();updateClientUi();renderDashboardSummary()}
+function applySettingsToForm(){settings.businessName=FIXED_BUSINESS_NAME;settings.services=normalizeServices(settings.services);updateBrand();document.querySelectorAll(".workday").forEach(check=>{check.checked=settings.workdays.includes(Number(check.value))});$("businessName").value=FIXED_BUSINESS_NAME;$("ownerWhatsapp").value=settings.ownerWhatsapp||"";$("businessAddress").value=settings.businessAddress||"";$("businessMapLink").value=settings.businessMapLink||"";$("confirmationMessage").value=settings.confirmationMessage||DEFAULT_CONFIRMATION_MESSAGE;$("adminEmail").value=settings.adminEmail||"admin@barbearia.com";$("adminPassword").value=settings.adminPassword||"1234";$("startTime").value=settings.startTime||"08:00";$("endTime").value=settings.endTime||"18:00";$("slotDuration").value=String(settings.slotDuration||30);if($("clientCampaignMessage"))$("clientCampaignMessage").value=String(settings.clientCampaignMessage||DEFAULT_CLIENT_CAMPAIGN_MESSAGE).replaceAll("\\n","\n");if($("autoCleanFinance30Days")){
+  $("autoCleanFinance30Days").value=String(Boolean(settings.autoCleanFinance30Days));
+  $("financeCleanupStatus").value=settings.autoCleanFinance30Days?"Ativo: apaga após 30 dias":"Desativado: mantém histórico";
+}renderServicesAdminList();renderServiceChoices("serviceList",selectedServiceId,async id=>{selectedServiceId=id;selectedDate="";selectedSlot="";bookedAppointments=[];renderClientDates();scrollToArea("dateList",260)});renderServiceChoices("quickServiceList",quickServiceId,async id=>{quickServiceId=id;quickSelected=null;$("quickConfirmBox").classList.add("hidden");await renderAvailableTimes();scrollToArea("availableList",260)});updateClientLink();renderBlockedDates();renderLunchBreaksList();renderBlockedSlotSelect();renderBlockedSlotsList();renderMonthOptions();updateClientUi();renderDashboardSummary()}
 function updateClientUi(){if(currentClient){$("clientRegisterBox").classList.add("hidden");$("scheduleBox").classList.remove("hidden");$("clientWelcome").classList.remove("hidden");$("clientWelcomeName").textContent=currentClient.name;$("clientWelcomePhone").textContent=currentClient.phone}else{$("clientRegisterBox").classList.remove("hidden");$("scheduleBox").classList.add("hidden");$("clientWelcome").classList.add("hidden")}}
 function renderServicesAdminList(){const c=$("servicesAdminList");if(!c)return;c.innerHTML="";settings.services.forEach(s=>{const div=document.createElement("div");div.className="service-admin-row";div.innerHTML=`<div><label>Nome do serviço</label><input id="serviceName_${s.id}" type="text" value="${s.name||""}"></div><div><label>Duração</label><input id="serviceDuration_${s.id}" type="number" min="10" step="5" value="${Number(s.duration||30)}"></div><div><label>Valor R$</label><input id="servicePrice_${s.id}" type="number" min="0" step="1" value="${Number(s.price||0)}"></div><div><label>Ativo</label><select id="serviceActive_${s.id}"><option value="true" ${s.active?"selected":""}>Sim</option><option value="false" ${!s.active?"selected":""}>Não</option></select></div>`;c.appendChild(div)})}
 function renderServiceChoices(containerId,currentId,onSelect){const c=$(containerId);if(!c)return;const services=activeServices();if(services.length===0){c.innerHTML=`<div class="empty">Nenhum serviço ativo. Ative um serviço no painel do administrador.</div>`;return}if(!currentId||!services.some(s=>s.id===currentId)){currentId=services[0].id;if(containerId==="serviceList")selectedServiceId=currentId;if(containerId==="quickServiceList")quickServiceId=currentId}c.innerHTML="";services.forEach(s=>{const btn=document.createElement("button");btn.className="service-card"+(s.id===currentId?" active":"");btn.type="button";btn.innerHTML=`<strong>${s.name}</strong><span>${s.duration} min • ${formatCurrency(s.price)}</span>`;btn.onclick=()=>{c.querySelectorAll(".service-card").forEach(card=>card.classList.remove("active"));btn.classList.add("active");onSelect(s.id)};c.appendChild(btn)})}
@@ -459,7 +574,7 @@ async function confirmQuickBooking(){startAudioContext();if(!quickSelected){show
 async function openClientAppointments(){startAudioContext();showOnly("clientAppointmentsView");$("clientLiveStatusView").classList.remove("hidden");$("myAppointmentsList").innerHTML="";if(currentClient&&currentClient.phone){$("myAppointmentsPhone").value=currentClient.phone;await loadMyAppointments()}}
 async function loadMyAppointments(){startAudioContext();const phone=cleanPhone($("myAppointmentsPhone").value);if(!phone||phone.length<8){showMessage("myAppointmentsMsg","Digite seu WhatsApp corretamente.","err");return}const c=$("myAppointmentsList");c.innerHTML=`<div class="empty">Buscando seus agendamentos...</div>`;try{const q=query(collection(db,"appointments"),where("phone","==",phone)),snap=await getDocs(q),items=[];snap.forEach(d=>items.push({id:d.id,...d.data()}));const today=new Date();today.setHours(0,0,0,0);const activeItems=items.filter(item=>{if(!item.date)return true;if(isCanceledStatus(item.status))return false;const[y,m,d]=item.date.split("-").map(Number),itemDate=new Date(y,m-1,d);itemDate.setHours(0,0,0,0);return itemDate>=today||item.status==="finished"}).sort((a,b)=>`${a.date||""} ${a.time||""}`.localeCompare(`${b.date||""} ${b.time||""}`));if(activeItems.length===0){c.innerHTML=`<div class="empty">Nenhum agendamento futuro encontrado para este WhatsApp.</div>`;return}c.innerHTML="";activeItems.forEach(item=>{const div=document.createElement("div");div.className="appointment";const info=getStatusInfo(item.status||"pending");div.innerHTML=`<div><strong>${item.name||"Cliente"}</strong><span>Serviço: ${item.serviceName||"Corte"}</span><span>Valor: ${formatCurrency(appointmentValue(item))}</span><span>Data: ${formatDateBR(item.date)} às ${item.time}</span><span class="status ${info.className}">${info.text}</span>${item.status==="finished"?`<span class="payment-badge">${paymentIcon(item.paymentMethod)} Pagamento: ${normalizePaymentMethod(item.paymentMethod)}</span>`:""}</div><div class="appointment-actions">${item.status==="finished"?"":`<button class="danger" onclick="cancelMyAppointment('${item.id}', '${item.date}', '${item.time}')">Desmarcar corte</button>`}</div>`;c.appendChild(div)})}catch(e){console.error(e);c.innerHTML=`<div class="empty">Não foi possível buscar seus agendamentos.</div>`}}
 async function cancelMyAppointment(id,date,time){startAudioContext();const ok=await askConfirm({title:"Desmarcar corte?",text:`Seu horário de ${formatDateBR(date)} às ${time} será liberado para outro cliente.`,confirmText:"Desmarcar",cancelText:"Voltar",type:"danger",icon:"⚠️"});if(!ok)return;try{await updateDoc(doc(db,"appointments",id),{status:"canceled_by_client",canceledBy:"client",canceledAt:serverTimestamp(),updatedAt:serverTimestamp()});showMessage("myAppointmentsMsg","✅ Seu corte foi desmarcado com sucesso. A barbearia será avisada no painel.","ok",8000);await loadMyAppointments()}catch(e){console.error(e);showMessage("myAppointmentsMsg","Não foi possível desmarcar o corte.","err")}}
-async function saveSettings(){const workdays=Array.from(document.querySelectorAll(".workday")).filter(c=>c.checked).map(c=>Number(c.value));if(workdays.length===0){showToast("Escolha pelo menos um dia de trabalho.","err");return}const startTime=$("startTime").value,endTime=$("endTime").value;if(minutesFromTime(startTime)>=minutesFromTime(endTime)){showToast("O horário inicial precisa ser menor que o horário final.","err");return}const updatedServices=settings.services.map(s=>({id:s.id,name:($(`serviceName_${s.id}`)?.value||s.name).trim()||s.name,duration:Number($(`serviceDuration_${s.id}`)?.value||s.duration||30),price:Number($(`servicePrice_${s.id}`)?.value||s.price||0),active:($(`serviceActive_${s.id}`)?.value||"true")==="true"}));if(updatedServices.filter(s=>s.active).length===0){showToast("Deixe pelo menos um serviço ativo.","err");return}settings={...settings,businessName:FIXED_BUSINESS_NAME,businessAddress:$("businessAddress").value.trim()||DEFAULT_SETTINGS.businessAddress,businessMapLink:$("businessMapLink").value.trim(),ownerWhatsapp:cleanPhone($("ownerWhatsapp").value)||DEFAULT_SETTINGS.ownerWhatsapp,confirmationMessage:$("confirmationMessage").value.trim()||DEFAULT_CONFIRMATION_MESSAGE,clientCampaignMessage:$("clientCampaignMessage")?$("clientCampaignMessage").value.trim().replaceAll("\\n","\n")||DEFAULT_CLIENT_CAMPAIGN_MESSAGE:settings.clientCampaignMessage,services:updatedServices,adminEmail:$("adminEmail").value.trim()||"admin@barbearia.com",adminPassword:$("adminPassword").value.trim()||"1234",workdays,startTime,endTime,slotDuration:Number($("slotDuration").value),blockedDates:settings.blockedDates||[],blockedSlots:settings.blockedSlots||{},lunchBreaks:normalizeLunchBreaks(settings.lunchBreaks)};if(!activeServices().some(s=>s.id===selectedServiceId))selectedServiceId=activeServices()[0]?.id||"corte";if(!activeServices().some(s=>s.id===quickServiceId))quickServiceId=selectedServiceId;try{await setDoc(doc(db,"barbeariaRodrigues","settings"),settings);showToast("Configurações salvas com sucesso.","ok");applySettingsToForm()}catch(e){console.error(e);showToast("Erro ao salvar configurações.","err")}}
+async function saveSettings(){const workdays=Array.from(document.querySelectorAll(".workday")).filter(c=>c.checked).map(c=>Number(c.value));if(workdays.length===0){showToast("Escolha pelo menos um dia de trabalho.","err");return}const startTime=$("startTime").value,endTime=$("endTime").value;if(minutesFromTime(startTime)>=minutesFromTime(endTime)){showToast("O horário inicial precisa ser menor que o horário final.","err");return}const updatedServices=settings.services.map(s=>({id:s.id,name:($(`serviceName_${s.id}`)?.value||s.name).trim()||s.name,duration:Number($(`serviceDuration_${s.id}`)?.value||s.duration||30),price:Number($(`servicePrice_${s.id}`)?.value||s.price||0),active:($(`serviceActive_${s.id}`)?.value||"true")==="true"}));if(updatedServices.filter(s=>s.active).length===0){showToast("Deixe pelo menos um serviço ativo.","err");return}settings={...settings,businessName:FIXED_BUSINESS_NAME,businessAddress:$("businessAddress").value.trim()||DEFAULT_SETTINGS.businessAddress,businessMapLink:$("businessMapLink").value.trim(),ownerWhatsapp:cleanPhone($("ownerWhatsapp").value)||DEFAULT_SETTINGS.ownerWhatsapp,confirmationMessage:$("confirmationMessage").value.trim()||DEFAULT_CONFIRMATION_MESSAGE,clientCampaignMessage:$("clientCampaignMessage")?$("clientCampaignMessage").value.trim().replaceAll("\\n","\n")||DEFAULT_CLIENT_CAMPAIGN_MESSAGE:settings.clientCampaignMessage,services:updatedServices,adminEmail:$("adminEmail").value.trim()||"admin@barbearia.com",adminPassword:$("adminPassword").value.trim()||"1234",workdays,startTime,endTime,slotDuration:Number($("slotDuration").value),blockedDates:settings.blockedDates||[],blockedSlots:settings.blockedSlots||{},lunchBreaks:normalizeLunchBreaks(settings.lunchBreaks),autoCleanFinance30Days:$("autoCleanFinance30Days")?$("autoCleanFinance30Days").value==="true":Boolean(settings.autoCleanFinance30Days),lastFinanceCleanupAt:settings.lastFinanceCleanupAt||""};if(!activeServices().some(s=>s.id===selectedServiceId))selectedServiceId=activeServices()[0]?.id||"corte";if(!activeServices().some(s=>s.id===quickServiceId))quickServiceId=selectedServiceId;try{await setDoc(doc(db,"barbeariaRodrigues","settings"),settings);showToast("Configurações salvas com sucesso.","ok");applySettingsToForm()}catch(e){console.error(e);showToast("Erro ao salvar configurações.","err")}}
 async function addBlockedDate(){const date=$("blockDate").value;if(!date){showToast("Escolha uma data para bloquear.","err");return}if(!Array.isArray(settings.blockedDates))settings.blockedDates=[];if(!settings.blockedDates.includes(date))settings.blockedDates.push(date);$("blockDate").value="";await saveSettings();showToast("Data bloqueada. Ela não aparecerá para o cliente.","ok")}
 async function removeBlockedDate(date){const ok=await askConfirm({title:"Liberar data?",text:`A data ${formatDateBR(date)} voltará a aparecer para os clientes.`,confirmText:"Liberar",cancelText:"Cancelar",type:"primary",icon:"📅"});if(!ok)return;settings.blockedDates=(settings.blockedDates||[]).filter(d=>d!==date);await saveSettings()}
 function renderBlockedDates(){const list=$("blockedDatesList");if(!list)return;list.innerHTML="";const dates=settings.blockedDates||[];if(dates.length===0){list.innerHTML=`<div class="empty">Nenhuma data bloqueada.</div>`;return}dates.sort().forEach(date=>{const item=document.createElement("div");item.className="blocked-item";item.innerHTML=`<span>📅 ${formatDateBR(date)}</span><button class="danger" type="button">Liberar</button>`;item.querySelector("button").onclick=()=>removeBlockedDate(date);list.appendChild(item)})}
@@ -528,7 +643,7 @@ async function loadClients(){const c=$("clientsList");if(!c)return;c.innerHTML=`
 function renderClientsList(){const c=$("clientsList");if(!c)return;const search=String($("clientSearch")?$("clientSearch").value:"").toLowerCase().trim();let items=[...clientsCache];if(search)items=items.filter(i=>String(i.name||"").toLowerCase().includes(search)||String(i.phone||"").toLowerCase().includes(search));items=sortClients(items);if(items.length===0){c.innerHTML=`<div class="empty">Nenhum cliente encontrado.</div>`;return}c.innerHTML="";items.forEach(item=>{const promo=`Olá, ${item.name||"cliente"}! Aqui é da ${settings.businessName||FIXED_BUSINESS_NAME}. Passando para avisar que temos horários disponíveis para corte.`,url=makeWhatsAppUrl(item.phone,promo),div=document.createElement("div");div.className="client-item";div.innerHTML=`<div><strong>${item.name||"Cliente"}</strong><span>WhatsApp: ${item.phone||""}</span></div><div class="appointment-actions"><button class="success" type="button" data-action="campaign-single">Enviar mensagem</button><a class="btn blue" href="${url}" target="_blank">Chamar no WhatsApp</a><button class="danger" type="button" onclick="deleteClient('${item.id}')">Excluir cliente</button></div>`;div.querySelector('[data-action="campaign-single"]').onclick=()=>openWhatsAppForClient(item);c.appendChild(div)})}
 async function deleteClient(id){const ok=await askConfirm({title:"Excluir cliente?",text:"Isso remove o cliente da lista, mas não cancela automaticamente cortes já agendados.",confirmText:"Excluir",cancelText:"Cancelar",type:"danger",icon:"🗑️"});if(!ok)return;try{await deleteDoc(doc(db,"clientes",id));showToast("Cliente excluído com sucesso.","ok");await loadClients()}catch(e){console.error(e);showToast("Não foi possível excluir o cliente.","err")}}
 function updateClientLink(){$("clientLink").value=getClientPublicLink()}async function copyClientLink(){const link=$("clientLink").value;try{await navigator.clipboard.writeText(link);showToast("Link copiado com sucesso.","ok")}catch{$("clientLink").select();document.execCommand("copy");showToast("Link copiado.","ok")}}
-function openOwnerTab(tab){$("tabSchedule").classList.remove("active");$("tabAppointments").classList.remove("active");if($("tabFinance"))$("tabFinance").classList.remove("active");$("tabClients").classList.remove("active");$("ownerSchedule").classList.add("hidden");$("ownerAppointments").classList.add("hidden");if($("ownerFinance"))$("ownerFinance").classList.add("hidden");$("ownerClients").classList.add("hidden");if(tab==="schedule"){$("tabSchedule").classList.add("active");$("ownerSchedule").classList.remove("hidden")}if(tab==="appointments"){$("tabAppointments").classList.add("active");$("ownerAppointments").classList.remove("hidden");renderAppointmentsList();renderFinanceBreakdown()}if(tab==="finance"){if($("tabFinance"))$("tabFinance").classList.add("active");if($("ownerFinance"))$("ownerFinance").classList.remove("hidden");if(!$("financeStartDate").value&&!$("financeEndDate").value)setFinanceMonth();else renderFinanceReport()}if(tab==="clients"){$("tabClients").classList.add("active");$("ownerClients").classList.remove("hidden");if($("clientCampaignMessage"))$("clientCampaignMessage").value=String(settings.clientCampaignMessage||DEFAULT_CLIENT_CAMPAIGN_MESSAGE).replaceAll("\\n","\n");loadClients()}}
+function openOwnerTab(tab){$("tabSchedule").classList.remove("active");$("tabAppointments").classList.remove("active");if($("tabFinance"))$("tabFinance").classList.remove("active");$("tabClients").classList.remove("active");$("ownerSchedule").classList.add("hidden");$("ownerAppointments").classList.add("hidden");if($("ownerFinance"))$("ownerFinance").classList.add("hidden");$("ownerClients").classList.add("hidden");if(tab==="schedule"){$("tabSchedule").classList.add("active");$("ownerSchedule").classList.remove("hidden")}if(tab==="appointments"){$("tabAppointments").classList.add("active");$("ownerAppointments").classList.remove("hidden");renderAppointmentsList();renderFinanceBreakdown()}if(tab==="finance"){if($("tabFinance"))$("tabFinance").classList.add("active");if($("ownerFinance"))$("ownerFinance").classList.remove("hidden");updateFinanceCleanupUi();if(settings.autoCleanFinance30Days)cleanOldFinanceRecords(false);if(!$("financeStartDate").value&&!$("financeEndDate").value)setFinanceMonth();else renderFinanceReport()}if(tab==="clients"){$("tabClients").classList.add("active");$("ownerClients").classList.remove("hidden");if($("clientCampaignMessage"))$("clientCampaignMessage").value=String(settings.clientCampaignMessage||DEFAULT_CLIENT_CAMPAIGN_MESSAGE).replaceAll("\\n","\n");loadClients()}}
 function showClientHome(){if(unsubscribeAppointments&&!$("ownerView").classList.contains("hidden")){unsubscribeAppointments();unsubscribeAppointments=null}showOnly("clientHomeView");if(activeClientAppointmentId)$("clientLiveStatusView").classList.remove("hidden")}
 function openGuidedBooking(){startAudioContext();showOnly("guidedView");if(activeClientAppointmentId)$("clientLiveStatusView").classList.remove("hidden");updateClientUi();renderServiceChoices("serviceList",selectedServiceId,async id=>{selectedServiceId=id;selectedDate="";selectedSlot="";bookedAppointments=[];renderClientDates();scrollToArea("dateList",260)});renderMonthOptions();renderClientDates()}
 async function openAvailableTimes(){startAudioContext();showOnly("availableView");if(activeClientAppointmentId)$("clientLiveStatusView").classList.remove("hidden");renderServiceChoices("quickServiceList",quickServiceId,async id=>{quickServiceId=id;quickSelected=null;$("quickConfirmBox").classList.add("hidden");await renderAvailableTimes();scrollToArea("availableList",260)});$("quickConfirmBox").classList.add("hidden");await renderAvailableTimes()}
@@ -661,7 +776,7 @@ async function clearSavedAdminLogin(){
   showToast("Login salvo apagado deste aparelho.","ok");
 }
 
-Object.assign(window,{showClientHome,openGuidedBooking,openAvailableTimes,showOwnerLogin,ownerLogin,adminLogout,saveSettings,addBlockedDate,removeBlockedDate,bookAppointment,copyClientLink,openOwnerTab,loadAppointments,clearFilter,registerClient,changeClient,loadClients,renderClientsList,renderAppointmentsList,renderClientDates,selectQuickSlot,confirmQuickBooking,openClientAppointments,loadMyAppointments,cancelMyAppointment,deleteClient,deleteAppointmentHistory,saveClientCampaignMessage,startClientCampaign,sendNextCampaignClient,cancelClientCampaign,openBusinessMap,openBusinessWhatsApp,handleLogoFile,saveLogoImage,removeLogoImage,renderBlockedSlotSelect,addBlockedSlot,removeBlockedSlot,addLunchBreak,removeLunchBreak,finishAppointment,openFinishPaymentModal,closePaymentModal,completeServiceWithPayment,renderFinanceReport,setFinanceToday,setFinanceMonth,setFinanceAll});
+Object.assign(window,{showClientHome,openGuidedBooking,openAvailableTimes,showOwnerLogin,ownerLogin,adminLogout,saveSettings,addBlockedDate,removeBlockedDate,bookAppointment,copyClientLink,openOwnerTab,loadAppointments,clearFilter,registerClient,changeClient,loadClients,renderClientsList,renderAppointmentsList,renderClientDates,selectQuickSlot,confirmQuickBooking,openClientAppointments,loadMyAppointments,cancelMyAppointment,deleteClient,deleteAppointmentHistory,saveClientCampaignMessage,startClientCampaign,sendNextCampaignClient,cancelClientCampaign,openBusinessMap,openBusinessWhatsApp,handleLogoFile,saveLogoImage,removeLogoImage,renderBlockedSlotSelect,addBlockedSlot,removeBlockedSlot,addLunchBreak,removeLunchBreak,finishAppointment,openFinishPaymentModal,closePaymentModal,completeServiceWithPayment,renderFinanceReport,setFinanceToday,setFinanceMonth,setFinanceAll,saveFinanceCleanupPreference,cleanOldFinanceRecords});
 currentClient=loadClientFromStorage();await loadSettings();updateSavedLoginBox();showClientHome();
 </script>
 
