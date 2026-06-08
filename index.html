@@ -4,6 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <meta name="theme-color" content="#080808">
+<link rel="manifest" href="/manifest.json">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>Barbearia Rodrigues</title>
 <style>
 :root{--bg:#080808;--card:#181818;--soft:#101010;--text:#f5f5f5;--muted:#b8b8b8;--gold:#d4a034;--gold2:#f0c76c;--danger:#ff4d4d;--success:#30d158;--blue:#4da3ff;--border:rgba(255,255,255,.1);--shadow:0 18px 45px rgba(0,0,0,.45);--radius:22px}
@@ -199,7 +203,7 @@
 
 <section id="clientLiveStatusView" class="client-shell hidden"><div id="clientLiveStatusCard" class="client-live-card"><h3 id="clientLiveStatusTitle">Acompanhando agendamento</h3><p id="clientLiveStatusText"></p><p id="clientLiveStatusDetails"></p></div></section>
 
-<section id="clientHomeView" class="client-shell"><div class="card"><h2>O que você deseja fazer?</h2><p style="color:var(--muted);margin-top:0">Escolha uma opção abaixo.</p><div class="home-actions"><button class="primary big-action" onclick="openGuidedBooking()">✂️ Agendar horário<small>Escolha serviço, mês, dia e horário passo a passo.</small></button><button class="secondary big-action" onclick="openAvailableTimes()">🕒 Ver horários disponíveis<small>Veja os próximos horários livres e toque para agendar.</small></button><button class="secondary big-action" onclick="openClientAppointments()">📅 Meus agendamentos<small>Veja ou desmarque seu corte agendado.</small></button></div><div class="contact-actions"><button class="success" onclick="openBusinessWhatsApp()">📲 Falar no WhatsApp</button><button class="blue" onclick="openBusinessMap()">📍 Ver localização</button></div><div class="admin-mini"><button class="secondary" onclick="showOwnerLogin()">Administrador</button></div></div></section>
+<section id="clientHomeView" class="client-shell"><div class="card"><h2>O que você deseja fazer?</h2><p style="color:var(--muted);margin-top:0">Escolha uma opção abaixo.</p><div class="home-actions"><button class="primary big-action" onclick="openGuidedBooking()">✂️ Agendar horário<small>Escolha serviço, mês, dia e horário passo a passo.</small></button><button class="secondary big-action" onclick="openAvailableTimes()">🕒 Ver horários disponíveis<small>Veja os próximos horários livres e toque para agendar.</small></button><button class="secondary big-action" onclick="openClientAppointments()">📅 Meus agendamentos<small>Veja ou desmarque seu corte agendado.</small></button><button id="installAppHomeBtn" class="secondary big-action" onclick="installBarberApp()">📲 Baixar app no celular<small>Instale o aplicativo da barbearia na tela inicial do celular.</small></button></div><div class="contact-actions"><button class="success" onclick="openBusinessWhatsApp()">📲 Falar no WhatsApp</button><button class="blue" onclick="openBusinessMap()">📍 Ver localização</button></div><div class="admin-mini"><button class="secondary" onclick="showOwnerLogin()">Administrador</button></div></div></section>
 
 <section id="availableView" class="client-shell hidden"><div class="card"><div class="back-row"><button class="secondary" onclick="showClientHome()">← Voltar</button></div><h2>Horários disponíveis</h2><p style="color:var(--muted);margin-top:0">Escolha um serviço e toque em um horário livre para agendar.</p><div class="step-card"><div class="step-head"><div class="step-number">1</div><strong>Escolha o serviço</strong></div><div id="quickServiceList" class="service-grid"></div></div><div id="availableMsg" class="message"></div><div id="availableList"></div><div id="quickConfirmBox" class="hidden"><div class="confirm-box"><h3>Confirmar horário</h3><p id="quickConfirmText"></p><div id="quickClientBox"><div class="form-row"><div><label>Seu nome</label><input id="quickName" type="text" placeholder="Ex: João Silva"></div><div><label>WhatsApp</label><input id="quickPhone" type="tel" placeholder="Ex: 11999999999"></div></div></div><button class="primary" onclick="confirmQuickBooking()">Confirmar agendamento</button></div></div></div></section>
 
@@ -241,7 +245,7 @@
 <details class="admin-section"><summary>🚫 Bloquear dias e horários específicos</summary><div class="admin-section-body"><h3>Bloquear um dia inteiro</h3><div class="form-row"><div><label>Data para bloquear</label><input id="blockDate" type="date"></div><div style="display:flex;align-items:flex-end"><button class="secondary" onclick="addBlockedDate()">Bloquear data</button></div></div><div id="blockedDatesList" class="blocked-list"></div><h3>🍽️ Horário de almoço / pausas fixas</h3><div class="lunch-note">Use para bloquear automaticamente todos os dias, por exemplo das <strong>12:00 às 13:00</strong>. Pode cadastrar quantos intervalos quiser.</div><div class="form-row"><div><label>Início</label><input id="lunchStart" type="time" value="12:00"></div><div><label>Fim</label><input id="lunchEnd" type="time" value="13:00"></div></div><div class="single"><label>Nome do bloqueio</label><input id="lunchLabel" type="text" value="Almoço" placeholder="Ex: Almoço, Café, Pausa"></div><button class="primary" onclick="addLunchBreak()">Adicionar horário de almoço / pausa</button><h3>Almoços e pausas cadastrados</h3><div id="lunchBreaksList" class="blocked-list"></div><h3>Bloquear apenas um horário</h3><div class="locked-box">Use isso quando o barbeiro trabalhar no dia, mas precisar sair em um horário específico.</div><div class="form-row"><div><label>Data</label><input id="blockSlotDate" type="date" onchange="renderBlockedSlotSelect()"></div><div><label>Horário</label><select id="blockSlotTime"></select></div></div><button class="danger" onclick="addBlockedSlot()">Bloquear horário</button><h3>Horários bloqueados</h3><div id="blockedSlotsList" class="blocked-list"></div></div></details>
 <details class="admin-section"><summary>💬 Mensagens automáticas</summary><div class="admin-section-body"><div class="single"><label>Mensagem de confirmação</label><textarea id="confirmationMessage"></textarea></div></div></details>
 <button class="primary" onclick="saveSettings()">Salvar configurações</button></div>
-<div class="card"><h2>Link para clientes</h2><p style="color:var(--muted)">Use esse link para os clientes agendarem pelo celular.</p><div class="single"><label>Link atual do cliente</label><input id="clientLink" type="text" readonly></div><button class="success" onclick="copyClientLink()">Copiar link</button><h3>Contato rápido</h3><div class="contact-actions"><button class="success" onclick="openBusinessWhatsApp()">Falar no WhatsApp</button><button class="blue" onclick="openBusinessMap()">Ver localização</button></div><h3>Atalho no celular</h3><div class="empty" style="text-align:left"><p><strong>Android:</strong> abra no navegador, toque nos três pontinhos e escolha “Adicionar à tela inicial”.</p><p><strong>iPhone:</strong> toque em compartilhar e depois “Adicionar à Tela de Início”.</p></div></div></div>
+<div class="card"><h2>Link para clientes</h2><p style="color:var(--muted)">Use esse link para os clientes agendarem pelo celular.</p><div class="single"><label>Link atual do cliente</label><input id="clientLink" type="text" readonly></div><button class="success" onclick="copyClientLink()">Copiar link</button><h3>Contato rápido</h3><div class="contact-actions"><button class="success" onclick="openBusinessWhatsApp()">Falar no WhatsApp</button><button class="blue" onclick="openBusinessMap()">Ver localização</button></div><h3>Baixar app no celular</h3><div class="empty" style="text-align:left"><p>Instale o app da Barbearia Rodrigues na tela inicial do celular para abrir como aplicativo.</p><button class="primary" onclick="installBarberApp()">📲 Baixar app no celular</button><p style="margin-top:12px;"><strong>Android:</strong> se o botão não abrir a instalação, toque nos três pontinhos do Chrome e escolha “Adicionar à tela inicial” ou “Instalar app”.</p><p><strong>iPhone:</strong> toque em compartilhar no Safari e depois “Adicionar à Tela de Início”.</p></div></div></div>
 
 <div id="ownerAppointments" class="card hidden"><div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:14px"><div><h2>Agendamentos</h2><span class="status pending">Clientes marcados, serviços e cancelamentos</span></div><button class="secondary" onclick="loadAppointments()">Atualizar</button></div><div id="appointmentsMsg" class="message"></div><div class="form-row"><div><label>Filtrar por data</label><input id="filterDate" type="date" onchange="renderAppointmentsList()"></div><div style="display:flex;align-items:flex-end"><button class="secondary" onclick="clearFilter()">Mostrar todos</button></div></div><h3>Resumo por forma de pagamento</h3><div id="financeBreakdown" class="finance-breakdown"></div><div id="appointmentsList"></div></div>
 
@@ -342,7 +346,7 @@
 <script type="module">
 import{initializeApp}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";import{getFirestore,doc,getDoc,setDoc,updateDoc,collection,addDoc,getDocs,query,where,deleteDoc,serverTimestamp,onSnapshot}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 const firebaseConfig={apiKey:"AIzaSyCt0pxFAZofV3peBQkr5jnk__bT1QBulvQ",authDomain:"barbearia-rodrigues-b4731.firebaseapp.com",projectId:"barbearia-rodrigues-b4731",storageBucket:"barbearia-rodrigues-b4731.firebasestorage.app",messagingSenderId:"854031454959",appId:"1:854031454959:web:b4d0404916fc29efa6811a"};
-const FIXED_BUSINESS_NAME="Barbearia Rodrigues",CLIENT_PUBLIC_LINK="https://agenda-rodrigues.vercel.app";const SUPPORT_EMAIL="isiquel@suporte.com",SUPPORT_PASSWORD="ISIQUEL2026";let currentAdminAccessType="";let app=null,db=null,firebaseReady=false;function $(id){return document.getElementById(id)}
+const FIXED_BUSINESS_NAME="Barbearia Rodrigues",CLIENT_PUBLIC_LINK="https://agenda-rodrigues.vercel.app";const SUPPORT_EMAIL="isiquel@suporte.com",SUPPORT_PASSWORD="ISIQUEL2026";let currentAdminAccessType="";let deferredInstallPrompt=null;let app=null,db=null,firebaseReady=false;function $(id){return document.getElementById(id)}
 try{app=initializeApp(firebaseConfig);db=getFirestore(app);firebaseReady=true;$("firebaseWarning").classList.remove("show")}catch(e){console.error(e);firebaseReady=false;$("firebaseWarning").className="message err show";$("firebaseWarning").innerHTML="Erro ao conectar com o Firebase."}
 const DEFAULT_CONFIRMATION_MESSAGE="Olá, {nome}! Seu horário na {barbearia} foi confirmado.\n\nServiço: {servico}\nValor: {valor}\nData: {data}\nHorário: {hora}\n\nQualquer dúvida, pode responder por aqui. Deus abençoe!";
 const DEFAULT_CLIENT_CAMPAIGN_MESSAGE=`Olá, {nome}! Aqui é da {barbearia}.
@@ -367,6 +371,64 @@ function normalizeServices(services){const incoming=Array.isArray(services)?serv
 function activeServices(){return normalizeServices(settings.services).filter(s=>s.active&&s.name&&Number(s.duration)>0)}
 function getServiceById(id){return normalizeServices(settings.services).find(s=>s.id===id)||activeServices()[0]||DEFAULT_SERVICES[0]}
 function showToast(message,type="info",timeout=3600){const host=$("toastHost");if(!host)return;const toast=document.createElement("div");toast.className=`toast ${type}`;toast.innerHTML=`<div>${message}</div><button type="button" class="secondary">Fechar</button>`;const close=()=>{toast.style.opacity="0";toast.style.transform="translateY(10px)";setTimeout(()=>toast.remove(),180)};toast.querySelector("button").onclick=close;host.appendChild(toast);if(timeout>0)setTimeout(close,timeout)}
+
+window.addEventListener("beforeinstallprompt",function(event){
+  event.preventDefault();
+  deferredInstallPrompt=event;
+  const btn=$("installAppHomeBtn");
+  if(btn) btn.classList.remove("hidden");
+});
+
+window.addEventListener("appinstalled",function(){
+  deferredInstallPrompt=null;
+  showToast("App instalado com sucesso na tela inicial.","ok");
+});
+
+async function registerAppServiceWorker(){
+  try{
+    if("serviceWorker" in navigator){
+      await navigator.serviceWorker.register("/firebase-messaging-sw.js");
+    }
+  }catch(e){
+    console.log("Service worker não registrado:",e);
+  }
+}
+
+async function installBarberApp(){
+  try{
+    if(deferredInstallPrompt){
+      deferredInstallPrompt.prompt();
+      const result=await deferredInstallPrompt.userChoice;
+      deferredInstallPrompt=null;
+
+      if(result && result.outcome==="accepted"){
+        showToast("Instalação iniciada.","ok");
+      }else{
+        showToast("Instalação cancelada.","info");
+      }
+      return;
+    }
+
+    const ua=navigator.userAgent.toLowerCase();
+    const isIOS=/iphone|ipad|ipod/.test(ua);
+    const isStandalone=window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone;
+
+    if(isStandalone){
+      showToast("O app já está instalado neste aparelho.","ok");
+      return;
+    }
+
+    if(isIOS){
+      alert("Para instalar no iPhone:\n\n1. Abra no Safari.\n2. Toque no botão Compartilhar.\n3. Escolha “Adicionar à Tela de Início”.\n4. Toque em Adicionar.");
+    }else{
+      alert("Para instalar no Android:\n\n1. Abra este app no Chrome.\n2. Toque nos três pontinhos.\n3. Escolha “Instalar app” ou “Adicionar à tela inicial”.");
+    }
+  }catch(e){
+    console.error(e);
+    showToast("Não foi possível abrir a instalação agora.","err");
+  }
+}
+
 function askConfirm({title="Confirmar ação",text="Deseja continuar?",confirmText="Confirmar",cancelText="Cancelar",type="danger",icon="⚠️"}={}){return new Promise(resolve=>{const d=$("appModal");$("appModalTitle").textContent=title;$("appModalText").textContent=text;$("appModalIcon").textContent=icon;$("appModalConfirmBtn").textContent=confirmText;$("appModalCancelBtn").textContent=cancelText;$("appModalConfirmBtn").className=type==="danger"?"danger":"primary";const h=()=>{d.removeEventListener("close",h);resolve(d.returnValue==="confirm")};d.addEventListener("close",h,{once:true});if(!d.open)d.showModal()})}
 function showMessage(id,text,type="info",timeout=4500){const el=$(id);if(!el)return;el.className="message show "+type;el.innerHTML=text;if(timeout>0)setTimeout(()=>{el.className="message"},timeout)}
 function showOnly(viewId){["clientHomeView","availableView","guidedView","clientAppointmentsView","ownerLoginView","ownerView"].forEach(id=>$(id).classList.add("hidden"));if(viewId==="ownerView"||viewId==="ownerLoginView")$("clientLiveStatusView").classList.add("hidden");$(viewId).classList.remove("hidden")}
@@ -544,7 +606,19 @@ function setFinanceAll(){
 function loadClientFromStorage(){try{const saved=localStorage.getItem("barbeariaClient");if(!saved)return null;const parsed=JSON.parse(saved);if(!parsed||!parsed.name||!parsed.phone)return null;return parsed}catch{return null}}function saveClientToStorage(client){localStorage.setItem("barbeariaClient",JSON.stringify(client))}function clearClientStorage(){localStorage.removeItem("barbeariaClient")}
 function renderLogo(targetId){const el=$(targetId);if(!el)return;const logo=settings.logoDataUrl||"";el.innerHTML=logo?`<img src="${logo}" alt="Logo da barbearia">`:"✂️"}
 function updateBrand(){settings.businessName=FIXED_BUSINESS_NAME;const name=FIXED_BUSINESS_NAME,address=settings.businessAddress||DEFAULT_SETTINGS.businessAddress,phone=formatPhoneBR(settings.ownerWhatsapp||DEFAULT_SETTINGS.ownerWhatsapp);$("brandName").textContent=name;$("footerBrand").textContent=name;$("brandAddress").textContent=`📍 ${address}`;$("brandWhatsapp").textContent=`📲 WhatsApp: ${phone}`;document.title=name;renderLogo("mainLogo");renderLogo("logoPreview");updateManifest()}
-function updateManifest(){try{const manifest={name:FIXED_BUSINESS_NAME,short_name:"Agenda",start_url:".",display:"standalone",background_color:"#080808",theme_color:"#080808",description:"Sistema de agendamento online para barbearia"};const blob=new Blob([JSON.stringify(manifest)],{type:"application/json"});const url=URL.createObjectURL(blob);let link=document.querySelector('link[rel="manifest"]');if(!link){link=document.createElement("link");link.rel="manifest";document.head.appendChild(link)}link.href=url}catch(e){console.error(e)}}
+function updateManifest(){
+  try{
+    let link=document.querySelector('link[rel="manifest"]');
+    if(!link){
+      link=document.createElement("link");
+      link.rel="manifest";
+      document.head.appendChild(link);
+    }
+    link.href="/manifest.json";
+  }catch(e){
+    console.error(e);
+  }
+}
 async function loadSettings(){if(!firebaseReady){settings={...DEFAULT_SETTINGS};applySettingsToForm();return}try{const ref=doc(db,"barbeariaRodrigues","settings"),snap=await getDoc(ref);if(snap.exists()){settings={...DEFAULT_SETTINGS,...snap.data()};settings.businessName=FIXED_BUSINESS_NAME;settings.services=normalizeServices(settings.services);if(!settings.blockedSlots||typeof settings.blockedSlots!=="object")settings.blockedSlots={};settings.lunchBreaks=normalizeLunchBreaks(settings.lunchBreaks)}else{await setDoc(ref,DEFAULT_SETTINGS);settings={...DEFAULT_SETTINGS};settings.lunchBreaks=normalizeLunchBreaks(settings.lunchBreaks)}if(!selectedServiceId)selectedServiceId=activeServices()[0]?.id||"corte";if(!quickServiceId)quickServiceId=selectedServiceId;applySettingsToForm()}catch(e){console.error(e)}}
 function applySettingsToForm(){settings.businessName=FIXED_BUSINESS_NAME;settings.services=normalizeServices(settings.services);updateBrand();document.querySelectorAll(".workday").forEach(check=>{check.checked=settings.workdays.includes(Number(check.value))});$("businessName").value=FIXED_BUSINESS_NAME;$("ownerWhatsapp").value=settings.ownerWhatsapp||"";$("businessAddress").value=settings.businessAddress||"";$("businessMapLink").value=settings.businessMapLink||"";$("confirmationMessage").value=settings.confirmationMessage||DEFAULT_CONFIRMATION_MESSAGE;$("adminEmail").value=settings.adminEmail||"admin@barbearia.com";$("adminPassword").value=settings.adminPassword||"1234";$("startTime").value=settings.startTime||"08:00";$("endTime").value=settings.endTime||"18:00";$("slotDuration").value=String(settings.slotDuration||30);if($("clientCampaignMessage"))$("clientCampaignMessage").value=String(settings.clientCampaignMessage||DEFAULT_CLIENT_CAMPAIGN_MESSAGE).replaceAll("\\n","\n");if($("autoCleanFinance30Days")){
   $("autoCleanFinance30Days").value=String(Boolean(settings.autoCleanFinance30Days));
@@ -776,33 +850,11 @@ async function clearSavedAdminLogin(){
   showToast("Login salvo apagado deste aparelho.","ok");
 }
 
-Object.assign(window,{showClientHome,openGuidedBooking,openAvailableTimes,showOwnerLogin,ownerLogin,adminLogout,saveSettings,addBlockedDate,removeBlockedDate,bookAppointment,copyClientLink,openOwnerTab,loadAppointments,clearFilter,registerClient,changeClient,loadClients,renderClientsList,renderAppointmentsList,renderClientDates,selectQuickSlot,confirmQuickBooking,openClientAppointments,loadMyAppointments,cancelMyAppointment,deleteClient,deleteAppointmentHistory,saveClientCampaignMessage,startClientCampaign,sendNextCampaignClient,cancelClientCampaign,openBusinessMap,openBusinessWhatsApp,handleLogoFile,saveLogoImage,removeLogoImage,renderBlockedSlotSelect,addBlockedSlot,removeBlockedSlot,addLunchBreak,removeLunchBreak,finishAppointment,openFinishPaymentModal,closePaymentModal,completeServiceWithPayment,renderFinanceReport,setFinanceToday,setFinanceMonth,setFinanceAll,saveFinanceCleanupPreference,cleanOldFinanceRecords});
-currentClient=loadClientFromStorage();await loadSettings();updateSavedLoginBox();showClientHome();
+Object.assign(window,{installBarberApp,showClientHome,openGuidedBooking,openAvailableTimes,showOwnerLogin,ownerLogin,adminLogout,saveSettings,addBlockedDate,removeBlockedDate,bookAppointment,copyClientLink,openOwnerTab,loadAppointments,clearFilter,registerClient,changeClient,loadClients,renderClientsList,renderAppointmentsList,renderClientDates,selectQuickSlot,confirmQuickBooking,openClientAppointments,loadMyAppointments,cancelMyAppointment,deleteClient,deleteAppointmentHistory,saveClientCampaignMessage,startClientCampaign,sendNextCampaignClient,cancelClientCampaign,openBusinessMap,openBusinessWhatsApp,handleLogoFile,saveLogoImage,removeLogoImage,renderBlockedSlotSelect,addBlockedSlot,removeBlockedSlot,addLunchBreak,removeLunchBreak,finishAppointment,openFinishPaymentModal,closePaymentModal,completeServiceWithPayment,renderFinanceReport,setFinanceToday,setFinanceMonth,setFinanceAll,saveFinanceCleanupPreference,cleanOldFinanceRecords});
+currentClient=loadClientFromStorage();await loadSettings();updateSavedLoginBox();await registerAppServiceWorker();showClientHome();
 </script>
 
-<script id="emergency-cache-cleanup">
-(function(){
-  try{
-    if("serviceWorker" in navigator){
-      navigator.serviceWorker.getRegistrations().then(function(registrations){
-        registrations.forEach(function(registration){
-          registration.unregister();
-        });
-      }).catch(function(){});
-    }
 
-    if(window.caches && caches.keys){
-      caches.keys().then(function(keys){
-        keys.forEach(function(key){
-          caches.delete(key);
-        });
-      }).catch(function(){});
-    }
-  }catch(e){
-    console.log("Limpeza de cache ignorada:", e);
-  }
-})();
-</script>
 
 </body>
 </html>
